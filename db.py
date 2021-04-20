@@ -16,36 +16,36 @@ file_routes = 'routes.yaml'
 def open_connection():
     unix_socket = '/cloudsql/{}'.format(db_connection_name)
     try:
-        #if os.environ.get('GAE_ENV') == 'standard':
+        # if os.environ.get('GAE_ENV') == 'standard':
         conn = pymysql.connect(user=db_user, password=db_password,
-                            unix_socket=unix_socket, db=db_name,
-                            cursorclass=pymysql.cursors.DictCursor
-                            )
+                               unix_socket=unix_socket, db=db_name,
+                               cursorclass=pymysql.cursors.DictCursor)
         return conn
     except pymysql.MySQLError as e:
         print(e)
-        
-        
+
+
 def lookup_sql_by_route(route, my_args):
-    
+
+    """
     start_date = my_args.get('start_date')
     end_date = my_args.get('end_date')
-    
+    """
     try:
         with open(file_routes) as file:
             data = yaml.load(file, Loader=yaml.FullLoader)
             for key, value in data.items():
                 if key == '/' + route:
                     return value
-        return 'no route match found'
-    except:
-        return 'an exception occurred'
+        return 'ERROR: no route match found'
+    except FileNotFoundError:
+        return 'ERROR: cannot open {0}'.format(file_routes)
 
 
 def content(urlpath, my_args):
 
     sql = lookup_sql_by_route(urlpath, my_args)
-    
+
     conn = open_connection()
     with conn.cursor() as cursor:
         result = cursor.execute(sql)
@@ -55,6 +55,5 @@ def content(urlpath, my_args):
         else:
             results_json = 'No results found!'
     conn.close()
-   
+
     return results_json
-  
