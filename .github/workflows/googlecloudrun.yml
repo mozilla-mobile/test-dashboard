@@ -1,0 +1,35 @@
+name: Deploy the application to Google Cloud Run
+on:
+  push:
+    branches:
+      - 'master'
+
+jobs:
+  deploy:
+    name: Deploy job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v1
+
+      - name: Build Docker image
+        run: |
+          docker build . -t gcr.io/${{ secrets.GCLOUD_PROJECT }}/${{ secrets.GCLOUD_APP_NAME }}
+
+      - name: Authenticate into Google Cloud Platform
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          service_account_email: ${{ secrets.GCLOUD_EMAIL }}
+          service_account_key: ${{ secrets.GCLOUD_AUTH }}
+
+      - name: Configure Docker to use Google Cloud Platform
+        run: "gcloud auth configure-docker --quiet"
+
+      - name: Push image to Google Cloud Container Registry
+        run: docker push gcr.io/${{ secrets.GCLOUD_PROJECT }}/${{ secrets.GCLOUD_APP_NAME }}
+
+      - name: Deploy on cloud run
+        run: |
+          gcloud config set project ${{ secrets.GCLOUD_PROJECT }}
+          gcloud run deploy ${{ secrets.GCLOUD_APP_NAME }} --image gcr.io/${{ secrets.GCLOUD_PROJECT }}/${{ secrets.GCLOUD_APP_NAME }} --project ${{ secrets.GCLOUD_PROJECT }} --region us-west1 --platform managed --allow-unauthenticated 
+          gcloud run services update ${{ secrets.GCLOUD_APP_NAME }} --region us-west1 --add-cloudsql-instances ${{ secrets.CLOUD_SQL_CONNECTION_NAME }} --set-env-vars CLOUD_SQL_CONNECTION_NAME=${{ secrets.CLOUD_SQL_CONNECTION_NAME }},CLOUD_SQL_USERNAME=${{ secrets.CLOUD_SQL_USERNAME }},CLOUD_SQL_PASSWORD=${{ secrets.CLOUD_SQL_PASSWORD }},CLOUD_SQL_DATABASE_NAME=${{ secrets.CLOUD_SQL_DATABASE_NAME }} --platform managed
