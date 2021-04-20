@@ -1,0 +1,4 @@
+venv*
+~archive
+*.sw[op]
+.DS_Store
