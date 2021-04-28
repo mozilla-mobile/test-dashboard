@@ -1,7 +1,14 @@
+#! /usr/bin/env python
+"""
+Serve database content to Flask API
+"""
+
 import os
-import yaml
+import logging
+
 import pymysql
 from flask import jsonify
+import yaml
 
 
 db_user = os.environ.get('CLOUD_SQL_USERNAME')
@@ -51,9 +58,14 @@ def content(urlpath, my_args):
         result = cursor.execute(sql)
         results = cursor.fetchall()
         if result > 0:
-            results_json = jsonify(results)
+            resp = jsonify(results)
         else:
-            results_json = 'No results found!'
-    conn.close()
+            resp = "NO RESULTS FOUND"
 
-    return results_json
+    conn.close()
+    data = {"data": "TBD",
+            "meta": """THIS IS INTENDED TO BE A PUBLIC API:
+                    https://github.com/mozilla-mobile/test-dashboard/"""}
+    data["data"] = resp
+    logging.warn(resp)
+    return jsonify(data)
