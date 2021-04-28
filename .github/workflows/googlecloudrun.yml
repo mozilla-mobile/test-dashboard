@@ -31,10 +31,9 @@ jobs:
           echo "GCLOUD_APP_NAME=${{ steps.split.outputs._2 }}" >> $GITHUB_ENV
 
       - name: Set GCLOUD_SERVICE 
-        if: ${{ steps.split.output._2 }} != 'unchanged-url-on-prod'
+        if: ${{ github.ref != 'ref/head/unchanged-url-on-prod' }}
         run: |
-          #echo "GCLOUD_SERVICE=${{ steps.split.outputs._2 }}" >> $GITHUB_ENV
-          echo "GCLOUD_SERVICE=''" >> $GITHUB_ENV
+          echo "GCLOUD_SERVICE=${{ steps.split.outputs._2 }}" >> $GITHUB_ENV
 
       - name: Build Docker image
         run: |
