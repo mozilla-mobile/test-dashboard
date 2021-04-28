@@ -6,7 +6,7 @@ on:
       - '**'
 
 env:
-  GCLOUD_SERVICE: ''
+  GCLOUD_SERVICE: 'prod'
 
 jobs:
   deploy:
@@ -31,7 +31,7 @@ jobs:
           echo "GCLOUD_APP_NAME=${{ steps.split.outputs._2 }}" >> $GITHUB_ENV
 
       - name: Set GCLOUD_SERVICE 
-        if: ${{ steps.split.output._2  != 'unchanged-url-on-prod' }}
+        if: ${{ steps.split.output._2 }} != 'unchanged-url-on-prod'
         run: |
           #echo "GCLOUD_SERVICE=${{ steps.split.outputs._2 }}" >> $GITHUB_ENV
           echo "GCLOUD_SERVICE=''" >> $GITHUB_ENV
