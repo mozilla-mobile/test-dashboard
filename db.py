@@ -67,9 +67,7 @@ def content(urlpath, my_args):
             resp = "NO RESULTS FOUND"
 
     conn.close()
-    data = {"data": "TBD",
-            "meta": """THIS IS INTENDED TO BE A PUBLIC API:
-                    https://github.com/mozilla-mobile/test-dashboard/"""}
+    data = {"data": "TBD", "meta": "THIS IS INTENDED TO BE A PUBLIC API: https://github.com/mozilla-mobile/test-dashboard/"}
     data["data"] = resp
-    logging.warn(resp)
+    #logging.warn(resp)
     return jsonify(data)
