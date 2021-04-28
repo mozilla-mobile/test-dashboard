@@ -4,6 +4,7 @@ Serve database content to Flask API
 """
 
 import os
+import sys
 import logging
 
 import pymysql
@@ -29,7 +30,8 @@ def open_connection():
                                cursorclass=pymysql.cursors.DictCursor)
         return conn
     except pymysql.MySQLError as e:
-        print(e)
+        logging.warn('ERROR: pymyqsl.MySQLError {0}'.format(e))
+        sys.exit() 
 
 
 def lookup_sql_by_route(route, my_args):
@@ -44,9 +46,11 @@ def lookup_sql_by_route(route, my_args):
             for key, value in data.items():
                 if key == '/' + route:
                     return value
-        return 'ERROR: no route match found'
+        logging.warn('ERROR: no route match found')
+        return ''
     except FileNotFoundError:
-        return 'ERROR: cannot open {0}'.format(file_routes)
+        logging.warn('ERROR: an exception occurred')
+        sys.exit()
 
 
 def content(urlpath, my_args):
