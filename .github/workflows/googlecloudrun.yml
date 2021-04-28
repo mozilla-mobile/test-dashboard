@@ -32,7 +32,7 @@ jobs:
           echo "GCLOUD_APP_NAME=${{ steps.split.outputs._2 }}" >> $GITHUB_ENV
 
       - name: Set GCLOUD_SERVICE 
-        if: {{ steps.split.output._2 }} != 'master'
+        if: ${{ steps.split.output._2  != 'master' }}
         run: |
           echo "GCLOUD_APP_NAME=${{ steps.split.outputs._2 }}" >> $GITHUB_ENV
           echo "GCLOUD_SERVICE=${{ steps.split.outputs._2 }}" >> $GITHUB_ENV
