@@ -68,6 +68,6 @@ def content(urlpath, my_args):
 
     conn.close()
     data = {"data": "TBD", "meta": "THIS IS INTENDED TO BE A PUBLIC API: https://github.com/mozilla-mobile/test-dashboard/"}
-    data["data"] = resp
-    #logging.warn(resp)
+    #data["data"] = resp
+    logging.warn(resp)
     return jsonify(data)
