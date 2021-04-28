@@ -58,16 +58,16 @@ def content(urlpath, my_args):
     sql = lookup_sql_by_route(urlpath, my_args)
 
     conn = open_connection()
+
     with conn.cursor() as cursor:
         result = cursor.execute(sql)
         results = cursor.fetchall()
         if result > 0:
-            resp = jsonify(results)
+            resp = results[0]
         else:
-            resp = "NO RESULTS FOUND"
+            resp = "NO RESULTS FOUND" 
 
     conn.close()
     data = {"data": "TBD", "meta": "THIS IS INTENDED TO BE A PUBLIC API: https://github.com/mozilla-mobile/test-dashboard/"}
-    #data["data"] = resp
-    logging.warn(resp)
+    data["data"] = resp
     return jsonify(data)
