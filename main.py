@@ -1,8 +1,12 @@
-# main.py
-# This module provides dynamic API routing
+#! /usr/bin/env python
+"""
+Flask module providing dynamic API routing
+"""
 
 from flask import Flask, request
 from db import content
+
+
 app = Flask(__name__)
 
 

@@ -1,7 +1,15 @@
+#! /usr/bin/env python
+"""
+Serve database content to Flask API
+"""
+
 import os
-import yaml
+import sys
+import logging
+
 import pymysql
 from flask import jsonify
+import yaml
 
 
 db_user = os.environ.get('CLOUD_SQL_USERNAME')
@@ -22,7 +30,8 @@ def open_connection():
                                cursorclass=pymysql.cursors.DictCursor)
         return conn
     except pymysql.MySQLError as e:
-        print(e)
+        logging.warn('ERROR: pymyqsl.MySQLError {0}'.format(e))
+        sys.exit() 
 
 
 def lookup_sql_by_route(route, my_args):
@@ -37,9 +46,11 @@ def lookup_sql_by_route(route, my_args):
             for key, value in data.items():
                 if key == '/' + route:
                     return value
-        return 'ERROR: no route match found'
+        logging.warn('ERROR: no route match found')
+        return ''
     except FileNotFoundError:
-        return 'ERROR: cannot open {0}'.format(file_routes)
+        logging.warn('ERROR: an exception occurred')
+        sys.exit()
 
 
 def content(urlpath, my_args):
@@ -47,13 +58,16 @@ def content(urlpath, my_args):
     sql = lookup_sql_by_route(urlpath, my_args)
 
     conn = open_connection()
+
     with conn.cursor() as cursor:
         result = cursor.execute(sql)
         results = cursor.fetchall()
         if result > 0:
-            results_json = jsonify(results)
+            resp = results[0]
         else:
-            results_json = 'No results found!'
-    conn.close()
+            resp = "NO RESULTS FOUND" 
 
-    return results_json
+    conn.close()
+    data = {"data": "TBD", "meta": "THIS IS INTENDED TO BE A PUBLIC API: https://github.com/mozilla-mobile/test-dashboard/"}
+    data["data"] = resp
+    return jsonify(data)
