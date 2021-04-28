@@ -1,11 +1,9 @@
-name: Deploy the dashboard API to Google Cloud Run
+name: Linter for python modules 
 
 on:
   push:
     branches:
       - '**'
-    paths:
-    - '**.py'
 
 jobs:
   flake8-lint:
