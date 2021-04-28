@@ -6,10 +6,8 @@ on:
       - '**'
 
 env:
-  #GCLOUD_APP_NAME: 'master'
-  GCLOUD_APP_NAME: 'unchanged-url-on-prod'
   #GCLOUD_SERVICE: ''
-  GCLOUD_SERVICE: 'my-neato-service'
+  GCLOUD_SERVICE: 'xxx'
 
 jobs:
   deploy:
@@ -36,9 +34,7 @@ jobs:
       - name: Set GCLOUD_SERVICE 
         if: ${{ steps.split.output._2  != 'unchanged-url-on-prod' }}
         run: |
-          echo "GCLOUD_APP_NAME=${{ steps.split.outputs._2 }}" >> $GITHUB_ENV
-          #echo "GCLOUD_SERVICE=${{ steps.split.outputs._2 }}" >> $GITHUB_ENV
-          echo "GCLOUD_SERVICE=my-neato-service2" >> $GITHUB_ENV
+          echo "GCLOUD_SERVICE=${{ steps.split.outputs._2 }}" >> $GITHUB_ENV
 
       - name: Build Docker image
         run: |
