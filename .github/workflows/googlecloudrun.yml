@@ -5,6 +5,10 @@ on:
     branches:
       - '**'
 
+env:
+  GCLOUD_APP_NAME: 'master'
+  GCLOUD_SERVICE: ''
+
 jobs:
   deploy:
     name: Deploy job
@@ -23,9 +27,15 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v1
        
+      - name: Set GCLOUD_APP_NAME
+        run: |
+          echo "GCLOUD_APP_NAME=${{ steps.split.outputs._2 }}" >> $GITHUB_ENV
 
-      - name: Set GCLOUD_APP_NAME 
-        run: echo "GCLOUD_APP_NAME=${{ steps.split.outputs._2 }}" >> $GITHUB_ENV
+      - name: Set GCLOUD_SERVICE 
+        if: {{ steps.split.output._2 }} != 'master'
+        run: |
+          echo "GCLOUD_APP_NAME=${{ steps.split.outputs._2 }}" >> $GITHUB_ENV
+          echo "GCLOUD_SERVICE=${{ steps.split.outputs._2 }}" >> $GITHUB_ENV
 
       - name: Build Docker image
         run: |
@@ -46,5 +56,7 @@ jobs:
       - name: Deploy on cloud run
         run: |
           gcloud config set project ${{ secrets.GCLOUD_PROJECT }}
-          gcloud run deploy ${{ env.GCLOUD_APP_NAME }} --image gcr.io/${{ secrets.GCLOUD_PROJECT }}/${{ env.GCLOUD_APP_NAME }} --project ${{ secrets.GCLOUD_PROJECT }} --region us-west1 --platform managed --allow-unauthenticated 
-          gcloud run services update ${{ env.GCLOUD_APP_NAME }} --region us-west1 --add-cloudsql-instances ${{ secrets.CLOUD_SQL_CONNECTION_NAME }} --set-env-vars CLOUD_SQL_CONNECTION_NAME=${{ secrets.CLOUD_SQL_CONNECTION_NAME }},CLOUD_SQL_USERNAME=${{ secrets.CLOUD_SQL_USERNAME }},CLOUD_SQL_PASSWORD=${{ secrets.CLOUD_SQL_PASSWORD }},CLOUD_SQL_DATABASE_NAME=${{ secrets.CLOUD_SQL_DATABASE_NAME }} --platform managed
+          #gcloud run deploy ${{ env.GCLOUD_APP_NAME }} --image gcr.io/${{ secrets.GCLOUD_PROJECT }}/${{ env.GCLOUD_APP_NAME }} --project ${{ secrets.GCLOUD_PROJECT }} --region us-west1 --platform managed --allow-unauthenticated 
+          gcloud run deploy ${{ env.GCLOUD_SERVICE}} --image gcr.io/${{ secrets.GCLOUD_PROJECT }}/${{ env.GCLOUD_APP_NAME }} --project ${{ secrets.GCLOUD_PROJECT }} --region us-west1 --platform managed --allow-unauthenticated 
+          #gcloud run services update ${{ env.GCLOUD_APP_NAME }} --region us-west1 --add-cloudsql-instances ${{ secrets.CLOUD_SQL_CONNECTION_NAME }} --set-env-vars CLOUD_SQL_CONNECTION_NAME=${{ secrets.CLOUD_SQL_CONNECTION_NAME }},CLOUD_SQL_USERNAME=${{ secrets.CLOUD_SQL_USERNAME }},CLOUD_SQL_PASSWORD=${{ secrets.CLOUD_SQL_PASSWORD }},CLOUD_SQL_DATABASE_NAME=${{ secrets.CLOUD_SQL_DATABASE_NAME }} --platform managed
+          gcloud run services update ${{ env.GCLOUD_SERVICE }} --region us-west1 --add-cloudsql-instances ${{ secrets.CLOUD_SQL_CONNECTION_NAME }} --set-env-vars CLOUD_SQL_CONNECTION_NAME=${{ secrets.CLOUD_SQL_CONNECTION_NAME }},CLOUD_SQL_USERNAME=${{ secrets.CLOUD_SQL_USERNAME }},CLOUD_SQL_PASSWORD=${{ secrets.CLOUD_SQL_PASSWORD }},CLOUD_SQL_DATABASE_NAME=${{ secrets.CLOUD_SQL_DATABASE_NAME }} --platform managed
