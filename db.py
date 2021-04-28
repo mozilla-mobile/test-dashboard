@@ -31,7 +31,7 @@ def open_connection():
         return conn
     except pymysql.MySQLError as e:
         logging.warn('ERROR: pymyqsl.MySQLError {0}'.format(e))
-        sys.exit() 
+        sys.exit()
 
 
 def lookup_sql_by_route(route, my_args):
@@ -65,9 +65,9 @@ def content(urlpath, my_args):
         if result > 0:
             resp = results[0]
         else:
-            resp = "NO RESULTS FOUND" 
+            resp = "NO RESULTS FOUND"
 
     conn.close()
-    data = {"data": "TBD", "meta": "THIS IS INTENDED TO BE A PUBLIC API: https://github.com/mozilla-mobile/test-dashboard/"}
+    data = {"data": "TBD", "meta": "THIS IS INTENDED TO BE A PUBLIC API. For more info: https://github.com/mozilla-mobile/test-dashboard/"} # noqa
     data["data"] = resp
     return jsonify(data)

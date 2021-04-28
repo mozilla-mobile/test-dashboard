@@ -5,7 +5,6 @@ on:
     branches:
       - '**'
 
-
 jobs:
   deploy:
     name: Deploy job
@@ -23,12 +22,12 @@ jobs:
 
       - name: Checkout the repository
         uses: actions/checkout@v1
+       
+
+      - name: Set GCLOUD_APP_NAME 
+        run: echo "GCLOUD_APP_NAME=${{ steps.split.outputs._2 }}" >> $GITHUB_ENV
 
       - name: Build Docker image
-        # workaround for no global env vars
-        env: 
-          GCLOUD_APP_NAME: ${{ steps.split.outputs._2 }} 
-
         run: |
           docker build . -t gcr.io/${{ secrets.GCLOUD_PROJECT }}/${{ env.GCLOUD_APP_NAME }}
 
@@ -42,15 +41,9 @@ jobs:
         run: "gcloud auth configure-docker --quiet"
 
       - name: Push image to Google Cloud Container Registry
-        # workaround for no global env vars
-        env: 
-          GCLOUD_APP_NAME: ${{ steps.split.outputs._2 }} 
         run: docker push gcr.io/${{ secrets.GCLOUD_PROJECT }}/${{ env.GCLOUD_APP_NAME }}
 
       - name: Deploy on cloud run
-        # workaround for no global env vars
-        env: 
-          GCLOUD_APP_NAME: ${{ steps.split.outputs._2 }} 
         run: |
           gcloud config set project ${{ secrets.GCLOUD_PROJECT }}
           gcloud run deploy ${{ env.GCLOUD_APP_NAME }} --image gcr.io/${{ secrets.GCLOUD_PROJECT }}/${{ env.GCLOUD_APP_NAME }} --project ${{ secrets.GCLOUD_PROJECT }} --region us-west1 --platform managed --allow-unauthenticated 
