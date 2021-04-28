@@ -25,7 +25,7 @@ jobs:
        
 
       - name: Set GCLOUD_APP_NAME 
-        run: echo "GCLOUD_APP_NAME=${{ steps.split.outputs._2 }}" >> $GCLOUD_APP_NAME
+        run: echo "GCLOUD_APP_NAME=${{ steps.split.outputs._2 }}" >> $GITHUB_ENV
 
       - name: Build Docker image
         run: |
