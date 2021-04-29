@@ -1,7 +1,7 @@
 ---
 /test/demo: SELECT * FROM songs 
-/testrail/ios/coverage/smoke: SELECT * FROM testrail_test_coverage WHERE project_name = 'Firefox for iOS' AND suite = 'Smoke Tests'
+/testrail/ios/coverage/fullfunctional: SELECT * FROM testrail_test_coverage WHERE project_name = 'Firefox for iOS' AND suite = 'Smoke Tests'
 /testrail/ios/coverage/smoke: SELECT * FROM testrail_test_coverage WHERE project_name = 'Firefox for iOS' AND suite = 'Full Functional Tests'
 /testrail/ios/coverage/bfts: SELECT * FROM testrail_test_coverage WHERE project_name = 'Firefox for iOS' AND suite = 'Basic Functional Tests'
 /testrail/fenix/coverage/smoke: SELECT * FROM testrail_test_coverage WHERE project_name = 'Fenix Browser' AND suite = 'Smoke Tests'
-/testrail/fenix/coverage/smoke: SELECT * FROM testrail_test_coverage WHERE project_name = 'Fenix Browser' AND suite = 'Full functional & UI tests'
+/testrail/fenix/coverage/fullfunctional: SELECT * FROM testrail_test_coverage WHERE project_name = 'Fenix Browser' AND suite = 'Full functional & UI tests'
