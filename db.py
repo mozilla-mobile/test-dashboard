@@ -28,7 +28,6 @@ def open_connection():
     """
     unix_socket = '/cloudsql/{}'.format(db_connection_name)
     try:
-        # if os.environ.get('GAE_ENV') == 'standard':
         conn = pymysql.connect(user=db_user, password=db_password,
                                unix_socket=unix_socket, db=db_name,
                                cursorclass=pymysql.cursors.DictCursor)
@@ -64,6 +63,12 @@ def lookup_sql_by_route(route, my_args):
         sys.exit()
 
 
+def banner(resp):
+    data = {"data": "TBD", "meta": "THIS IS INTENDED TO BE A PUBLIC API. For more info: https://github.com/mozilla-mobile/test-dashboard/"} # noqa
+    data["data"] = resp
+    return jsonify(data)
+
+
 def content(urlpath, my_args):
     """
     Provides API content
@@ -76,20 +81,22 @@ def content(urlpath, my_args):
     :rtype: JSON string
     """
 
-    sql = lookup_sql_by_route(urlpath, my_args)
+    if urlpath == '/':
+        return banner('N/A') 
 
+    sql = lookup_sql_by_route(urlpath, my_args)
     conn = open_connection()
 
     with conn.cursor() as cursor:
         result = cursor.execute(sql)
         results = cursor.fetchall()
         if result > 0:
-            # resp = results[0]
             resp = results
         else:
             resp = "NO RESULTS FOUND"
 
     conn.close()
-    data = {"data": "TBD", "meta": "THIS IS INTENDED TO BE A PUBLIC API. For more info: https://github.com/mozilla-mobile/test-dashboard/"} # noqa
-    data["data"] = resp
-    return jsonify(data)
+    #data = {"data": "TBD", "meta": "THIS IS INTENDED TO BE A PUBLIC API. For more info: https://github.com/mozilla-mobile/test-dashboard/"} # noqa
+    #data["data"] = resp
+    #return jsonify(data)
+    return banner(resp) 
