@@ -23,7 +23,7 @@ def open_connection():
     """
     Cloud SQL database connector
 
-    :return conn: Database connection 
+    :return conn: Database connection
     :rtype: pymysql connector object
     """
     unix_socket = '/cloudsql/{}'.format(db_connection_name)
@@ -42,7 +42,7 @@ def lookup_sql_by_route(route, my_args):
     """
     Looks up SQL from corresponding URL path
 
-    :param route: URL path 
+    :param route: URL path
     :type: string
     :my_args: args from GET
     :type: Flask request object
@@ -68,7 +68,7 @@ def content(urlpath, my_args):
     """
     Provides API content
 
-    :param route: URL path 
+    :param route: URL path
     :type: string
     :my_args: args from GET
     :type: Flask request object
@@ -84,7 +84,7 @@ def content(urlpath, my_args):
         result = cursor.execute(sql)
         results = cursor.fetchall()
         if result > 0:
-            #resp = results[0]
+            # resp = results[0]
             resp = results
         else:
             resp = "NO RESULTS FOUND"
