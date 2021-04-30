@@ -88,10 +88,6 @@ def content(urlpath, my_args):
     :return: JSON content
     :rtype: JSON string
     """
-
-    if urlpath == '':
-        return banner('N/A') 
-
     sql = lookup_sql_by_route(urlpath, my_args)
     conn = open_connection()
 
