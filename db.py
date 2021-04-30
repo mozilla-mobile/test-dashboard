@@ -64,6 +64,14 @@ def lookup_sql_by_route(route, my_args):
 
 
 def banner(resp):
+    """
+    Wraps API content in banner
+
+    :param resp: JSON data
+    :type: string
+    :return: JSON data w/ banner
+    :rtype: string
+    """
     data = {"data": "TBD", "meta": "THIS IS INTENDED TO BE A PUBLIC API. For more info: https://github.com/mozilla-mobile/test-dashboard/"} # noqa
     data["data"] = resp
     return jsonify(data)

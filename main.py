@@ -10,6 +10,11 @@ from db import content
 app = Flask(__name__)
 
 
+@app.route('/')
+def home_page():
+    return '<html><h1>Home page</h1></html>'
+
+
 @app.route('/<path:urlpath>', methods=['GET'])
 def page_content(urlpath):
     """
