@@ -81,7 +81,7 @@ def content(urlpath, my_args):
     :rtype: JSON string
     """
 
-    if urlpath == '/':
+    if urlpath == '':
         return banner('N/A') 
 
     sql = lookup_sql_by_route(urlpath, my_args)
@@ -96,7 +96,4 @@ def content(urlpath, my_args):
             resp = "NO RESULTS FOUND"
 
     conn.close()
-    #data = {"data": "TBD", "meta": "THIS IS INTENDED TO BE A PUBLIC API. For more info: https://github.com/mozilla-mobile/test-dashboard/"} # noqa
-    #data["data"] = resp
-    #return jsonify(data)
     return banner(resp) 
