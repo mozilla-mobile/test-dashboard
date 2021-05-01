@@ -115,7 +115,7 @@ def content_home():
             if line != '---':
                 line = line.split(':')
                 line = '{0}{1}'.format(API, line[0])
-                body += '<a href="{0}">{0}</a><br>'.format(line))
+                body += '<a href="{0}">{0}</a><br>'.format(line)
 
     repo = '<a href="{0}">{0}</a>'.format(REPO)
     return '<html><h1>{0}</h1>{1}<hr>{2}</html>'.format(BANNER, repo, body) 
