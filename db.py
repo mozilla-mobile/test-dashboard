@@ -14,7 +14,9 @@ db_user = os.environ.get('CLOUD_SQL_USERNAME')
 db_password = os.environ.get('CLOUD_SQL_PASSWORD')
 db_name = os.environ.get('CLOUD_SQL_DATABASE_NAME')
 db_connection_name = os.environ.get('CLOUD_SQL_CONNECTION_NAME')
-BANNER = "THIS IS INTENDED TO BE A PUBLIC API. For more info: https://github.com/mozilla-mobile/test-dashboard/"
+BANNER = "THIS IS INTENDED TO BE A PUBLIC API"
+REPO = "For more info: https://github.com/mozilla-mobile/test-dashboard/"
+API = 'https://master-ocnlwxzr4q-uw.a.run.app'
 
 
 file_routes = 'routes.yaml'
@@ -105,16 +107,15 @@ def content(urlpath, my_args):
 
 
 def content_home():
-    with open('routes.yaml') as f:
-        domain = 'https://fix-json-ocnlwxzr4q-uw.a.run.app'
+    with open(file_routes) as f:
         content = f.read().splitlines()
 
- 
-        lines = []
+        body = ''
         for line in content:
             if line != '---':
                 line = line.split(':')
-                line = '{0}{1}'.format(domain, line[0])
-                lines.append('<a href="{0}">{0}</a><br>'.format(line))
+                line = '{0}{1}'.format(API, line[0])
+                body += '<a href="{0}">{0}</a><br>'.format(line))
 
-    return '<html><h1>{0}</h1><hr>{1}</html>'.format(BANNER, lines) 
+    repo = '<a href="{0}">{0}</a>'.format(REPO)
+    return '<html><h1>{0}</h1>{1}<hr>{2}</html>'.format(BANNER, repo, body) 

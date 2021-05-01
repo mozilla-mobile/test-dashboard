@@ -1,7 +1,5 @@
 #! /usr/bin/env python
-"""
-Flask module providing dynamic API routing
-"""
+"""Flask module providing dynamic API routing"""
 
 from flask import Flask, request
 from db import content, content_home
@@ -21,7 +19,6 @@ def page_content(urlpath):
     start_date = request.args.get('start_date')
     end_date = request.args.get('end_date')
     """
-
     return content(urlpath, request.args)
 
 
