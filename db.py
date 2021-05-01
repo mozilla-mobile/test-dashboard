@@ -113,9 +113,9 @@ def content_home():
         body = ''
         for line in content:
             if line != '---':
-                line = line.split(':')
-                line = '{0}{1}'.format(API, line[0])
-                body += '<a href="{0}">{1}</a><br>'.format(line, line[0])
+                path = line.split(':')[0]
+                line = '{0}{1}'.format(API, path)
+                body += '<a href="{0}">{1}</a><br>'.format(line, path)
 
     repo = '<a href="{0}">{0}</a>'.format(REPO)
     return """<html><h1>{0}</h1>For more info: {1}<hr>
