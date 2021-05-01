@@ -14,8 +14,8 @@ db_user = os.environ.get('CLOUD_SQL_USERNAME')
 db_password = os.environ.get('CLOUD_SQL_PASSWORD')
 db_name = os.environ.get('CLOUD_SQL_DATABASE_NAME')
 db_connection_name = os.environ.get('CLOUD_SQL_CONNECTION_NAME')
-BANNER = "THIS IS INTENDED TO BE A PUBLIC API"
-REPO = "For more info: https://github.com/mozilla-mobile/test-dashboard/"
+BANNER = 'THIS IS INTENDED TO BE A PUBLIC API'
+REPO = 'https://github.com/mozilla-mobile/test-dashboard/'
 API = 'https://master-ocnlwxzr4q-uw.a.run.app'
 
 
@@ -75,7 +75,7 @@ def banner(resp):
     :return: JSON data w/ banner
     :rtype: string
     """
-    data = {"data": "TBD", "meta": BANNER }
+    data = {"data": "TBD", "meta": BANNER}
     data["data"] = resp
     return jsonify(data)
 
@@ -103,7 +103,7 @@ def content(urlpath, my_args):
             resp = "NO RESULTS FOUND"
 
     conn.close()
-    return banner(resp) 
+    return banner(resp)
 
 
 def content_home():
@@ -118,4 +118,5 @@ def content_home():
                 body += '<a href="{0}">{0}</a><br>'.format(line)
 
     repo = '<a href="{0}">{0}</a>'.format(REPO)
-    return '<html><h1>{0}</h1>{1}<hr>{2}</html>'.format(BANNER, repo, body) 
+    return """<html><h1>{0}</h1>For more info: {1}<hr>
+        {2}</html>""".format(BANNER, repo, body)
