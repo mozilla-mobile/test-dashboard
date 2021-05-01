@@ -101,3 +101,13 @@ def content(urlpath, my_args):
 
     conn.close()
     return banner(resp) 
+
+
+def content_home():
+    with open('routes.yaml') as f:
+        content = f.read().splitlines()
+ 
+        lines = []
+        for line in content:
+            lines.append('{0}<br>'.format(line))
+        return banner(lines) 

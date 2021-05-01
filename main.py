@@ -4,7 +4,7 @@ Flask module providing dynamic API routing
 """
 
 from flask import Flask, request
-from db import content
+from db import content, content_home
 
 
 app = Flask(__name__)
@@ -12,7 +12,8 @@ app = Flask(__name__)
 
 @app.route('/')
 def home_page():
-    return '<html><a href="https://github.com/mozilla-mobile/test-dashboard/blob/master/routes.yaml">ROUTES</a></html>'
+    #return '<html><a href="https://github.com/mozilla-mobile/test-dashboard/blob/master/routes.yaml">ROUTES</a></html>'
+    return content_home()
 
 
 @app.route('/<path:urlpath>', methods=['GET'])
