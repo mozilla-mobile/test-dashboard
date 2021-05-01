@@ -105,9 +105,14 @@ def content(urlpath, my_args):
 
 def content_home():
     with open('routes.yaml') as f:
+        domain = 'https://fix-json-ocnlwxzr4q-uw.a.run.app'
         content = f.read().splitlines()
+
  
         lines = []
         for line in content:
-            lines.append('{0}<br>'.format(line))
+            if line != '---':
+                line = line.split(':')
+                line = '{0}{1}'.format(domain, line[0])
+                lines.append('<a href="{0}">{0}</a>'.format(line))
         return banner(lines) 
