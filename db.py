@@ -14,6 +14,7 @@ db_user = os.environ.get('CLOUD_SQL_USERNAME')
 db_password = os.environ.get('CLOUD_SQL_PASSWORD')
 db_name = os.environ.get('CLOUD_SQL_DATABASE_NAME')
 db_connection_name = os.environ.get('CLOUD_SQL_CONNECTION_NAME')
+BANNER = "THIS IS INTENDED TO BE A PUBLIC API. For more info: https://github.com/mozilla-mobile/test-dashboard/"
 
 
 file_routes = 'routes.yaml'
@@ -72,7 +73,7 @@ def banner(resp):
     :return: JSON data w/ banner
     :rtype: string
     """
-    data = {"data": "TBD", "meta": "THIS IS INTENDED TO BE A PUBLIC API. For more info: https://github.com/mozilla-mobile/test-dashboard/"} # noqa
+    data = {"data": "TBD", "meta": BANNER }
     data["data"] = resp
     return jsonify(data)
 
@@ -114,5 +115,6 @@ def content_home():
             if line != '---':
                 line = line.split(':')
                 line = '{0}{1}'.format(domain, line[0])
-                lines.append('<a href="{0}">{0}</a>'.format(line))
-        return banner(lines) 
+                lines.append('<a href="{0}">{0}</a><br>'.format(line))
+
+    return '<html><h1>{0}</h1><hr>{1}</html>'.format(BANNER, lines) 

@@ -12,7 +12,6 @@ app = Flask(__name__)
 
 @app.route('/')
 def home_page():
-    #return '<html><a href="https://github.com/mozilla-mobile/test-dashboard/blob/master/routes.yaml">ROUTES</a></html>'
     return content_home()
 
 
