@@ -75,7 +75,7 @@ def banner(resp):
     :return: JSON data w/ banner
     :rtype: string
     """
-    data = {"data": "TBD", "meta": BANNER}
+    data = {"meta": BANNER, "data": "TBD"}
     data["data"] = resp
     return jsonify(data)
 
