@@ -13,8 +13,8 @@ jobs:
     steps:
       - name: Insert data 
         uses: mattes/gce-cloudsql-proxy-action@v1
-	with:
-	  creds: ${{ secrets.GCLOUD_AUTH }}
+        with:
+          creds: ${{ secrets.GCLOUD_AUTH }}
           instance: ${{ secrets.CLOUD_SQL_CONNECTION_NAME }}
         uses: actions/checkout@v2
         uses: actions/setup-python@v1
