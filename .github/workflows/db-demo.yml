@@ -14,6 +14,12 @@ jobs:
       - name: Check out source repository
         uses: actions/checkout@v2
 
+      - name: Set ENV vars 
+        run: |
+          echo "CLOUD_SQL_USERNAME=${{ secrets.CLOUD_SQL_USERNAME }}" >> $GITHUB_ENV
+          echo "CLOUD_SQL_PASSWORD=${{ secrets.CLOUD_SQL_PASSWORD}}" >> $GITHUB_ENV
+          echo "CLOUD_SQL_DATABASE_NAME=${{ secrets.CLOUD_SQL_DATABASE_NAME}}" >> $GITHUB_ENV
+
       - name: Setup python 
         uses: actions/setup-python@v1
 
