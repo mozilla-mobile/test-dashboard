@@ -14,16 +14,13 @@ jobs:
       - name: Check out source repository
         uses: actions/checkout@v2
 
-      - name: Set ENV vars 
-        run: |
-          echo "CLOUD_SQL_DATABASE_USERNAME=${{ secrets.CLOUD_SQL_DATABASE_USERNAME }}" >> $GITHUB_ENV
-          echo "CLOUD_SQL_DATABASE_PASSWORD=${{ secrets.CLOUD_SQL_DATABASE_PASSWORD}}" >> $GITHUB_ENV
-          echo "CLOUD_SQL_DATABASE_NAME=${{ secrets.CLOUD_SQL_DATABASE_NAME}}" >> $GITHUB_ENV
-
       - name: Setup python 
         uses: actions/setup-python@v1
 
       - name: Establish Cloud SQL Proxy 
+        env:
+          GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH}}
+          CLOUD_SQL_CONNECTION_NAME: ${{ secrets.CLOUD_SQL_CONNECTION_NAME}}
         uses: mattes/gce-cloudsql-proxy-action@v1
         with:
           creds: ${{ secrets.GCLOUD_AUTH }}
@@ -31,6 +28,9 @@ jobs:
           port: 3307
 
       - name: Insert data 
+        env:
+          CLOUD_SQL_DATABASE_USERNAME: ${{ secrets.CLOUD_SQL_DATABASE_USERNAME}}
+          CLOUD_SQL_DATABASE_PASSWORD: ${{ secrets.CLOUD_SQL_DATABASE_PASSWORD}}
         uses: BSFishy/pip-action@v1
         with:
           requirements: requirements.txt
