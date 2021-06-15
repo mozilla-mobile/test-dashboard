@@ -4,7 +4,7 @@ https://github.com/swaathi/sqlalchemy"""
 
 import os
 
-from sqlalchemy import create_engine, engine, MetaData
+from sqlalchemy import create_engine, engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
