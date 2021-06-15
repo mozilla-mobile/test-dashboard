@@ -16,8 +16,8 @@ jobs:
 
       - name: Set ENV vars 
         run: |
-          echo "CLOUD_SQL_USERNAME=${{ secrets.CLOUD_SQL_USERNAME }}" >> $GITHUB_ENV
-          echo "CLOUD_SQL_PASSWORD=${{ secrets.CLOUD_SQL_PASSWORD}}" >> $GITHUB_ENV
+          echo "CLOUD_SQL_DATABASE_USERNAME=${{ secrets.CLOUD_SQL_DATABASE_USERNAME }}" >> $GITHUB_ENV
+          echo "CLOUD_SQL_DATABASE_PASSWORD=${{ secrets.CLOUD_SQL_DATABASE_PASSWORD}}" >> $GITHUB_ENV
           echo "CLOUD_SQL_DATABASE_NAME=${{ secrets.CLOUD_SQL_DATABASE_NAME}}" >> $GITHUB_ENV
 
       - name: Setup python 
