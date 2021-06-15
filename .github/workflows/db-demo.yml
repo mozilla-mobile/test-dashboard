@@ -1,13 +1,12 @@
 name: Update testops DB - demo data 
 
 on:
-  push:
-    branches:
-      - '**'
+  schedule:
+    - cron:  "*/30 * * * *" 
 
 jobs:
   deploy:
-    name: Update testops database 
+    name: Update testops DB 
     runs-on: ubuntu-latest
 
     steps:
