@@ -24,7 +24,7 @@ class BaseAPI(object):
 
     def main(self):
         table_name = 'songs'
-        row_data = {'title': 'Ramones', 'artist': 'The Ramones', 'genre': 'punk'}
+        row_data = {'title': 'Ramones', 'artist': 'The Ramones', 'genre': 'punk'} # noqa
         self.insert_row(table_name, row_data)
 
 
