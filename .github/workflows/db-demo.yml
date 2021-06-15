@@ -28,6 +28,7 @@ jobs:
         with:
           creds: ${{ secrets.GCLOUD_AUTH }}
           instance: ${{ secrets.CLOUD_SQL_CONNECTION_NAME }}
+          port: 3306
 
       - name: Insert data 
         uses: BSFishy/pip-action@v1
