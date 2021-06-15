@@ -14,7 +14,6 @@ jobs:
       - name: Insert data 
         uses: mattes/gce-cloudsql-proxy-action@v1
 	with:
-	  #creds: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
 	  creds: ${{ secrets.GCLOUD_AUTH }}
           instance: ${{ secrets.CLOUD_SQL_CONNECTION_NAME }}
         uses: actions/checkout@v2
