@@ -13,7 +13,7 @@ db_username = os.environ['CLOUD_SQL_DATABASE_USERNAME']
 db_password = os.environ['CLOUD_SQL_DATABASE_PASSWORD']
 db_name = os.environ['CLOUD_SQL_DATABASE_NAME']
 db_host = os.environ.get('CLOUD_SQL_DATABASE_HOST', 'localhost')
-db_port = os.environ.get('CLOUD_SQL_DATABASE_PORT', '3306')
+db_port = os.environ.get('CLOUD_SQL_DATABASE_PORT', '3307')
 db_config = {
     "pool_size": 5,
     "max_overflow": 2,
