@@ -29,8 +29,8 @@ jobs:
 
       - name: Insert data 
         env:
-          CLOUD_SQL_DATABASE_USERNAME: ${{ secrets.CLOUD_SQL_DATABASE_USERNAME}}
-          CLOUD_SQL_DATABASE_PASSWORD: ${{ secrets.CLOUD_SQL_DATABASE_PASSWORD}}
+          CLOUD_SQL_DATABASE_USERNAME: ${{ secrets.CLOUD_SQL_DATABASE_USERNAME }}
+          CLOUD_SQL_DATABASE_PASSWORD: ${{ secrets.CLOUD_SQL_DATABASE_PASSWORD }}
         uses: BSFishy/pip-action@v1
         with:
           requirements: requirements.txt
