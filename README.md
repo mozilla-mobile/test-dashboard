@@ -7,25 +7,6 @@ The Mozilla Mobile Test Dashboard is data aggregator that collects data from mul
 
 Note:
 The test-dashboard is currently in a DRAFT state.
-STAGING dashboard is intended for design/feedback only.
-
-
-Frontend
----------
-
-JSON API deployed using python Flask framework and Google App Engine.
-
-[https://moz-mobile-tools.wl.r.appspot.com](https://moz-mobile-tools.wl.r.appspot.com)
-
-
-Stage branches
-
-https://<branch-name>-<unique-id>-uw.a.run.app/
-
-Production branch
-
-[https://moz-mobile-tools.wl.r.appspot.com](https://moz-mobile-tools.wl.r.appspot.com)
-
 
 
 Backend

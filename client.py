@@ -22,6 +22,30 @@ class BaseAPI(object):
         self.session.execute(i)
         self.session.commit()
 
+    def update_testrail():
+        pass
+
+    def update_github():
+        table1 = 'github_fenix_intermittent_tests'
+        table2 = 'github_test'
+        table3 = 'github_test_by_day' 
+        pass
+
+    def update_taskcluster():
+        pass
+
+    def update_bitrise():
+        table = 'bitrise_build_states'
+
+
+        """
+        | coverage                        |
+        | songs                           |
+        | test_aaron                      |
+        | testrail_test_coverage 
+        """
+        pass
+
     def main(self):
         table_name = 'songs'
         row_data = {'title': 'Ramones', 'artist': 'The Ramones', 'genre': 'punk'} # noqa
