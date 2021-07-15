@@ -26,16 +26,16 @@ class BaseAPI(object):
         pass
 
     def update_github():
-        table1 = 'github_fenix_intermittent_tests'  # noqa
-        table2 = 'github_test'  #noqa
-        table3 = 'github_test_by_day'  #noqa
+        # table1 = 'github_fenix_intermittent_tests'
+        # table2 = 'github_test'
+        # table3 = 'github_test_by_day'
         pass
 
     def update_taskcluster():
         pass
 
     def update_bitrise():
-        table = 'bitrise_build_states'  #noqa
+        # table = 'bitrise_build_states'
 
         # | coverage                        |
         # | songs                           |
