@@ -24,25 +24,6 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/ `staging` /*!40100 DEFAULT CHARACTER SE
 USE `staging`;
 
 --
--- Table structure for table `test_coverage`
---
-
-DROP TABLE IF EXISTS `test_coverage`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `test_coverage` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `projects_id` int(11) NOT NULL, 
-  `test_suites_id` int(11) NOT NULL, 
-  `test_automation_flags_id` int(11) NOT NULL, 
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY(`projects_id`) REFERENCES projects(`id`))
-  FOREIGN KEY(`test_suites_id`) REFERENCES test_suites(`id`))
-  FOREIGN KEY(`test_automation_flags_id`) REFERENCES test_automation_flags(`id`))
-) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
---
 -- Table structure for table `projects`
 --
 
@@ -51,9 +32,14 @@ DROP TABLE IF EXISTS `projects`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `projects` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `project_name` varchar(75) DEFAULT NULL,
+  `testrail_id` int(11) NOT NULL,
+  `testrail_functional_test_suite_id` int(11) NOT NULL,
+  `project_name_abbrev` varchar(25) NOT NULL,
+  `project_name` varchar(75) NOT NULL,
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
 
 --
 -- Table structure for table `test_suites`
@@ -64,91 +50,86 @@ DROP TABLE IF EXISTS `test_suites`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `test_suites` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `test_suites_type` varchar(75) DEFAULT NULL,
+  `test_suite_abbrev` varchar(25) NOT NULL,
+  `test_suite` varchar(75) NOT NULL,
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `test_automation_flags`
+-- Table structure for table `test_sub_suites`
 --
 
-DROP TABLE IF EXISTS `test_automation_flags`;
+DROP TABLE IF EXISTS `test_sub_suites`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `test_automation_flags` (
+CREATE TABLE `test_sub_suites` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `flag` varchar(75) DEFAULT NULL,
+  `testrail_id` int(11) NOT NULL,
+  `test_sub_suite_abbrev` varchar(25) NOT NULL,
+  `test_sub_suite` varchar(75) NOT NULL,
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 
-
 --
--- Table structure for table `projects`
+-- Table structure for table `test_automation_status`
 --
 
-DROP TABLE IF EXISTS `projects`;
+DROP TABLE IF EXISTS `test_automation_status`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `projects` (
+CREATE TABLE `test_automation_status` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `project_name` varchar(75) DEFAULT NULL,
+  `testrail_id` int(11) NOT NULL,
+  `status` varchar(75) DEFAULT NULL,
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 
-
-
 --
--- Table structure for table `github_test`
+-- Table structure for table `test_automation_coverage`
 --
 
-DROP TABLE IF EXISTS `github_test`;
+DROP TABLE IF EXISTS `test_automation_coverage`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `github_test` (
+CREATE TABLE `test_automation_coverage` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `open` int(11) NOT NULL,
-  `closed` int(11) NOT NULL,
-  `label` varchar(50) DEFAULT NULL,
-  `project_name` varchar(50) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `testrail_id` int(11) NOT NULL,
+  `coverage` varchar(75) DEFAULT NULL,
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+
 --
--- Table structure for table `testrail_test_coverage`
+-- Table structure for table `report_test_coverage`
 --
 
-DROP TABLE IF EXISTS `testrail_test_coverage`;
+DROP TABLE IF EXISTS `report_test_coverage`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `testrail_test_coverage` (
+CREATE TABLE `report_test_coverage` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `projects_id` int(11) NOT NULL, 
-  `suite` varchar(100) DEFAULT NULL,
-  `automation_state` varchar(100) DEFAULT NULL,
-  `case_count` int(11) DEFAULT NULL,
+  `test_suites_id` int(11) NOT NULL, 
+  `test_sub_suites_id` int(11) NOT NULL, 
+  `percentage` int(11) NOT NULL, 
+  `test_automation_status_id` int(11) NOT NULL, 
+  `test_automation_coverage_id` int(11) NOT NULL, 
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  FOREIGN KEY(`projects_id`) REFERENCES projects(`id`))
-) ENGINE=InnoDB AUTO_INCREMENT=1671 DEFAULT CHARSET=utf8;
+  FOREIGN KEY(`projects_id`) REFERENCES projects(`id`),
+  FOREIGN KEY(`test_suites_id`) REFERENCES test_suites(`id`),
+  FOREIGN KEY(`test_sub_suites_id`) REFERENCES test_sub_suites(`id`),
+  FOREIGN KEY(`test_automation_status_id`) REFERENCES test_automation_status(`id`),
+  FOREIGN KEY(`test_automation_coverage_id`) REFERENCES test_automation_coverage(`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `demo`
---
-
-DROP TABLE IF EXISTS `demo`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `demo` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) DEFAULT NULL,
-  `artist` varchar(255) DEFAULT NULL,
-  `genre` varchar(255) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=88 DEFAULT CHARSET=utf8;
 
 
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -162,47 +143,58 @@ CREATE TABLE `demo` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-06-17 13:47:56
-
 --
--- Dumping data for table `projects`
+-- data for reference table `projects`
 --
 
 LOCK TABLES `projects` WRITE;
 /*!40000 ALTER TABLE `projects` DISABLE KEYS */;
-INSERT INTO `projects` VALUES ('fenix', 'focus-android', 'firefox-ios', 'focus-ios', 'android-components', 'reference-browser');
+INSERT INTO `projects` (`testrail_id`, `testrail_functional_test_suite_id`, `project_name_abbrev`, `project_name`) VALUES (59, 3192, 'fenix', 'Fenix Browser'), (48, 1028, 'focus-android', 'Focus for Android'), (14, 1157, 'firefox-ios', 'Firefox for iOS'), (27, 5291, 'focus-ios', 'Focus for iOS'), (58, 3179, 'reference-browser', 'Reference Browser');
 /*!40000 ALTER TABLE `projects` ENABLE KEYS */;
 UNLOCK TABLES;
 
 
 --
--- Dumping data for table `test_suites`
+-- data for reference table `test_suites`
 --
 
 LOCK TABLES `test_suites` WRITE;
 /*!40000 ALTER TABLE `test_suites` DISABLE KEYS */;
-INSERT INTO `test_suites` VALUES ('Full Functional', 'Smoke', 'Accessibility', 'L10N', 'Telemetry', 'Search', 'Top Sites');
+INSERT INTO `test_suites` (`test_suite_abbrev`, `test_suite`) VALUES ('functional', 'Full Functional Tests Suite');
 /*!40000 ALTER TABLE `test_suites` ENABLE KEYS */;
 UNLOCK TABLES;
 
 
 --
--- Dumping data for table `test_automation_flags`
+-- data for reference table `test_sub_suites`
 --
 
-LOCK TABLES `test_automation_flags` WRITE;
-/*!40000 ALTER TABLE `test_automation_flags` DISABLE KEYS */;
-INSERT INTO `test_automation_flags` VALUES ('untriaged', 'suitable', 'unsuitable', 'completed', 'disabled');
-/*!40000 ALTER TABLE `test_automation_flags` ENABLE KEYS */;
+LOCK TABLES `test_sub_suites` WRITE;
+/*!40000 ALTER TABLE `test_sub_suites` DISABLE KEYS */;
+INSERT INTO `test_sub_suites` (`testrail_id`, `test_sub_suite_abbrev`, `test_sub_suite`) VALUES (0, 'functional', 'Functional'), (1, 'smoke', 'Smoke & Sanity'), (2, 'accessibility', 'Accessibility'), (3, 'l10n', 'L10n'), (4, 'security', 'Security');
+/*!40000 ALTER TABLE `test_sub_suites` ENABLE KEYS */;
 UNLOCK TABLES;
 
 
 --
--- Dumping data for table `demo`
+-- data for reference table `test_automation_status`
 --
 
-LOCK TABLES `demo` WRITE;
-/*!40000 ALTER TABLE `demo` DISABLE KEYS */;
-INSERT INTO `demo` VALUES (1,'Say so','Doja Cat','HipHop','2021-04-12 15:09:49'),(2,'Rockstar','Dababy','rap','2021-04-12 15:09:49'),(3,'God\'s plan','Drake','Rap','2021-04-12 15:09:49'),(4,'My Record','Richard P.','rock','2021-04-12 15:09:49'),(5,'Let It Be','Beatles','Rock','2021-04-12 15:09:49'),(6,'Obla di','Beatles','Rock','2021-04-12 15:09:49'),(7,'Radio Clash','The Clash','Punk','2021-04-12 15:09:49');
-/*!40000 ALTER TABLE `demo` ENABLE KEYS */;
+LOCK TABLES `test_automation_status` WRITE;
+/*!40000 ALTER TABLE `test_automation_status` DISABLE KEYS */;
+INSERT INTO `test_automation_status`(`testrail_id`, `status`) VALUES (1, 'Untriaged'), (2, 'Suitable'), (3, 'Unsuitable'), (4, 'Completed'), (5, 'Disabled');
+/*!40000 ALTER TABLE `test_automation_status` ENABLE KEYS */;
 UNLOCK TABLES;
+
+
+--
+-- data for reference table `test_automation_coverage`
+--
+
+LOCK TABLES `test_automation_coverage` WRITE;
+/*!40000 ALTER TABLE `test_automation_coverage` DISABLE KEYS */;
+INSERT INTO `test_automation_coverage`(`testrail_id`, `coverage`) VALUES (1, 'None'), (2, 'Partial'), (3, 'Full');
+/*!40000 ALTER TABLE `test_automation_coverage` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
