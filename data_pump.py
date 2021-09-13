@@ -78,11 +78,32 @@ def parse_args(cmdln_args):
 
 
 def main():
+    # GET INPUT ARGS
     args = parse_args(sys.argv[1:])
     logging.basicConfig(format='%(message)s', level=logging.DEBUG)
 
+    # QUERY TESTRAIL IDs FROM DB
     db = Database()
-    db.print_table('projects')
+    x = db.select_test_suite_id(args.project)
+    print(x)
+
+    # QUERY TESTRAIL FOR JSON DATA
+
+    # CONVERT JSON DATA TO PYTHON LISTS
+
+    # CONVERT PYTHON LISTS TO SQLALCHEMY OBJECTS
+
+    # INSERT DATA TO DB VIA SQLALCHEMY OBJECT
+
+    # TBD
+
+    # TEST COVERAGE (AUTOMATION)
+    # 1. Percent 
+    # - untriaged > suitable
+    # - untriaged > unsuitable
+    # 2. Test counts
+
+    # FREQUENCE - once a month? 
     """
     _logger.debug("Fetching project data from TestRail...")
     t = TestRail()

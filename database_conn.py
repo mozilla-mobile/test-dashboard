@@ -35,6 +35,5 @@ pool = create_engine(
     **db_config
 )
 
-
 Session = sessionmaker(bind=pool)
 Base.metadata.bind = pool
