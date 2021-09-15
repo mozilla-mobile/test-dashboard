@@ -5,8 +5,8 @@ import os
 import sys
 from enum import Enum
 
-from database import Database
-from testrail_conn import APIClient
+#from database import Database
+from testrail import TestRailHelpers
 
 
 _logger = logging.getLogger('testrail')
@@ -56,38 +56,61 @@ def parse_args(cmdln_args):
     parser.add_argument(
         "--sub-suite",
         help="Indicate sub test suite",
-        required=True,
         choices=SUB_SUITES
-    )
-
-    parser.add_argument(
-        "--status",
-        help="Indicate test case automation status",
-        required=True,
-        choices=STATUS
-    )
-
-    parser.add_argument(
-        "--coverage",
-        help="Indicate test case automation coverage",
-        required=True,
-        choices=COVERAGE
     )
 
     return parser.parse_args(args=cmdln_args)
 
 
 def main():
+    import pprint
+    pp = pprint.PrettyPrinter(indent=4)
+
     # GET INPUT ARGS
     args = parse_args(sys.argv[1:])
     logging.basicConfig(format='%(message)s', level=logging.DEBUG)
 
     # QUERY TESTRAIL IDs FROM DB
-    db = Database()
-    x = db.select_test_suite_id(args.project)
-    print(x)
+    #db = Database()
+    h = TestRailHelpers()
+    #project_id, functional_test_suite_id = db.select_testrail_project_ids(args.project)
+    h.test_case_data_raw(args.project)
+
+
+    # Automatated Status = [Untriaged, Suitable, Unsuitable, Completed, Disabled]
+    # Automation Coverage = [None, Partial, Full]
+    # Sub Test Suites = [Functional, Smoke & Sanity, Accessibilty, L10n, Security]
+
+
+    # QUERY TYPES
+    # 1. counts
 
     # QUERY TESTRAIL FOR JSON DATA
+
+    """
+    cases  = t.test_cases(project_id, functional_test_suite_id)
+
+    # TODO: write helper functions
+    custom_automation_statuses = [1, 2, 3, 4, 5]
+    custom_automation_coverages = [1, 2, 3]
+    
+    count_custom_automation_status = [0] * 5 
+    count_custom_automation_coverage = [0] * 3 
+
+    pp.pprint(cases[0])
+    for case in cases:
+        for i in custom_automation_statuses:
+            if case['custom_automation_status'] == i:
+                count_custom_automation_status[i - 1] += 1
+        #if case['custom_automation_coverage'] == 3:
+        #    count_custom_automation_coverage += 1
+    print('COUNTS')
+    print('custom_automation_status: {0}'.format(count_custom_automation_status))
+    print('custom_automation_coverage: {0}'.format(count_custom_automation_coverage))
+    print('---')
+    """
+    #print(cases[0]['custom_automation_coverage'])
+
 
     # CONVERT JSON DATA TO PYTHON LISTS
 

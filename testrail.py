@@ -6,6 +6,7 @@ import sys
 from enum import Enum
 
 from testrail_conn import APIClient
+from database import Database
 
 
 _logger = logging.getLogger('testrail')
@@ -43,9 +44,9 @@ class Status(Enum):
 class TestRail:
              
     def __init__(self):
-        self.set_config()
+        self.config()
 
-    def set_config(self):
+    def config(self):
         try:
             TESTRAIL_HOST = os.environ['TESTRAIL_HOST']
             self.client = APIClient(TESTRAIL_HOST)
@@ -56,79 +57,50 @@ class TestRail:
             exit()
 
     # API: Projects
-    def get_projects(self):
+    def projects(self):
         return self.client.send_get('get_projects')
 
 
-    def get_project(self, project_id):
+    def project(self, project_id):
         return self.client.send_get('get_project/{0}'.format(project_id))
 
 
     # API: Cases
-    def get_cases(self, project_id, suite_id):
+    def test_cases(self, project_id, suite_id):
         return self.client.send_get(
             'get_cases/{0}&suite_id={1}'.format(project_id, suite_id))
 
 
-    def get_case(self, case_id):
+    def test_case(self, case_id):
         return self.client.send_get(
             'get_case/{0}'.format(case_id))
 
 
     # API: Case Fields
-    def get_case_fields(self):
+    def test_case_fields(self):
         return self.client.send_get(
             'get_case_fields')
 
 
     # API: Suites
-    def get_suites(self, project_id):
+    def test_suites(self, project_id):
         return self.client.send_get('get_suites/{0}'.format(project_id))
 
 
-    def get_suite(self, suite_id):
+    def test_suite(self, suite_id):
         return self.client.send_get('get_suite/{0}'.format(suite_id))
 
 
     # API: Runs
-    def get_runs(self, project_id):
+    def test_runs(self, project_id):
         return self.client.send_get('get_runs/{0}'.format(project_id))
 
 
-    def get_run(self, run_id):
+    def test_run(self, run_id):
         return self.client.send_get('get_run/{0}'.format(run_id))
 
     
-    def write_json(self, blob, file):
-        with open(file, "w") as f:
-            json.dump(blob, f, sort_keys=True, indent=4)
-
-
-class Cases:
-    json_data = []
-
-    def __init__(self):
-        pass
-
-
-class Sections:
-    def __init__(self):
-        pass
-
-    def write_section_name(self, sections, suite, stripped):
-        data = []
-
-        for s in sections:
-            delete = [key for key in s if key != 'suite_id' and key != 'name']
-            for key in delete:
-                del s[key]
-            data.append(s)
-
-        with open('sections-from-suite-{}.json'.format(str(suite)), "w") as f:
-            json.dump(data, f, sort_keys=True, indent=4)
-
-
-class Helpers():
+class TestRailHelpers():
     mobile_projects = [
         'Firefox for Android',
         'Fenix Browser',
@@ -139,8 +111,9 @@ class Helpers():
     ]
 
 
-    def __init__(self, testrail):
-        self.testrail = testrail
+    def __init__(self):
+        self.testrail = TestRail() 
+        self.db = Database()
 
 
     def testrail_full_name(self, abbrev_name, full_names):
@@ -150,6 +123,14 @@ class Helpers():
                     return val
         err = 'ERROR: project: "{0}" not found'.format(abbrev_name)
         sys.exit(err)
+
+
+    def test_case_data_raw(self, project):
+        project_id, functional_test_suite_id = self.db.select_testrail_project_ids(project)  
+        cases  = self.testrail.test_cases(project_id, functional_test_suite_id)  
+        table_name = 'report_test_coverage'
+        self.db.insert_row(table_name, cases)
+        print(cases)
 
 
     def json_to_sql(self, data):
@@ -165,7 +146,7 @@ class Helpers():
 
     # note: could also store these in the DB as unlikely to change 
     def project_ids(self, projects=mobile_projects):
-        p = self.testrail.get_projects()
+        p = self.testrail.projects()
         results = [item for item in p if any(k in item['name'] for k in projects)]
 
         project_arr = []
@@ -198,9 +179,9 @@ def main():
 
     # test suite ids
     
-    #s = t.get_suites('Full Functional Tests Suite')
-    s = t.get_case_fields()
-    #s = t.get_suites(27)
+    #s = t.test_suites('Full Functional Tests Suite')
+    s = t.test_case_fields()
+    #s = t.test_suites(27)
     pp.pprint(s)
 
     """
@@ -223,14 +204,11 @@ def main():
 
 
     # get_project
-    p = t.get_project(project_id)
+    p = t.project(project_id)
     pp.pprint(p)
 
     _logger.debug("Fetching suite data from TestRail...")
-    s = t.get_suite(args.suite)
-
-    _logger.debug("Writing case automation status to JSON dump...")
-    c = Cases()
+    s = t.test_suite(args.suite)
 
    """
 

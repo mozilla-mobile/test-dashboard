@@ -7,6 +7,10 @@ class Projects(Base):
     __table__ = Table('projects', Base.metadata, autoload=True, autoload_with=Base.metadata.bind)  
 
 
+class ReportTestCoverage(Base):
+    __table__ = Table('report_test_coverage', Base.metadata, autoload=True, autoload_with=Base.metadata.bind)  
+
+
 class Database(object):
 
     def __init__(self):
@@ -21,6 +25,12 @@ class Database(object):
 
 
     def insert_row(self, table_name, row_data):
+        report = ReportTestCoverage(projects_id=1, test_automation_status_id=1, test_automation_coverage_id=1, test_count=77)
+        self.session.add(report)
+        self.session.commit()
+
+
+    def insert_row_OLD(self, table_name, row_data):
         _table = Table(table_name, Base.metadata, autoload=True)
         i = insert(_table)
         i = i.values(row_data)
@@ -28,9 +38,9 @@ class Database(object):
         self.session.commit()
 
  
-    def select_test_suite_id(self, project):
+    def select_testrail_project_ids(self, project):
         p = self.session.query(Projects).filter_by(project_name_abbrev=project).first()  
-        return p.testrail_functional_test_suite_id
+        return p.testrail_id, p.testrail_functional_test_suite_id
 
         """
         q = self.session.query(Projects).all()    
@@ -38,13 +48,6 @@ class Database(object):
             p = self.session.query(Projects).filter_by(project_name_abbrev='fenix').first()  
             print(p.testrail_functional_test_suite_id)
         """
-
-            
-
-    def select_test_suite_id2(self, project):
-        _table = Table('projects', Base.metadata, autoload=True)
-        q = self.session.query(_table.columns.testrail_functional_test_suite_id)
-        return q.filter(_table.columns['project_name_abbrev']=='fenix').first()[0]
 
 
     def select_project(self, project):
