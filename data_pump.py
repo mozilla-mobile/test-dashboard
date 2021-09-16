@@ -71,44 +71,15 @@ def main():
     logging.basicConfig(format='%(message)s', level=logging.DEBUG)
 
     # QUERY TESTRAIL IDs FROM DB
-    #db = Database()
     h = TestRailHelpers()
-    #project_id, functional_test_suite_id = db.select_testrail_project_ids(args.project)
     h.test_case_data_raw(args.project)
-
 
     # Automatated Status = [Untriaged, Suitable, Unsuitable, Completed, Disabled]
     # Automation Coverage = [None, Partial, Full]
     # Sub Test Suites = [Functional, Smoke & Sanity, Accessibilty, L10n, Security]
 
-
-    # QUERY TYPES
-    # 1. counts
-
     # QUERY TESTRAIL FOR JSON DATA
 
-    """
-    cases  = t.test_cases(project_id, functional_test_suite_id)
-
-    # TODO: write helper functions
-    custom_automation_statuses = [1, 2, 3, 4, 5]
-    custom_automation_coverages = [1, 2, 3]
-    
-    count_custom_automation_status = [0] * 5 
-    count_custom_automation_coverage = [0] * 3 
-
-    pp.pprint(cases[0])
-    for case in cases:
-        for i in custom_automation_statuses:
-            if case['custom_automation_status'] == i:
-                count_custom_automation_status[i - 1] += 1
-        #if case['custom_automation_coverage'] == 3:
-        #    count_custom_automation_coverage += 1
-    print('COUNTS')
-    print('custom_automation_status: {0}'.format(count_custom_automation_status))
-    print('custom_automation_coverage: {0}'.format(count_custom_automation_coverage))
-    print('---')
-    """
     #print(cases[0]['custom_automation_coverage'])
 
 
@@ -126,7 +97,7 @@ def main():
     # - untriaged > unsuitable
     # 2. Test counts
 
-    # FREQUENCE - once a month? 
+    # FREQUENCY - weekly
     """
     _logger.debug("Fetching project data from TestRail...")
     t = TestRail()

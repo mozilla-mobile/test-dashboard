@@ -126,11 +126,13 @@ class TestRailHelpers():
 
 
     def test_case_data_raw(self, project):
-        project_id, functional_test_suite_id = self.db.select_testrail_project_ids(project)  
+        import pprint
+
+        pp = pprint.PrettyPrinter(indent=4)
+        project_id, functional_test_suite_id = self.db.testrail_identity_ids(project)  
         cases  = self.testrail.test_cases(project_id, functional_test_suite_id)  
-        table_name = 'report_test_coverage'
-        self.db.insert_row(table_name, cases)
-        print(cases)
+        self.db.insert_report(cases)
+        #pp.pprint(cases[0])
 
 
     def json_to_sql(self, data):
