@@ -129,21 +129,11 @@ class TestRailHelpers():
         import pprint
 
         pp = pprint.PrettyPrinter(indent=4)
-        project_id, functional_test_suite_id = self.db.testrail_identity_ids(project)  
-        cases  = self.testrail.test_cases(project_id, functional_test_suite_id)  
-        self.db.insert_report(cases)
+        projects_id, testrail_project_id, functional_test_suite_id = self.db.testrail_identity_ids(project)  
+        cases  = self.testrail.test_cases(testrail_project_id, functional_test_suite_id)  
+        totals = self.db.report_test_coverage_totals(cases)
+        self.db.report_test_coverage_insert(projects_id, totals)
         #pp.pprint(cases[0])
-
-
-    def json_to_sql(self, data):
-        return "INSERT INTO testrail_test_coverage (project_name, suite, " \
-            "automation_state, case_count) VALUES " \
-            "('{}', '{}', '{}', '{}')".format(
-                data['project_name'],
-                data['suite'],
-                data['automation_state'],
-                data['case_count']
-            )
 
 
     # note: could also store these in the DB as unlikely to change 

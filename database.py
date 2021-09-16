@@ -40,7 +40,8 @@ class Database(object):
             print(row)
 
 
-    def insert_report(self, cases):
+    def report_test_coverage_totals(self, cases):
+        """given testrail data (cases), parse for test case counts"""
 
         # determine range for a data array for temp storing values to insert
         stat_ids = self.test_automation_status_option_ids()
@@ -48,23 +49,28 @@ class Database(object):
         cov_ids = self.test_automation_coverage_option_ids()
         cov_ids = len(cov_ids) + 1
 
-        # array to store values to insert in database
+        # create array to store values to insert in database
         totals = [ [0]*(cov_ids) for _ in range(stat_ids)] 
+        count = 0
         for case in cases:
+            t = case['title']
             s = case['custom_automation_status']
             c = case['custom_automation_coverage']
-            if s is None:
-                s = 0
-            if c is None:
-                c = 0
-            totals[s][c] += 1
 
-        #count = 0
+            if c is None:
+                print('{0}. {1}'.format(count, t))
+                c = 1
+                count +=1
+            totals[s][c] += 1
+        return totals
+
+
+    def report_test_coverage_insert(self, project_id, totals):
+        # insert data from totals[][] into report_test_coverage table
         for i in range(1, len(totals)):
             for j in range(1, len(totals[i])):
-                #print('TOTALS[{0}][{1}]: {2}'.format(i, j, totals[i][j]))
-                #count += totals[i][j] 
-                report = ReportTestCoverage(projects_id=1, test_automation_status_id=i, test_automation_coverage_id=j, test_count=totals[i][j])
+                # sqlalchemy insert statement
+                report = ReportTestCoverage(projects_id=project_id, test_automation_status_id=i, test_automation_coverage_id=j, test_count=totals[i][j])
                 self.session.add(report)
                 self.session.commit()
 
@@ -88,20 +94,17 @@ class Database(object):
 
 
     def testrail_identity_ids(self, project):
-        # Return the 2 ids needed to be able to query the TestRail API for
+        # Return the ids needed to be able to query the TestRail API for
         # a specific test suite from a specific project 
-        # Note: 
-        #  these are stored in the database for convenience and will 
-        #  never change
-        p = self.session.query(Projects).filter_by(project_name_abbrev=project).first()  
-        return p.testrail_id, p.testrail_functional_test_suite_id
+        # projects.id = projects table id
+        # testrail_id = id of project in testrail
+        # testrail_functional_test_suite_id = Full Functional Tests Suite id
 
-        """
-        q = self.session.query(Projects).all()    
-        for project in q:
-            p = self.session.query(Projects).filter_by(project_name_abbrev='fenix').first()  
-            print(p.testrail_functional_test_suite_id)
-        """
+        # Note: 
+        #  As these will never change, we store them in db for convenience
+        p = self.session.query(Projects).filter_by(project_name_abbrev=project).first()  
+        return p.id, p.testrail_id, p.testrail_functional_test_suite_id
+
 
     def select_project(self, project):
         #p = Projects()
@@ -113,14 +116,3 @@ class Database(object):
             print(row)
             
         return result
-
-
-    def main(self):
-        table_name = 'songs'
-        row_data = {'title': 'Ramones', 'artist': 'The Ramones', 'genre': 'punk'} # noqa
-        self.insert_row(table_name, row_data)
-
-
-if __name__ == '__main__':
-    c = Database()
-    c.main()
