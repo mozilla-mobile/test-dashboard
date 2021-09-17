@@ -1,3 +1,4 @@
+# flake8: noqa
 """TestRail API binding for Python 3.x.
 
 (API v2, available since TestRail 3.0)
@@ -80,7 +81,7 @@ class APIClient:
         if response.status_code > 201:
             try:
                 error = response.json()
-            except:     # response.content not formatted as JSON
+            except requests.exceptions.HTTPError:     # response.content not formatted as JSON
                 error = str(response.content)
             raise APIError('TestRail API returned HTTP %s (%s)' % (response.status_code, error))
         else:
@@ -88,12 +89,12 @@ class APIClient:
                 try:
                     open(data, 'wb').write(response.content)
                     return (data)
-                except:
+                except FileNotFoundError:
                     return ("Error saving attachment.")
             else:
                 try:
                     return response.json()
-                except: # Nothing to return
+                except requests.exceptions.HTTPError: 
                     return {}
 
 

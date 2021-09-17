@@ -1,8 +1,5 @@
 import argparse
-import json
-import os
 import sys
-from enum import Enum
 
 from testrail import TestRailHelpers
 
@@ -19,7 +16,7 @@ DATA_SOURCES = [
     'testrail',
     'github',
 ]
-        
+
 
 def parse_args(cmdln_args):
     parser = argparse.ArgumentParser(
@@ -49,8 +46,11 @@ def main():
         h = TestRailHelpers()
         h.testrail_coverage_update(args.project)
     if args.data_type == 'github':
-        #h = GithubHelpers()
-        #h.github_coverage_update(args.project)
+        """
+        h = GithubHelpers()
+        h.github_coverage_update(args.project)
+        h = GithubHelpers()
+        """
         pass
 
 
