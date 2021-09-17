@@ -2,7 +2,7 @@ name: Update testops DB - demo data
 
 on:
   schedule:
-    - cron:  "0 0 1 * *" 
+    - cron:  "0 21 * * *" 
 
 jobs:
   deploy:
@@ -34,5 +34,5 @@ jobs:
           CLOUD_SQL_DATABASE_USERNAME: ${{ secrets.CLOUD_SQL_DATABASE_USERNAME }}
           CLOUD_SQL_DATABASE_PASSWORD: ${{ secrets.CLOUD_SQL_DATABASE_PASSWORD }}
           CLOUD_SQL_DATABASE_NAME: ${{ secrets.CLOUD_SQL_DATABASE_NAME }}
-        run: python ./client.py 
+        run: python ./data_pump.py --data-source testrail --project fenix 
 
