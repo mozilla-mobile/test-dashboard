@@ -58,6 +58,11 @@ class Database(object):
             c = case['custom_automation_coverage']
 
             if c is None:
+                # ============================================
+                # DIAGNOSTIC
+                # ============================================
+                # Testrail data needs housekeeping
+                # print will list out cases missing Coverage
                 print('{0}. {1}'.format(count, t))
                 c = 1
                 count +=1
@@ -104,15 +109,3 @@ class Database(object):
         #  As these will never change, we store them in db for convenience
         p = self.session.query(Projects).filter_by(project_name_abbrev=project).first()  
         return p.id, p.testrail_id, p.testrail_functional_test_suite_id
-
-
-    def select_project(self, project):
-        #p = Projects()
-        #p.column = 'project_name_abbrev'
-        result = self.session.query(_table).filter(p.column==project).all()
-        #result = self.session.query(_table).count()
-
-        for row in result:
-            print(row)
-            
-        return result

@@ -125,7 +125,7 @@ class TestRailHelpers():
         sys.exit(err)
 
 
-    def test_case_data_raw(self, project):
+    def testrail_coverage_update(self, project):
         import pprint
 
         pp = pprint.PrettyPrinter(indent=4)
@@ -167,44 +167,8 @@ def main():
 
     _logger.debug("Fetching project data from TestRail...")
     t = TestRail()
-    h = Helpers(t)
+    h = TestRailHelpers(t)
 
-    # test suite ids
-    
-    #s = t.test_suites('Full Functional Tests Suite')
-    s = t.test_case_fields()
-    #s = t.test_suites(27)
-    pp.pprint(s)
-
-    """
-    p = h.testrail_full_name('fenix', PROJECTS)
-    print(p)
-    p = h.testrail_full_name('fenix', PROJECTS)
-    print(p)
-
-    # project ids
-    pids = h.project_ids(('Fenix Browser', 'Reference Browser', 'Firefox for iOS', 'Focus for Android', 'Focus for iOS'))
-    pp.pprint(pids)
-
-    # project id
-    project_id = h.project_id(p)
-    pp.pprint(project_id)
-
-    # project id
-    project_id = h.project_id('Focus for Android')
-    pp.pprint(project_id)
-
-
-    # get_project
-    p = t.project(project_id)
-    pp.pprint(p)
-
-    _logger.debug("Fetching suite data from TestRail...")
-    s = t.test_suite(args.suite)
-
-   """
 
 if __name__ == '__main__':
     main()
-
-         
