@@ -93,8 +93,9 @@ class TestRailHelpers():
         projects_id, testrail_project_id, functional_test_suite_id = self.db.testrail_identity_ids(project) # noqa 
         runs = self.testrail.test_runs(testrail_project_id)
         totals = self.db.report_test_run_totals(runs)
-        self.db.report_test_runs_insert(projects_id, totals)
+        #self.db.report_test_runs_insert(projects_id, totals)
 
+    """
     def project_ids(self, projects=mobile_projects):
         # Note: testrail project ids are also stored in database for
         # convenience as they can't be changed
@@ -115,21 +116,5 @@ class TestRailHelpers():
         # give a project name (as stored in Testrail) and
         # return testrail project_id
         return self.project_ids([project_name])[0][1]
-
-
-def main():
-    """
-    logging.basicConfig(format='%(message)s', level=logging.DEBUG)
-    _logger.debug("Fetching project data from TestRail...")
-    t = TestRail()
-    h = TestRailHelpers(t)
-
-    import pprint
-    pp = pprint.PrettyPrinter(indent=4)
     """
 
-    # TEST FUNCTIONS HERE
-
-
-if __name__ == '__main__':
-    main()
