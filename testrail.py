@@ -89,6 +89,12 @@ class TestRailHelpers():
         totals = self.db.report_test_coverage_totals(cases)
         self.db.report_test_coverage_insert(projects_id, totals)
 
+    def testrail_run_update(self, project):
+        projects_id, testrail_project_id, functional_test_suite_id = self.db.testrail_identity_ids(project) # noqa 
+        runs = self.testrail.test_runs(testrail_project_id)
+        totals = self.db.report_test_run_totals(runs)
+        self.db.report_test_runs_insert(projects_id, totals)
+
     def project_ids(self, projects=mobile_projects):
         # Note: testrail project ids are also stored in database for
         # convenience as they can't be changed

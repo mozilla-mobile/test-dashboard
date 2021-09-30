@@ -2,6 +2,9 @@ from lib.database_conn import Session, Base
 
 from sqlalchemy import Table
 
+# TODO remove this
+import pprint
+pp = pprint.PrettyPrinter(width=41, compact=True)
 
 class Projects(Base):
     __table__ = Table('projects', Base.metadata, autoload=True)
@@ -67,6 +70,21 @@ class Database(object):
             totals[s][c] += 1
         return totals
 
+    def report_test_run_totals(self, runs):
+        """given testrail data (runs), parse for test run counts"""
+
+        # determine range for a data array for temp storing values to insert
+
+        # create array to store values to insert in database
+        #totals = [[0]*(cov_ids) for _ in range(stat_ids)]
+        totals = []
+        count = 0
+
+        print('===========================')
+        pp.pprint(runs)
+        print('===========================')
+        return '' 
+
     def report_test_coverage_insert(self, project_id, totals):
         # insert data from totals[][] into report_test_coverage table
         for i in range(1, len(totals)):
@@ -78,6 +96,24 @@ class Database(object):
                                             test_count=totals[i][j])
                 self.session.add(report)
                 self.session.commit()
+
+    def report_test_runs_insert(self, project_id, totals):
+        """
+        # insert data from totals[][] into report_test_coverage table
+        for i in range(1, len(totals)):
+            for j in range(1, len(totals[i])):
+                # sqlalchemy insert statement
+                report = ReportTestCoverage(projects_id=project_id,
+                                            test_automation_status_id=i,
+                                            test_automation_coverage_id=j,
+                                            test_count=totals[i][j])
+                self.session.add(report)
+                self.session.commit()
+        """
+        print('===========================')
+        pp.pprint('RUNS INSERT HERE')
+        print('===========================')
+        pass
 
     def test_automation_status_option_ids(self):
         # ids corresponding to options in the automation status dropdown
