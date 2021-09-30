@@ -1,9 +1,6 @@
 test-dashboard
 ==================
-The Mozilla Mobile Test Dashboard is data aggregator that collects data from multiple input sources, caches and exposes it via a JSON API for consumption via re-dash.
-
-* [STAGING Dashboard](https://sql.telemetry.mozilla.org/dashboard/tests-found-by-automation)
-* PRODUCTION Dashboard
+The Mozilla Mobile Test Dashboard is data aggregator that collects data from multiple input sources and aggregates it in a Cloud SQL database for display in Looker graphs. 
 
 Note:
 The test-dashboard is currently in a DRAFT state.
@@ -12,18 +9,18 @@ The test-dashboard is currently in a DRAFT state.
 Backend
 ---------
 
-**Aggregator**
-
-A collection of python modules that collect data from the following input sources:
+**Data Sources**
 
 * Testrail
-* Github
-* Taskcluster
-* Bitrise.io
+* Github - TBD
+* Taskcluster - TBD
+* Bitrise.io - TBD
 
 **Database**
 
-Data is aggregated / cached in a Cloud SQL database.
+Data is aggregated / cached in a Cloud SQL database.  Data queries are constructed using BigQuery views.
+
+
 
 
 

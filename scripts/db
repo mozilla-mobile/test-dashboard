@@ -1,0 +1,51 @@
+#!/bin/bash
+
+clear
+echo "=============================="
+echo "Cloud SQL DB"
+echo "=============================="
+echo
+
+help()
+{
+   echo
+   echo "Syntax: db [--help|--sql|--import|--dump|*]"
+   echo
+   echo "options:"
+   echo "--sql      Run SQL command, then quit. Ex: db -s 'SHOW DATABASES'"
+   echo "--import   Import SQL data file        Ex. db -i <input.sql>"
+   echo "--dump     Dump SQL data file          Ex. db -d <database-name>"
+   echo "*          Open mysql CLI client       Ex. db" 
+   echo
+}
+
+CMD="mysql -u${CLOUD_SQL_DATABASE_USERNAME} -p${CLOUD_SQL_DATABASE_PASSWORD}  --host ${CLOUD_SQL_DATABASE_HOST}"
+
+
+parse_args() {
+    case "$1" in
+        -h|--help)
+            help
+            echo
+            echo
+            exit 0
+            ;;
+        -s|--sql)
+            CMD="${CMD} -e '$2'"
+            ;;
+        -i|--import)
+            CMD="${CMD} < $2"
+            ;;
+        -d|--dump)
+            CMD="mysqldump --column-statistics=0  -u ${CLOUD_SQL_DATABASE_USERNAME} -p${CLOUD_SQL_DATABASE_PASSWORD} --host ${CLOUD_SQL_DATABASE_HOST} --databases ${2} --set-gtid-purged=OFF > dump.sql;"
+            ;;
+        *)
+            ;;
+    esac
+}
+
+parse_args "$1" "$2" "$3"
+
+eval ${CMD} 
+echo
+echo
