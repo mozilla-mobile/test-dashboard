@@ -6,6 +6,10 @@ from lib.testrail_conn import APIClient
 from database import Database
 
 
+# TODO remove this
+import sys
+
+
 _logger = logging.getLogger('testrail')
 
 
@@ -59,8 +63,11 @@ class TestRail:
     def test_run(self, run_id):
         return self.client.send_get('get_run/{0}'.format(run_id))
 
+    def test_results_for_run(self, run_id):
+        return self.client.send_get('get_results_for_run/{0}'.format(run_id))
 
 class TestRailHelpers():
+    """
     mobile_projects = [
         'Firefox for Android',
         'Fenix Browser',
@@ -69,6 +76,7 @@ class TestRailHelpers():
         'Focus for iOS',
         'Reference Browser'
     ]
+    """
 
     def __init__(self):
         self.testrail = TestRail()
@@ -90,10 +98,29 @@ class TestRailHelpers():
         self.db.report_test_coverage_insert(projects_id, totals)
 
     def testrail_run_update(self, project):
+        totals = []
         projects_id, testrail_project_id, functional_test_suite_id = self.db.testrail_identity_ids(project) # noqa 
         runs = self.testrail.test_runs(testrail_project_id)
-        totals = self.db.report_test_run_totals(runs)
-        #self.db.report_test_runs_insert(projects_id, totals)
+        for run in runs:
+            total = self.db.report_test_run_total(run)
+            print('=====================================')
+            print(total)
+            print('=====================================')
+            run_id = total[0]['run_id']
+            # [{'run_id': 44113}, {'project_id': 59}, {'suite_id': 3192}, {'name': 'Smoke and sanity automated tests - Beta 90.0.0-beta.2'}, {'created_on': 1623151551}, {'completed_on': 1623158050}, {'failed_count': 0}, {'passed_count': 35}, {'retest_count': 0}, {'blocked_count': 0}, {'untested_count': 0}, {'untested_count': 0}]
+            results = self.testrail.test_results_for_run(run_id)
+            for result in results:
+                if result['status_id'] in [6]:
+                    #print('RESULT: {0}'.format(result))
+                    print('RESULT_ID: {0}'.format(result['id']))
+                    print('STATUS_ID: {0}'.format(result['status_id']))
+                    print('TEST_ID: {0}'.format(result['test_id']))
+                    print('------------------------------')
+                    #for test in tests:
+            # need to add but total a
+            totals.append(results)
+        sys.exit()
+        self.db.report_test_runs_insert(projects_id, totals)
 
     """
     def project_ids(self, projects=mobile_projects):

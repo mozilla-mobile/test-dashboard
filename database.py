@@ -70,29 +70,29 @@ class Database(object):
             totals[s][c] += 1
         return totals
 
-    def report_test_run_totals(self, runs):
-        """given testrail data (runs), parse for test run counts"""
-
-        # determine range for a data array for temp storing values to insert
-        run_count = len(runs) + 1
+    def report_test_run_total(self, run):
+        """pack testrail data for 1 run in a data array """
 
         # create array to store values to insert in database
-        totals = [[0]*(9) for _ in range(0, run_count)]
-        count = 0
-        for run in runs:
-            # epoch date
-            #url = 'http://testrail.stage.mozaws.net/index.php?/runs/view/{0}'.format(project_id)
-            totals[count][0] = run['project_id'] 
-            totals[count][1] = run['suite_id'] 
-            totals[count][2] = run['name'] 
-            totals[count][3] = run['created_on']
-            totals[count][4] = run['completed_on']
-            totals[count][5] = run['failed_count']
-            totals[count][6] = run['passed_count']
-            totals[count][7] = run['retest_count']
-            totals[count][8] = run['untested_count']
-            count += 1
-        return totals
+        tmp = []
+        # identifiers
+        print('RUN_ID: {0}'.format(run['id']))
+        tmp.append({'run_id': run['id']})
+        tmp.append({'project_id': run['project_id']})
+        tmp.append({'suite_id': run['suite_id']})
+        tmp.append({'name': run['name']})
+        # epoch dates
+        tmp.append({'created_on': run['created_on']})
+        tmp.append({'completed_on': run['completed_on']})
+        # test data
+        tmp.append({'failed_count': run['failed_count']})
+        tmp.append({'passed_count': run['passed_count']})
+        tmp.append({'retest_count': run['retest_count']})
+        tmp.append({'blocked_count': run['blocked_count']})
+        tmp.append({'untested_count': run['untested_count']})
+        # missing abbrev value for "Not Available" 
+        tmp.append({'untested_count': run['untested_count']})
+        return tmp
 
     def report_test_coverage_insert(self, project_id, totals):
         # insert data from totals[][] into report_test_coverage table
@@ -119,20 +119,8 @@ class Database(object):
                 self.session.add(report)
                 self.session.commit()
         """
-
-        """
-        'id': 29469,
-        'project_id': 59,
-        'suite_id': 3192,
-        'name': 'Sanity Check - 05/11 - ' 'Google Pixel 4 XL (10)',
-        'created_on': 1589184835,
-        'completed_on': 1590072538,
-        'failed_count': 1,
-        'passed_count': 36,
-        'retest_count': 22,
-        'untested_count': 0,
-        'url': 'http://testrail.stage.mozaws.net/index.php?/runs/view/29469'
-        """
+        for total in totals:
+            print(total)
         pass
 
     def test_automation_status_option_ids(self):
