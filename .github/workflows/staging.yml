@@ -2,7 +2,7 @@ name: Update testops DB - demo data
 
 on:
   schedule:
-    - cron:  "0 21 * * *" 
+    - cron:  "*/30 * * * *" 
 
 jobs:
   deploy:
