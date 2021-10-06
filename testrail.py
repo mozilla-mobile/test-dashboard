@@ -6,10 +6,6 @@ from lib.testrail_conn import APIClient
 from database import Database
 
 
-# TODO remove this
-import sys
-
-
 _logger = logging.getLogger('testrail')
 
 
@@ -82,19 +78,13 @@ class TestRailHelpers():
         self.testrail = TestRail()
         self.db = Database()
 
-    def testrail_full_name(self, abbrev_name, full_names):
-        for item in full_names:
-            for key, val in item.items():
-                if key == abbrev_name:
-                    return val
-        err = 'ERROR: project: "{0}" not found'.format(abbrev_name)
-        sys.exit(err)
-
     def testrail_coverage_update(self, project):
         projects_id, testrail_project_id, functional_test_suite_id = self.db.testrail_identity_ids(project) # noqa 
+        print('PROJECTS_ID: {0}'.format(projects_id)
         cases = self.testrail.test_cases(testrail_project_id,
                                          functional_test_suite_id)
         totals = self.db.report_test_coverage_totals(cases)
+        print(totals)
         self.db.report_test_coverage_insert(projects_id, totals)
 
     def testrail_run_update(self, project):
