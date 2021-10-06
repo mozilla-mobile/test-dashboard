@@ -86,6 +86,9 @@ class Database(object):
                                             test_automation_coverage_id=j,
                                             test_count=totals[i][j])
                 self.session.add(report)
+                print('=================')
+                print('prepare to commit')
+                print('=================')
                 self.session.commit()
 
     def test_automation_status_option_ids(self):
