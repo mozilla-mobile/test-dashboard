@@ -40,7 +40,9 @@ def parse_args(cmdln_args):
 
 
 def main():
-    #args = parse_args(sys.argv[1:])
+    print(sys.argv)
+    print(sys.argv[1:])
+    args = parse_args(sys.argv[1:])
     args = parse_args()
     print('begin data_pump')
     print('DATA_TYPE: {0}'.format(args.data_type))
