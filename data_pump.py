@@ -47,6 +47,7 @@ def main():
         print('exists.....')
         print(args.data_type)
     if args.data_type in 'testrail':
+        print('found')
         h = TestRailHelpers()
         print('preparing testrail helper....')
         h.dummy()
