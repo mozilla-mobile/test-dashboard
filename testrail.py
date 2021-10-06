@@ -111,6 +111,12 @@ class TestRailHelpers():
         # return testrail project_id
         return self.project_ids([project_name])[0][1]
 
+    def dummy(self):
+        print('PRINT THIS')
+        print('PRINT THIS')
+        print('PRINT THIS')
+        print('PRINT THIS')
+
 
 def main():
     """
