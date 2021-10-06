@@ -40,15 +40,16 @@ def parse_args(cmdln_args):
 
 
 def main():
-    args = parse_args(sys.argv[1:])
+    #args = parse_args(sys.argv[1:])
+    args = parse_args()
     print('begin data_pump')
     print('DATA_TYPE: {0}'.format(args.data_type))
-    if args["data_type"] == 'testrail':
+    if args.data_type == 'testrail':
         h = TestRailHelpers()
         print('preparing testrail helper....')
         h.dummy()
         h.testrail_coverage_update(args.project)
-    if args["data_type"] == 'github':
+    if args.data_type == 'github':
         """
         h = GithubHelpers()
         h.github_coverage_update(args.project)
