@@ -43,6 +43,9 @@ def main():
     args = parse_args(sys.argv[1:])
     print('begin data_pump')
     print('DATA_TYPE: {0}'.format(args.data_type))
+    if args.data_type:
+        print('exists.....')
+        print(args.data_type)
     if args.data_type in 'testrail':
         h = TestRailHelpers()
         print('preparing testrail helper....')
