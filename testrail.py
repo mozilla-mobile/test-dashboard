@@ -87,6 +87,7 @@ class TestRailHelpers():
         cases = self.testrail.test_cases(testrail_project_id,
                                          functional_test_suite_id)
         totals = self.db.report_test_coverage_totals(cases)
+        print(totals)
         self.db.report_test_coverage_insert(projects_id, totals)
 
     def project_ids(self, projects=mobile_projects):

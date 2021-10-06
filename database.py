@@ -76,6 +76,7 @@ class Database(object):
         return totals
 
     def report_test_coverage_insert(self, project_id, totals):
+        print('test coverage insert')
         # insert data from totals[][] into report_test_coverage table
         for i in range(1, len(totals)):
             for j in range(1, len(totals[i])):
