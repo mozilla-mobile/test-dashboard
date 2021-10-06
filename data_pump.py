@@ -45,6 +45,7 @@ def main():
     if args.data_type == 'testrail':
         h = TestRailHelpers()
         h.testrail_coverage_update(args.project)
+        print('begin data pump')
     if args.data_type == 'github':
         """
         h = GithubHelpers()
