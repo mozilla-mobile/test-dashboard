@@ -31,9 +31,9 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Data INSERT
-        run: python ./data_pump.py --data-type testrail --project fenix 
         env:
           CLOUD_SQL_DATABASE_USERNAME: ${{ secrets.CLOUD_SQL_DATABASE_USERNAME }}
           CLOUD_SQL_DATABASE_PASSWORD: ${{ secrets.CLOUD_SQL_DATABASE_PASSWORD }}
           CLOUD_SQL_DATABASE_NAME: ${{ secrets.CLOUD_SQL_DATABASE_NAME }}
+        run: python ./data_pump.py --data-type testrail --project fenix 
 

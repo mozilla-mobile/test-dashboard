@@ -41,7 +41,8 @@ def parse_args(cmdln_args):
 
 def main():
     args = parse_args(sys.argv[1:])
-
+    print('begin data_pump')
+    print(args)
     if args.data_type == 'testrail':
         h = TestRailHelpers()
         print('preparing testrail helper....')
