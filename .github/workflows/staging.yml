@@ -1,4 +1,4 @@
-name: Update testops DB - demo data 
+name: Update testops staging database
 
 on:
   push:
