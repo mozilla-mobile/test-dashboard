@@ -2,7 +2,8 @@ name: Update testops DB - demo data
 
 on:
   push:
-    - branches:  "*" 
+    branches: 
+      - check-db 
 
 jobs:
   deploy:
