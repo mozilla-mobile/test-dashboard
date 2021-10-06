@@ -1,6 +1,11 @@
+import logging
+
 from lib.database_conn import Session, Base
 
 from sqlalchemy import Table
+
+
+_logger = logging.getLogger('database')
 
 
 class Projects(Base):
@@ -61,7 +66,10 @@ class Database(object):
                 # ============================================
                 # Testrail data needs housekeeping
                 # print will list out cases missing Coverage
-                print('{0}. {1}'.format(count, t))
+                diagnostic = '{0}. {1}'.format(count, t)
+                _logger.debug(diagnostic)
+                print(diagnostic)
+
                 c = 1
                 count += 1
             totals[s][c] += 1
