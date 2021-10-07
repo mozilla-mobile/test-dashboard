@@ -21,6 +21,7 @@ class TestRail:
             self.client = APIClient(TESTRAIL_HOST)
             self.client.user = os.environ['TESTRAIL_USERNAME']
             self.client.password = os.environ['TESTRAIL_PASSWORD']
+            print('TESTRAIL config')
         except KeyError:
             _logger.debug("ERROR: Missing testrail env var")
             exit()
@@ -72,7 +73,10 @@ class TestRailHelpers():
     ]
 
     def __init__(self):
+        print('TESTRAILHELPERS init')
+        print('call TestRail')
         self.testrail = TestRail()
+        print('call DB')
         self.db = Database()
 
     def testrail_full_name(self, abbrev_name, full_names):
