@@ -35,6 +35,7 @@ class ReportTestCoverage(Base):
 class Database(object):
 
     def __init__(self):
+        print('DATABASE init')
         self.session = Session()
 
     def print_table(self, table_name):
@@ -115,6 +116,7 @@ class Database(object):
         # testrail_functional_test_suite_id = Full Functional Tests Suite id
         # Note:
         #  As these will never change, we store them in db for convenience
+        print('testrail_identity_ids')
         q = self.session.query(Projects)
         p = q.filter_by(project_name_abbrev=project).first()
         return p.id, p.testrail_id, p.testrail_functional_test_suite_id
