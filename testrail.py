@@ -12,6 +12,7 @@ _logger = logging.getLogger('testrail')
 class TestRail:
 
     def __init__(self):
+        print('TESTRAIL init')
         self.config()
 
     def config(self):
