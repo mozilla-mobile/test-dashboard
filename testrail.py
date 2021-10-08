@@ -17,6 +17,13 @@ class TestRail:
 
     def config(self):
         try:
+            XXX = os.environ['XXX']
+            print('XXXX')
+        except:
+            exit()
+
+
+        try:
             TESTRAIL_HOST = os.environ['TESTRAIL_HOST']
             self.client = APIClient(TESTRAIL_HOST)
             self.client.user = os.environ['TESTRAIL_USERNAME']
