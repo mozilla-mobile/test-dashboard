@@ -14,12 +14,12 @@ class TestRail:
         try:
             TESTRAIL_HOST = os.environ['TESTRAIL_HOST']
             self.client = APIClient(TESTRAIL_HOST)
-            self.client.user = os.environ['TESTRAIL_USERNAME']
+            self.client.user = os.environ['XTESTRAIL_USERNAME']
             self.client.password = os.environ['TESTRAIL_PASSWORD']
             print('TESTRAIL config')
         except KeyError:
-            print('variable not found...')
-            sys.exit()
+            print('ERROR: variable not found...')
+            sys.exit(1)
 
     # API: Projects
     def projects(self):
