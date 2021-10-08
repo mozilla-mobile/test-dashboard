@@ -13,9 +13,9 @@ class TestRail:
 
     def __init__(self):
         print('TESTRAIL init')
-        self.config()
+        #self.config()
 
-    def config(self):
+        #def config(self):
         try:
             XXX = os.environ['XXX']
             print('XXXX')
