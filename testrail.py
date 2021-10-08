@@ -16,12 +16,6 @@ class TestRail:
         #self.config()
 
         #def config(self):
-        try:
-            XXX = os.environ['XXX']
-            print('XXXX')
-        except:
-            print('hit and exception....')
-            exit()
 
 
         try:
@@ -32,6 +26,7 @@ class TestRail:
             print('TESTRAIL config')
         except KeyError:
             _logger.debug("ERROR: Missing testrail env var")
+            print('variable not found...')
             exit()
 
     # API: Projects
