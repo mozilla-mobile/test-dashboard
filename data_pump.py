@@ -13,9 +13,9 @@ PROJECTS_ABBREV = [
 ]
 
 REPORT_TYPES = [
-    'testrail-test-cases',
-    'testrail-test-runs',
-    'github',
+    'test-cases',
+    'test-runs',
+    'issue-regression',
 ]
 
 
@@ -26,7 +26,7 @@ def parse_args(cmdln_args):
 
     parser.add_argument(
         "--report-type",
-        help="Indicate data source",
+        help="Indicate report type",
         required=True,
         choices=REPORT_TYPES
     )
@@ -43,13 +43,13 @@ def parse_args(cmdln_args):
 def main():
     args = parse_args(sys.argv[1:])
 
-    if args.report_type == 'testrail-test-cases':
+    if args.report_type == 'test-cases':
         h = TestRailHelpers()
         h.testrail_coverage_update(args.project)
-    if args.report_type == 'testrail-test-runs':
+    if args.report_type == 'test-runs':
         h = TestRailHelpers()
         h.testrail_run_update(args.project)
-    if args.report_type == 'github-issue-regression':
+    if args.report_type == 'issue-regression':
         """
         h = GithubHelpers()
         h.github_issue_regression(args.project)
