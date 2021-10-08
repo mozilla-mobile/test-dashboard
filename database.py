@@ -2,9 +2,6 @@ from lib.database_conn import Session, Base
 
 from sqlalchemy import Table
 
-# TODO remove this
-import pprint
-pp = pprint.PrettyPrinter(width=41, compact=True)
 
 class Projects(Base):
     __table__ = Table('projects', Base.metadata, autoload=True)

@@ -6,23 +6,17 @@ from lib.testrail_conn import APIClient
 from database import Database
 
 
-_logger = logging.getLogger('testrail')
-
-
 class TestRail:
 
     def __init__(self):
-        self.config()
-
-    def config(self):
         try:
             TESTRAIL_HOST = os.environ['TESTRAIL_HOST']
             self.client = APIClient(TESTRAIL_HOST)
             self.client.user = os.environ['TESTRAIL_USERNAME']
             self.client.password = os.environ['TESTRAIL_PASSWORD']
         except KeyError:
-            _logger.debug("ERROR: Missing testrail env var")
-            exit()
+            print("ERROR: Missing testrail env var")
+            sys.exit(1)
 
     # API: Projects
     def projects(self):
@@ -80,11 +74,9 @@ class TestRailHelpers():
 
     def testrail_coverage_update(self, project):
         projects_id, testrail_project_id, functional_test_suite_id = self.db.testrail_identity_ids(project) # noqa 
-        print('PROJECTS_ID: {0}'.format(projects_id)
         cases = self.testrail.test_cases(testrail_project_id,
                                          functional_test_suite_id)
         totals = self.db.report_test_coverage_totals(cases)
-        print(totals)
         self.db.report_test_coverage_insert(projects_id, totals)
 
     def testrail_run_update(self, project):

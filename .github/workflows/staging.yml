@@ -34,5 +34,8 @@ jobs:
           CLOUD_SQL_DATABASE_USERNAME: ${{ secrets.CLOUD_SQL_DATABASE_USERNAME }}
           CLOUD_SQL_DATABASE_PASSWORD: ${{ secrets.CLOUD_SQL_DATABASE_PASSWORD }}
           CLOUD_SQL_DATABASE_NAME: ${{ secrets.CLOUD_SQL_DATABASE_NAME }}
+          TESTRAIL_HOST: ${{ secrets.TESTRAIL_HOST}}
+          TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME}}
+          TESTRAIL_PASSWORD: ${{ secrets.TESTRAIL_PASSWORD}}
         run: python ./data_pump.py --data-source testrail --project fenix 
 
