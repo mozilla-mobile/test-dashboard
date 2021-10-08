@@ -6,17 +6,10 @@ from lib.testrail_conn import APIClient
 from database import Database
 
 
-_logger = logging.getLogger('testrail')
-
-
 class TestRail:
 
     def __init__(self):
         print('TESTRAIL init')
-        #self.config()
-
-        #def config(self):
-
 
         try:
             TESTRAIL_HOST = os.environ['TESTRAIL_HOST']
@@ -25,9 +18,8 @@ class TestRail:
             self.client.password = os.environ['TESTRAIL_PASSWORD']
             print('TESTRAIL config')
         except KeyError:
-            _logger.debug("ERROR: Missing testrail env var")
             print('variable not found...')
-            exit()
+            sys.exit()
 
     # API: Projects
     def projects(self):
