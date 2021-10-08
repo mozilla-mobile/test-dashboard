@@ -1,4 +1,4 @@
-name: Testops Report: DAILY 
+name: Testops Report DAILY 
 
 # UTC Daily @4am
 on:
