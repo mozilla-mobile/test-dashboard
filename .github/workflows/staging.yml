@@ -1,8 +1,13 @@
 name: Update testops DB - demo data 
 
+#on:
+#  schedule:
+#    - cron:  "0 21 * * *" 
+
 on:
-  schedule:
-    - cron:  "0 21 * * *" 
+  push:
+    branches:
+      - testrail-test-runs
 
 jobs:
   deploy:
