@@ -85,9 +85,6 @@ class TestRailHelpers():
         runs = self.testrail.test_runs(testrail_project_id)
         for run in runs:
             total = self.db.report_test_run_total(run)
-            print('=====================================')
-            print(total)
-            print('=====================================')
             run_id = total[0]['run_id']
             # [{'run_id': 44113}, {'project_id': 59}, {'suite_id': 3192}, {'name': 'Smoke and sanity automated tests - Beta 90.0.0-beta.2'}, {'created_on': 1623151551}, {'completed_on': 1623158050}, {'failed_count': 0}, {'passed_count': 35}, {'retest_count': 0}, {'blocked_count': 0}, {'untested_count': 0}, {'untested_count': 0}]
             results = self.testrail.test_results_for_run(run_id)
