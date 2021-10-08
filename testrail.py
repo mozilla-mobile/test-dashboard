@@ -20,6 +20,7 @@ class TestRail:
             XXX = os.environ['XXX']
             print('XXXX')
         except:
+            print('hit and exception....')
             exit()
 
 
