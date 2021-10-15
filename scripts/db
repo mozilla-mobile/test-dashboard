@@ -9,17 +9,35 @@ echo
 help()
 {
    echo
-   echo "Syntax: db [--help|--sql|--import|--dump|*]"
+   echo "Syntax: db [--help|--sql|--copy-db|--import|--dump|--dump-data|*]"
    echo
    echo "options:"
-   echo "--sql      Run SQL command, then quit. Ex: db -s 'SHOW DATABASES'"
-   echo "--import   Import SQL data file        Ex. db -i <input.sql>"
-   echo "--dump     Dump SQL data file          Ex. db -d <database-name>"
-   echo "*          Open mysql CLI client       Ex. db" 
+   echo "--sql           Run SQL command, then quit.   Ex: db -s 'SHOW DATABASES'"
+   echo "--copy-db       Copy database to new          Ex. db -c <source-db> <target-db>"
+   echo "--import        Import SQL data file          Ex. db -i <input.sql>"
+   echo "--dump          Dump SQL schema + data file   Ex. db -d <source-db>"
+   echo "--dump-data     Dump SQL data file            Ex. db -d <source-db>"
+   echo "--migrate-data  Migrate SQL data file         Ex. db -d <source-db> <target-db>"
+   echo "*               Open mysql CLI client         Ex. db" 
    echo
 }
 
+DATETIME_STAMP=`date "+%Y-%m-%d-%H-%M-%S"`
+DATE_STAMP=`date "+%Y-%m-%d"`
+
+# source database
+DB_SOURCE=${2}
+
+# target database
+DB_TARGET=${3}-${DATE_STAMP}
+
+# database dump file
+DB_DUMP="${DB_SOURCE}-${DATETIME_STAMP}"
+
+
 CMD="mysql -u${CLOUD_SQL_DATABASE_USERNAME} -p${CLOUD_SQL_DATABASE_PASSWORD}  --host ${CLOUD_SQL_DATABASE_HOST}"
+
+CMD_DUMP="mysqldump --column-statistics=0  -u ${CLOUD_SQL_DATABASE_USERNAME} -p${CLOUD_SQL_DATABASE_PASSWORD} --host ${CLOUD_SQL_DATABASE_HOST} --databases ${DB_SOURCE} --set-gtid-purged=OFF"
 
 
 parse_args() {
@@ -31,21 +49,41 @@ parse_args() {
             exit 0
             ;;
         -s|--sql)
-            CMD="${CMD} -e '$2'"
+            CMD="${CMD} -e '${DB_SOURCE}'"
+            ;;
+        -c|--copy-db)
+            # dump DB_SOURCE
+            ${CMD_DUMP} > tmp.sql;
+
+            # replace database name in dump file with new database name
+            sed -i"_backup" s/${DB_SOURCE}/${DB_TARGET}/g ./tmp.sql
+
+            # create DB_TARGET
+            # TODO: verify
+            ${CMD} < tmp.sql
+            rm tmp.sql*
             ;;
         -i|--import)
-            CMD="${CMD} < $2"
+            # import switches to database specified in the sql file
+            ${CMD} < ${DB_SOURCE}.sql
             ;;
         -d|--dump)
-            CMD="mysqldump --column-statistics=0  -u ${CLOUD_SQL_DATABASE_USERNAME} -p${CLOUD_SQL_DATABASE_PASSWORD} --host ${CLOUD_SQL_DATABASE_HOST} --databases ${2} --set-gtid-purged=OFF > dump.sql;"
+            ${CMD_DUMP} > ${DB_DUMP}.sql;
+            ;;
+        -a|--dump-data)
+            ${CMD_DUMP} --no-create-info --no-create-db > DATA-${DB_DUMP}.sql;
+            ;;
+        -m|--migrate-data)
+            # assumes new target schema exists
+            ${CMD_DUMP} --no-create-info --no-create-db > DATA-${DB_DUMP}.sql;
+            ${CMD} < ${DB_DUMP}.sql
             ;;
         *)
             ;;
     esac
 }
 
-parse_args "$1" "$2" "$3"
+parse_args "$1" "${DB_SOURCE}" "${DB_TARGET}"
 
-eval ${CMD} 
 echo
 echo

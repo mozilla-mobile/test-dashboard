@@ -147,6 +147,29 @@ CREATE TABLE `report_test_coverage` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 
+--
+-- Table structure for table `report_test_runs`
+--
+
+DROP TABLE IF EXISTS `report_test_runs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `report_test_runs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `projects_id` int(11) NOT NULL, 
+  `test_suites_id` int(11) NOT NULL DEFAULT 1, 
+  `test_sub_suites_id` int(11) NOT NULL DEFAULT 1, 
+  `testrail_run_id` int(11) NOT NULL, 
+  `test_case_count` int(11) NOT NULL DEFAULT 0, 
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY(`projects_id`) REFERENCES projects(`id`),
+  FOREIGN KEY(`test_suites_id`) REFERENCES test_suites(`id`),
+  FOREIGN KEY(`test_sub_suites_id`) REFERENCES test_sub_suites(`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
 
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -227,4 +250,5 @@ INSERT INTO `test_run_result_types`(`testrail_id`, `result_type_abbrev`, `result
 (7, 'untested_count', 'Not Available');
 /*!40000 ALTER TABLE `test_run_result_types` ENABLE KEYS */;
 UNLOCK TABLES;
+
 

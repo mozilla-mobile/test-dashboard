@@ -26,6 +26,9 @@ class TestSubSuites(Base):
 class ReportTestCoverage(Base):
     __table__ = Table('report_test_coverage', Base.metadata, autoload=True)
 
+class ReportTestRuns(Base):
+    __table__ = Table('report_test_runs', Base.metadata, autoload=True)
+
 
 class Database(object):
 
@@ -69,6 +72,14 @@ class Database(object):
 
     def report_test_run_total(self, run):
         """pack testrail data for 1 run in a data array """
+        """
+        # TABLE `report_test_runs` (
+        `projects_id` 
+        `test_suites_id`
+        ``test_sub_suites_id`
+        `testrail_run_id`
+        `test_case_count`
+        """
 
         # create array to store values to insert in database
         tmp = []
