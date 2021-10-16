@@ -70,7 +70,7 @@ class Database(object):
             totals[s][c] += 1
         return totals
 
-    def report_test_run_total(self, run):
+    def report_test_run_totals(self, runs):
         """pack testrail data for 1 run in a data array 
 
         NOTE:
@@ -85,39 +85,30 @@ class Database(object):
         """
 
         """
-        # TABLE `report_test_runs` (
-
-	   `projects_id` int(11) NOT NULL, 
-	   `test_suites_id` int(11) NOT NULL DEFAULT 1,  
-	   `test_sub_suites_id` int(11) NOT NULL DEFAULT 1,  
-	   `testrail_run_id` int(11) NOT NULL, 
-	   `test_case_passed_count` int(11) NOT NULL DEFAULT 0,  
-	   `test_case_blocked_count` int(11) NOT NULL DEFAULT 0,  
-	   `test_case_retest_count` int(11) NOT NULL DEFAULT 0,  
-	   `test_case_failed_count` int(11) NOT NULL DEFAULT 0,  
-	   `testrail_created_on` timestamp,
-	   `testrail_completed_on` timestamp,
-	   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
         """
         # create array to store values to insert in database
         totals = []
 
-        # identifiers
-        # totals.append({'project_id': run['project_id']})
-        # totals.append({'suite_id': run['suite_id']})
-        # totals.append({'name': run['name']})
-        totals.append({'testrail_run_id': run['id']})
+        for run in runs:
+            tmp = {} 
 
-        # epoch dates
-        totals.append({'testrail_created_on': run['created_on']})
-        totals.append({'testrail_completed_on': run['completed_on']})
+            # identifiers
+            # tmp.append({'project_id': run['project_id']})
+            # tmp.append({'suite_id': run['suite_id']})
+            # tmp.append({'name': run['name']})
+            tmp.update({'testrail_run_id': run['id']})
 
-        # test data
-        totals.append({'failed_count': run['failed_count']})
-        totals.append({'passed_count': run['passed_count']})
-        totals.append({'retest_count': run['retest_count']})
-        totals.append({'blocked_count': run['blocked_count']})
-        #totals.append({'untested_count': run['untested_count']})
+            # epoch dates
+            tmp.update({'testrail_created_on': run['created_on']})
+            tmp.update({'testrail_completed_on': run['completed_on']})
+
+            # test data
+            tmp.update({'passed_count': run['passed_count']})
+            tmp.update({'retest_count': run['retest_count']})
+            tmp.update({'failed_count': run['failed_count']})
+            tmp.update({'blocked_count': run['blocked_count']})
+            # totals.append({'untested_count': run['untested_count']})
+            totals.append(tmp)
         return totals
 
     def report_test_coverage_insert(self, project_id, totals):
@@ -133,21 +124,35 @@ class Database(object):
                 self.session.commit()
 
     def report_test_runs_insert(self, project_id, totals):
-        """
+       """
+        # TABLE `report_test_runs` (
+
+	   `projects_id` int(11) NOT NULL, 
+	   `test_suites_id` int(11) NOT NULL DEFAULT 1,  
+	   `test_sub_suites_id` int(11) NOT NULL DEFAULT 1,  
+	   `testrail_run_id` int(11) NOT NULL, 
+	   `test_case_passed_count` int(11) NOT NULL DEFAULT 0,  
+	   `test_case_blocked_count` int(11) NOT NULL DEFAULT 0,  
+	   `test_case_retest_count` int(11) NOT NULL DEFAULT 0,  
+	   `test_case_failed_count` int(11) NOT NULL DEFAULT 0,  
+	   `testrail_created_on` timestamp,
+	   `testrail_completed_on` timestamp,
+	   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+       """
         # insert data from totals[][] into report_test_runs table
-        for i in range(1, len(totals)):
-            for j in range(1, len(totals[i])):
-                # sqlalchemy insert statement
-                report = ReportTestCoverage(projects_id=project_id,
-                                            test_automation_status_id=i,
-                                            test_automation_coverage_id=j,
-                                            test_count=totals[i][j])
-                self.session.add(report)
-                self.session.commit()
-        """
-        for total in totals:
-            print(total)
-        pass
+
+       for total in totals:
+           t = total
+           report = ReportTestRuns(projects_id=project_id,
+                                        testrail_run_id=t['testrail_run_id'],
+										test_case_passed_count=t['passed_count'],
+										test_case_retest_count=t['retest_count'],
+										test_case_failed_count=t['failed_count'],
+										test_case_blocked_count=t['blocked_count'],
+										testrail_created_on='2021-01-01',
+										testrail_completed_on='2021-01-01')
+           self.session.add(report)
+           self.session.commit()
 
     def test_automation_status_option_ids(self):
         # ids corresponding to options in the automation status dropdown

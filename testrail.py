@@ -55,7 +55,6 @@ class TestRail:
         if end_date:
             before = self.convert_datetime_to_epoch(end_date)
             date_range += '&created_before={0}'.format(before)
-        #return self.client.send_get('get_runs/{0}'.format(project_id))
         return self.client.send_get('get_runs/{0}{1}'.format(project_id, date_range))
 
     def test_run(self, run_id):
@@ -102,20 +101,22 @@ class TestRailHelpers():
         totals = []
         results = []
         projects_id, testrail_project_id, functional_test_suite_id = self.db.testrail_identity_ids(project) # noqa 
-        #runs = self.testrail.test_runs(testrail_project_id)
         runs = self.testrail.test_runs(testrail_project_id, start_date, end_date)
+        totals = self.db.report_test_run_totals(runs)
+        self.db.report_test_runs_insert(projects_id, totals)
+
+        """
         result_count = 0
         for run in runs:
             total = self.db.report_test_run_total(run)
             run_id = total[0]['testrail_run_id']
             print(run_id)
-            """
             results = self.testrail.test_results_for_run(run_id)
             for result in results:
                 result_count += 1
             # need to add but total a
             totals.append(results)
-            """
+        """
 
         # DIAGNOSTIC
         """
