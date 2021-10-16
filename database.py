@@ -71,36 +71,54 @@ class Database(object):
         return totals
 
     def report_test_run_total(self, run):
-        """pack testrail data for 1 run in a data array """
-        """
-        # TABLE `report_test_runs` (
-        `projects_id` 
-        `test_suites_id`
-        ``test_sub_suites_id`
-        `testrail_run_id`
-        `test_case_count`
+        """pack testrail data for 1 run in a data array 
+
+        NOTE:
+        run_name
+        Because storing data for 1 run will occupy multipe db rows,
+        Storing the run name would require inserting into a reference
+        table.  For now, we will just store the testrail run id.
+
+        project_id, suite_id
+        We will pass along the proj_name_abbrev to the db.
+        For suite_id, we will always default to Full Functional.
         """
 
+        """
+        # TABLE `report_test_runs` (
+
+	   `projects_id` int(11) NOT NULL, 
+	   `test_suites_id` int(11) NOT NULL DEFAULT 1,  
+	   `test_sub_suites_id` int(11) NOT NULL DEFAULT 1,  
+	   `testrail_run_id` int(11) NOT NULL, 
+	   `test_case_passed_count` int(11) NOT NULL DEFAULT 0,  
+	   `test_case_blocked_count` int(11) NOT NULL DEFAULT 0,  
+	   `test_case_retest_count` int(11) NOT NULL DEFAULT 0,  
+	   `test_case_failed_count` int(11) NOT NULL DEFAULT 0,  
+	   `testrail_created_on` timestamp,
+	   `testrail_completed_on` timestamp,
+	   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        """
         # create array to store values to insert in database
-        tmp = []
+        totals = []
+
         # identifiers
-        print('RUN_ID: {0}'.format(run['id']))
-        tmp.append({'run_id': run['id']})
-        tmp.append({'project_id': run['project_id']})
-        tmp.append({'suite_id': run['suite_id']})
-        tmp.append({'name': run['name']})
+        # totals.append({'project_id': run['project_id']})
+        # totals.append({'suite_id': run['suite_id']})
+        # totals.append({'name': run['name']})
+        totals.append({'testrail_run_id': run['id']})
+
         # epoch dates
-        tmp.append({'created_on': run['created_on']})
-        tmp.append({'completed_on': run['completed_on']})
+        totals.append({'testrail_created_on': run['created_on']})
+        totals.append({'testrail_completed_on': run['completed_on']})
+
         # test data
-        tmp.append({'failed_count': run['failed_count']})
-        tmp.append({'passed_count': run['passed_count']})
-        tmp.append({'retest_count': run['retest_count']})
-        tmp.append({'blocked_count': run['blocked_count']})
-        tmp.append({'untested_count': run['untested_count']})
-        # missing abbrev value for "Not Available" 
-        tmp.append({'untested_count': run['untested_count']})
-        return tmp
+        totals.append({'failed_count': run['failed_count']})
+        totals.append({'passed_count': run['passed_count']})
+        totals.append({'retest_count': run['retest_count']})
+        totals.append({'blocked_count': run['blocked_count']})
+        #totals.append({'untested_count': run['untested_count']})
+        return totals
 
     def report_test_coverage_insert(self, project_id, totals):
         # insert data from totals[][] into report_test_coverage table

@@ -65,7 +65,7 @@ parse_args() {
             ;;
         -i|--import)
             # import switches to database specified in the sql file
-            ${CMD} < ${DB_SOURCE}.sql
+            ${CMD} < ${DB_SOURCE}
             ;;
         -d|--dump)
             ${CMD_DUMP} > ${DB_DUMP}.sql;

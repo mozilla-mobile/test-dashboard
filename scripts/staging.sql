@@ -160,7 +160,12 @@ CREATE TABLE `report_test_runs` (
   `test_suites_id` int(11) NOT NULL DEFAULT 1, 
   `test_sub_suites_id` int(11) NOT NULL DEFAULT 1, 
   `testrail_run_id` int(11) NOT NULL, 
-  `test_case_count` int(11) NOT NULL DEFAULT 0, 
+  `test_case_passed_count` int(11) NOT NULL DEFAULT 0, 
+  `test_case_blocked_count` int(11) NOT NULL DEFAULT 0, 
+  `test_case_retest_count` int(11) NOT NULL DEFAULT 0, 
+  `test_case_failed_count` int(11) NOT NULL DEFAULT 0, 
+  `testrail_created_on` timestamp,
+  `testrail_completed_on` timestamp,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   FOREIGN KEY(`projects_id`) REFERENCES projects(`id`),
@@ -245,8 +250,10 @@ LOCK TABLES `test_run_result_types` WRITE;
 INSERT INTO `test_run_result_types`(`testrail_id`, `result_type_abbrev`, `result_type`) VALUES 
 (1, 'passed_count', 'Passed'), 
 (2, 'blocked_count', 'Blocked'), 
+(3, 'untested_count', 'Untested'), 
 (4, 'retest_count', 'Failed (known)'), 
 (5, 'failed_count', 'Failed (new)'), 
+(6, 'untested_count', 'Not Applicable'), 
 (7, 'untested_count', 'Not Available');
 /*!40000 ALTER TABLE `test_run_result_types` ENABLE KEYS */;
 UNLOCK TABLES;

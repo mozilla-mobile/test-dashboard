@@ -87,6 +87,7 @@ class TestRailHelpers():
         # will need a more intelligent method to restore historic data
         # since the data will be on a given datetime stamp we cloud "group" weekly data and 
         # insert it with a simulated historic created_at date
+        pass
 
     def testrail_coverage_update(self, project):
         projects_id, testrail_project_id, functional_test_suite_id = self.db.testrail_identity_ids(project) # noqa 
@@ -95,11 +96,9 @@ class TestRailHelpers():
         totals = self.db.report_test_coverage_totals(cases)
         self.db.report_test_coverage_insert(projects_id, totals)
 
-    def testrail_run_update(self, project):
+    def testrail_run_update(self, project, start_date, end_date):
         # Sample Testrail data from one run:
         # [{'run_id': 44113}, {'project_id': 59}, {'suite_id': 3192}, {'name': 'Smoke and sanity automated tests - Beta 90.0.0-beta.2'}, {'created_on': 1623151551}, {'completed_on': 1623158050}, {'failed_count': 0}, {'passed_count': 35}, {'retest_count': 0}, {'blocked_count': 0}, {'untested_count': 0}, {'untested_count': 0}] # noqa
-        start_date = '2021-08-01'
-        end_date = '2021-10-31'
         totals = []
         results = []
         projects_id, testrail_project_id, functional_test_suite_id = self.db.testrail_identity_ids(project) # noqa 
@@ -108,17 +107,22 @@ class TestRailHelpers():
         result_count = 0
         for run in runs:
             total = self.db.report_test_run_total(run)
-            run_id = total[0]['run_id']
+            run_id = total[0]['testrail_run_id']
+            print(run_id)
+            """
             results = self.testrail.test_results_for_run(run_id)
             for result in results:
                 result_count += 1
             # need to add but total a
             totals.append(results)
+            """
 
         # DIAGNOSTIC
+        """
         totals_count = len(totals)
         print('TOTALS_COUNT: {0}'.format(totals_count))
         testcase_count = len(results)
         print('RESULT_COUNT: {0}'.format(result_count))
         sys.exit()
+        """
         self.db.report_test_runs_insert(projects_id, totals)

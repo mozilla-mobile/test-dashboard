@@ -25,6 +25,13 @@ def parse_args(cmdln_args):
     )
 
     parser.add_argument(
+        "--project",
+        help="Indicate project",
+        required=True,
+        choices=PROJECTS_ABBREV
+    )
+
+    parser.add_argument(
         "--report-type",
         help="Indicate report type",
         required=True,
@@ -32,10 +39,15 @@ def parse_args(cmdln_args):
     )
 
     parser.add_argument(
-        "--project",
-        help="Indicate project",
-        required=True,
-        choices=PROJECTS_ABBREV
+        "--start-date",
+        help="Indicate data range start date: YYYY-MM-DD",
+        required=False
+    )
+
+    parser.add_argument(
+        "--end-date",
+        help="Indicate data range end date: YYYY-MM-DD",
+        required=False
     )
     return parser.parse_args(args=cmdln_args)
 
@@ -48,7 +60,7 @@ def main():
         h.testrail_coverage_update(args.project)
     if args.report_type == 'test-runs':
         h = TestRailHelpers()
-        h.testrail_run_update(args.project)
+        h.testrail_run_update(args.project, args.start_date, args.end_date)
     if args.report_type == 'issue-regression':
         """
         h = GithubHelpers()
