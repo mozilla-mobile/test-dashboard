@@ -99,6 +99,9 @@ class Database(object):
             tmp.update({'testrail_run_id': run['id']})
 
             # epoch dates
+
+            # TODO: these need to be converted from epoch to YYYY-MM-DD
+            # TODO: move epoch date converter to a utils.py mod
             tmp.update({'testrail_created_on': run['created_on']})
             tmp.update({'testrail_completed_on': run['completed_on']})
 
@@ -124,22 +127,7 @@ class Database(object):
                 self.session.commit()
 
     def report_test_runs_insert(self, project_id, totals):
-       """
-        # TABLE `report_test_runs` (
-
-	   `projects_id` int(11) NOT NULL, 
-	   `test_suites_id` int(11) NOT NULL DEFAULT 1,  
-	   `test_sub_suites_id` int(11) NOT NULL DEFAULT 1,  
-	   `testrail_run_id` int(11) NOT NULL, 
-	   `test_case_passed_count` int(11) NOT NULL DEFAULT 0,  
-	   `test_case_blocked_count` int(11) NOT NULL DEFAULT 0,  
-	   `test_case_retest_count` int(11) NOT NULL DEFAULT 0,  
-	   `test_case_failed_count` int(11) NOT NULL DEFAULT 0,  
-	   `testrail_created_on` timestamp,
-	   `testrail_completed_on` timestamp,
-	   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-       """
-        # insert data from totals[][] into report_test_runs table
+       # insert data from totals[][] into report_test_runs table
 
        for total in totals:
            t = total
@@ -151,6 +139,11 @@ class Database(object):
 										test_case_blocked_count=t['blocked_count'],
 										testrail_created_on='2021-01-01',
 										testrail_completed_on='2021-01-01')
+           """
+           NEED TO CONVERT EPOCH TIME
+										testrail_created_on=t['testrail_created_on'],
+										testrail_completed_on=t['testrail_completed_on'])
+           """
            self.session.add(report)
            self.session.commit()
 

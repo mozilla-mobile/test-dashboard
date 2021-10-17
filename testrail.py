@@ -4,6 +4,7 @@ import sys
 
 from lib.testrail_conn import APIClient
 from database import Database
+from utils import Utils
 
 
 class TestRail:
@@ -50,10 +51,12 @@ class TestRail:
     def test_runs(self, project_id, start_date='', end_date=''):
         date_range = ''
         if start_date:
-            after = self.convert_datetime_to_epoch(start_date)
+            #after = self.convert_datetime_to_epoch(start_date)
+            after = Utils.convert_datetime_to_epoch(start_date)
             date_range += '&created_after={0}'.format(after)
         if end_date:
-            before = self.convert_datetime_to_epoch(end_date)
+            #before = self.convert_datetime_to_epoch(end_date)
+            before = Utils.convert_datetime_to_epoch(end_date)
             date_range += '&created_before={0}'.format(before)
         return self.client.send_get('get_runs/{0}{1}'.format(project_id, date_range))
 
@@ -63,6 +66,7 @@ class TestRail:
     def test_results_for_run(self, run_id):
         return self.client.send_get('get_results_for_run/{0}'.format(run_id))
 
+    """
     # UTILITIES
     def convert_datetime_to_epoch(self, str_date):
         from datetime import datetime
@@ -72,6 +76,7 @@ class TestRail:
         epoch = datetime(1970, 1, 1)
         tmp = (datetime.strptime(mytime, p) - epoch).total_seconds()
         return int(round(tmp))
+    """
 
 
 class TestRailHelpers():
