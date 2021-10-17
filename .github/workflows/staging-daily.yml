@@ -39,8 +39,9 @@ jobs:
           TESTRAIL_HOST: ${{ secrets.TESTRAIL_HOST}}
           TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME}}
           TESTRAIL_PASSWORD: ${{ secrets.TESTRAIL_PASSWORD}}
-        #run: python ./data_pump.py --report-type test-runs --project fenix 
-        #run: python ./data_pump.py --report-type test-cases --project fenix 
+        # WIP: start-date and end-date
+        run: python ./data_pump.py --report-type test-runs --project fenix --start-date 2021-08-15 --end-date 2021-10-01
+        run: python ./data_pump.py --report-type test-cases --project fenix 
         run: |
             echo "Testops Report: DAILY"
 
