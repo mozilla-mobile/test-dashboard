@@ -1,6 +1,7 @@
-from lib.database_conn import Session, Base
-
 from sqlalchemy import Table
+
+from lib.database_conn import Session, Base
+from utils import Utils
 
 
 class Projects(Base):
@@ -25,6 +26,7 @@ class TestSubSuites(Base):
 
 class ReportTestCoverage(Base):
     __table__ = Table('report_test_coverage', Base.metadata, autoload=True)
+
 
 class ReportTestRuns(Base):
     __table__ = Table('report_test_runs', Base.metadata, autoload=True)
@@ -71,7 +73,7 @@ class Database(object):
         return totals
 
     def report_test_run_totals(self, runs):
-        """pack testrail data for 1 run in a data array 
+        """pack testrail data for 1 run in a data array
 
         NOTE:
         run_name
@@ -90,7 +92,7 @@ class Database(object):
         totals = []
 
         for run in runs:
-            tmp = {} 
+            tmp = {}
 
             # identifiers
             # tmp.append({'project_id': run['project_id']})
@@ -127,25 +129,25 @@ class Database(object):
                 self.session.commit()
 
     def report_test_runs_insert(self, project_id, totals):
-       # insert data from totals[][] into report_test_runs table
+        # insert data from totals[][] into report_test_runs table
 
-       for total in totals:
-           t = total
-           report = ReportTestRuns(projects_id=project_id,
+        for total in totals:
+            t = total
+
+            # only count completed testruns
+            if t['testrail_completed_on']:
+                created_on = Utils.convert_epoch_to_datetime(t['testrail_created_on']) # noqa
+                completed_on = Utils.convert_epoch_to_datetime(t['testrail_completed_on']) # noqa
+                report = ReportTestRuns(projects_id=project_id,
                                         testrail_run_id=t['testrail_run_id'],
-										test_case_passed_count=t['passed_count'],
-										test_case_retest_count=t['retest_count'],
-										test_case_failed_count=t['failed_count'],
-										test_case_blocked_count=t['blocked_count'],
-										testrail_created_on='2021-01-01',
-										testrail_completed_on='2021-01-01')
-           """
-           NEED TO CONVERT EPOCH TIME
-										testrail_created_on=t['testrail_created_on'],
-										testrail_completed_on=t['testrail_completed_on'])
-           """
-           self.session.add(report)
-           self.session.commit()
+                                        test_case_passed_count=t['passed_count'], # noqa
+                                        test_case_retest_count=t['retest_count'], # noqa
+                                        test_case_failed_count=t['failed_count'], # noqa
+                                        test_case_blocked_count=t['blocked_count'], # noqa
+                                        testrail_created_on=created_on,
+                                        testrail_completed_on=completed_on)
+                self.session.add(report)
+                self.session.commit()
 
     def test_automation_status_option_ids(self):
         # ids corresponding to options in the automation status dropdown
