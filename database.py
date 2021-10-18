@@ -37,12 +37,6 @@ class Database(object):
     def __init__(self):
         self.session = Session()
 
-    def print_table(self, table_name):
-        _table = Table(table_name, Base.metadata, autoload=True)
-        s = [c.name for c in _table.columns]
-        for row in s:
-            print(row)
-
     def report_test_coverage_totals(self, cases):
         """given testrail data (cases), parse for test case counts"""
 
@@ -65,7 +59,7 @@ class Database(object):
                 # DIAGNOSTIC
                 # ============================================
                 # Testrail data needs housekeeping
-                # print will list out cases missing Coverage
+                # List out cases missing Coverage
                 print('{0}. {1}'.format(count, t))
                 c = 1
                 count += 1
@@ -77,16 +71,15 @@ class Database(object):
 
         NOTE:
         run_name
+
         Because storing data for 1 run will occupy multipe db rows,
         Storing the run name would require inserting into a reference
         table.  For now, we will just store the testrail run id.
 
         project_id, suite_id
+
         We will pass along the proj_name_abbrev to the db.
         For suite_id, we will always default to Full Functional.
-        """
-
-        """
         """
         # create array to store values to insert in database
         totals = []
@@ -95,15 +88,10 @@ class Database(object):
             tmp = {}
 
             # identifiers
-            # tmp.append({'project_id': run['project_id']})
-            # tmp.append({'suite_id': run['suite_id']})
             # tmp.append({'name': run['name']})
             tmp.update({'testrail_run_id': run['id']})
 
             # epoch dates
-
-            # TODO: these need to be converted from epoch to YYYY-MM-DD
-            # TODO: move epoch date converter to a utils.py mod
             tmp.update({'testrail_created_on': run['created_on']})
             tmp.update({'testrail_completed_on': run['completed_on']})
 
@@ -112,12 +100,11 @@ class Database(object):
             tmp.update({'retest_count': run['retest_count']})
             tmp.update({'failed_count': run['failed_count']})
             tmp.update({'blocked_count': run['blocked_count']})
-            # totals.append({'untested_count': run['untested_count']})
             totals.append(tmp)
         return totals
 
     def report_test_coverage_insert(self, project_id, totals):
-        # insert data from totals[][] into report_test_coverage table
+        # insert data from totals into report_test_coverage table
         for i in range(1, len(totals)):
             for j in range(1, len(totals[i])):
                 # sqlalchemy insert statement
@@ -129,7 +116,7 @@ class Database(object):
                 self.session.commit()
 
     def report_test_runs_insert(self, project_id, totals):
-        # insert data from totals[][] into report_test_runs table
+        # insert data from totals into report_test_runs table
 
         for total in totals:
             t = total
@@ -166,13 +153,16 @@ class Database(object):
         return results
 
     def testrail_identity_ids(self, project):
-        # Return the ids needed to be able to query the TestRail API for
-        # a specific test suite from a specific project
-        # projects.id = projects table id
-        # testrail_id = id of project in testrail
-        # testrail_functional_test_suite_id = Full Functional Tests Suite id
+        """ Return the ids needed to be able to query the TestRail API for
+        a specific test suite from a specific project
+
+        projects.id = projects table id
+        testrail_id = id of project in testrail
+        testrail_functional_test_suite_id = Full Functional Tests Suite id
+
         # Note:
-        #  As these will never change, we store them in db for convenience
+        # These never change, so we store them in DB for convenience """
+
         q = self.session.query(Projects)
         p = q.filter_by(project_name_abbrev=project).first()
         return p.id, p.testrail_id, p.testrail_functional_test_suite_id
