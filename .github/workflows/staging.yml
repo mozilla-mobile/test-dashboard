@@ -36,4 +36,3 @@ jobs:
           CLOUD_SQL_DATABASE_NAME: ${{ secrets.CLOUD_SQL_DATABASE_NAME }}
         run: python ./data_pump.py --data-type testrail --project fenix 
 
-
