@@ -85,8 +85,10 @@ class TestRailHelpers():
         # Insert data in 'totals' array into DB
         self.db.report_test_coverage_insert(projects_id, totals)
 
-    def testrail_run_update(self, project, start_date, end_date):
-        totals = []
+    #def testrail_run_update(self, project, start_date, end_date):
+    def testrail_run_update(self, project, num_days):
+        start_date = Utils.start_date(num_days)
+        #totals = []
 
         # Get reference IDs from DB
         projects_id, testrail_project_id, functional_test_suite_id = self.db.testrail_identity_ids(project) # noqa 
@@ -99,7 +101,7 @@ class TestRailHelpers():
         # {'blocked_count': 0}, {'untested_count': 0}, {'untested_count': 0}]
 
         # Pull JSON blob from Testrail
-        runs = self.testrail.test_runs(testrail_project_id, start_date, end_date) # noqa
+        runs = self.testrail.test_runs(testrail_project_id, start_date) # noqa
 
         # Format and store data in a 'totals' array
         totals = self.db.report_test_run_totals(runs)
