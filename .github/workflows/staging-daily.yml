@@ -1,13 +1,13 @@
 name: Testops Report DAILY 
 
-# UTC Daily @4am
+# Daily @4am UTC
 on:
   schedule:
     - cron:  "0 4 * * *" 
 
 jobs:
   deploy:
-    name: Update testops DB 
+    name: TestOps Report (DAILY) 
     runs-on: ubuntu-latest
 
     steps:
@@ -18,9 +18,6 @@ jobs:
         uses: actions/setup-python@v1
 
       - name: Establish Cloud SQL Proxy
-        env:
-          GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
-          CLOUD_SQL_CONNECTION_NAME: ${{ secrets.CLOUD_SQL_CONNECTION_NAME }}
         uses: mattes/gce-cloudsql-proxy-action@v1
         with:
           creds: ${{ secrets.GCLOUD_AUTH }}
@@ -30,18 +27,18 @@ jobs:
       - name: Install requirements 
         run: pip install -r requirements.txt
 
-      - name: Insert data
-        env:
-          CLOUD_SQL_DATABASE_USERNAME: ${{ secrets.CLOUD_SQL_DATABASE_USERNAME }}
-          CLOUD_SQL_DATABASE_PASSWORD: ${{ secrets.CLOUD_SQL_DATABASE_PASSWORD }}
-          CLOUD_SQL_DATABASE_NAME: ${{ secrets.CLOUD_SQL_DATABASE_NAME }}
-          CLOUD_SQL_DATABASE_PORT: ${{ secrets.CLOUD_SQL_DATABASE_PORT }}
-          TESTRAIL_HOST: ${{ secrets.TESTRAIL_HOST}}
-          TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME}}
-          TESTRAIL_PASSWORD: ${{ secrets.TESTRAIL_PASSWORD}}
-        # WIP: start-date and end-date
-        run: python ./data_pump.py --report-type test-runs --project fenix --start-date 2021-08-15 --end-date 2021-10-01
-        run: python ./data_pump.py --report-type test-cases --project fenix 
-        run: |
-            echo "Testops Report: DAILY"
+      - name: Set env vars 
+        run: | 
+            echo "CLOUD_SQL_DATABASE_USERNAME=${{ secrets.CLOUD_SQL_DATABASE_USERNAME }}" >> $GITHUB_ENV
+            echo "CLOUD_SQL_DATABASE_PASSWORD=${{ secrets.CLOUD_SQL_DATABASE_PASSWORD }}" >> $GITHUB_ENV
+            echo "CLOUD_SQL_DATABASE_NAME=${{ secrets.CLOUD_SQL_DATABASE_NAME }}" >> $GITHUB_ENV
+            echo "CLOUD_SQL_DATABASE_PORT=${{ secrets.CLOUD_SQL_DATABASE_PORT }}" >> $GITHUB_ENV
+            echo "TESTRAIL_HOST=${{ secrets.TESTRAIL_HOST }}" >> $GITHUB_ENV
+            echo "TESTRAIL_USERNAME=${{ secrets.TESTRAIL_USERNAME }}" >> $GITHUB_ENV
+            echo "TESTRAIL_PASSWORD=${{ secrets.TESTRAIL_PASSWORD }}" >> $GITHUB_ENV
 
+      #- name: Update DB - test runs 
+      #  run: python ./data_pump.py --report-type test-runs --project fenix --start-date 2021-08-15 --end-date 2021-10-01 
+
+      - name: Update DB - test coverage 
+        run: python ./data_pump.py --report-type test-cases --project fenix 

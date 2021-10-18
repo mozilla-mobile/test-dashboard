@@ -17,12 +17,20 @@ class Utils:
         return ts.strftime(format_date)
 
     def start_date(num_days, end_date=''):
-        """ given an end_date (default: now), calculate a start date num_days
-        number of days in the past """
+        """ given num_days, calculate a start_date
+        given an end_date (default: now), calculate a start date num_days
+        number of days in the past.
+        If num_days is empty, return a blank start date."""
+
+        if num_days:
+            n = int(num_days)
+        else:
+            return ''
 
         if not end_date:
             end_date = datetime.now()
         else:
             end_date = datetime.strptime(end_date, format_date)
-        d = end_date - timedelta(days=num_days)
+
+        d = end_date - timedelta(days=n)
         return d.strftime(format_date)
