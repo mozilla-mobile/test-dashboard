@@ -1,28 +1,22 @@
-import logging
 import os
 import sys
 
 from lib.testrail_conn import APIClient
 from database import Database
-
-
-_logger = logging.getLogger('testrail')
+from utils import Utils
 
 
 class TestRail:
 
     def __init__(self):
-        self.config()
-
-    def config(self):
         try:
             TESTRAIL_HOST = os.environ['TESTRAIL_HOST']
             self.client = APIClient(TESTRAIL_HOST)
             self.client.user = os.environ['TESTRAIL_USERNAME']
             self.client.password = os.environ['TESTRAIL_PASSWORD']
         except KeyError:
-            _logger.debug("ERROR: Missing testrail env var")
-            exit()
+            print("ERROR: Missing testrail env var")
+            sys.exit(1)
 
     # API: Projects
     def projects(self):
@@ -53,34 +47,28 @@ class TestRail:
         return self.client.send_get('get_suite/{0}'.format(suite_id))
 
     # API: Runs
-    def test_runs(self, project_id):
-        return self.client.send_get('get_runs/{0}'.format(project_id))
+    def test_runs(self, project_id, start_date='', end_date=''):
+        date_range = ''
+        if start_date:
+            after = Utils.convert_datetime_to_epoch(start_date)
+            date_range += '&created_after={0}'.format(after)
+        if end_date:
+            before = Utils.convert_datetime_to_epoch(end_date)
+            date_range += '&created_before={0}'.format(before)
+        return self.client.send_get('get_runs/{0}{1}'.format(project_id, date_range)) # noqa
 
     def test_run(self, run_id):
         return self.client.send_get('get_run/{0}'.format(run_id))
 
+    def test_results_for_run(self, run_id):
+        return self.client.send_get('get_results_for_run/{0}'.format(run_id))
+
 
 class TestRailHelpers():
-    mobile_projects = [
-        'Firefox for Android',
-        'Fenix Browser',
-        'Focus for Android',
-        'Firefox for iOS',
-        'Focus for iOS',
-        'Reference Browser'
-    ]
 
     def __init__(self):
         self.testrail = TestRail()
         self.db = Database()
-
-    def testrail_full_name(self, abbrev_name, full_names):
-        for item in full_names:
-            for key, val in item.items():
-                if key == abbrev_name:
-                    return val
-        err = 'ERROR: project: "{0}" not found'.format(abbrev_name)
-        sys.exit(err)
 
     def testrail_coverage_update(self, project):
         projects_id, testrail_project_id, functional_test_suite_id = self.db.testrail_identity_ids(project) # noqa 
@@ -89,41 +77,11 @@ class TestRailHelpers():
         totals = self.db.report_test_coverage_totals(cases)
         self.db.report_test_coverage_insert(projects_id, totals)
 
-    def project_ids(self, projects=mobile_projects):
-        # Note: testrail project ids are also stored in database for
-        # convenience as they can't be changed
-        p = self.testrail.projects()
-        results = [item for item in p if any(k in item['name'] for k in projects)] # noqa
-
-        project_arr = []
-        tmp = []
-        for result in results:
-            tmp.append(result['name'])
-            tmp.append(result['id'])
-            project_arr.append(tmp)
-            tmp = []
-
-        return project_arr
-
-    def project_id(self, project_name):
-        # give a project name (as stored in Testrail) and
-        # return testrail project_id
-        return self.project_ids([project_name])[0][1]
-
-
-def main():
-    """
-    logging.basicConfig(format='%(message)s', level=logging.DEBUG)
-    _logger.debug("Fetching project data from TestRail...")
-    t = TestRail()
-    h = TestRailHelpers(t)
-
-    import pprint
-    pp = pprint.PrettyPrinter(indent=4)
-    """
-
-    # TEST FUNCTIONS HERE
-
-
-if __name__ == '__main__':
-    main()
+    def testrail_run_update(self, project, start_date, end_date):
+        # Sample Testrail data from one run:
+        # [{'run_id': 44113}, {'project_id': 59}, {'suite_id': 3192}, {'name': 'Smoke and sanity automated tests - Beta 90.0.0-beta.2'}, {'created_on': 1623151551}, {'completed_on': 1623158050}, {'failed_count': 0}, {'passed_count': 35}, {'retest_count': 0}, {'blocked_count': 0}, {'untested_count': 0}, {'untested_count': 0}] # noqa
+        totals = []
+        projects_id, testrail_project_id, functional_test_suite_id = self.db.testrail_identity_ids(project) # noqa 
+        runs = self.testrail.test_runs(testrail_project_id, start_date, end_date) # noqa
+        totals = self.db.report_test_run_totals(runs)
+        self.db.report_test_runs_insert(projects_id, totals)

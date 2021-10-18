@@ -104,6 +104,22 @@ CREATE TABLE `test_automation_coverage` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `test_run_result_types`
+--
+
+DROP TABLE IF EXISTS `test_run_result_types`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `test_run_result_types` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `testrail_id` int(11) NOT NULL,
+  `result_type_abbrev` varchar(25) NOT NULL,
+  `result_type` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
 
 --
 -- Table structure for table `report_test_coverage`
@@ -127,6 +143,34 @@ CREATE TABLE `report_test_coverage` (
   FOREIGN KEY(`test_sub_suites_id`) REFERENCES test_sub_suites(`id`),
   FOREIGN KEY(`test_automation_status_id`) REFERENCES test_automation_status(`id`),
   FOREIGN KEY(`test_automation_coverage_id`) REFERENCES test_automation_coverage(`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `report_test_runs`
+--
+
+DROP TABLE IF EXISTS `report_test_runs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `report_test_runs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `projects_id` int(11) NOT NULL, 
+  `test_suites_id` int(11) NOT NULL DEFAULT 1, 
+  `test_sub_suites_id` int(11) NOT NULL DEFAULT 1, 
+  `testrail_run_id` int(11) NOT NULL, 
+  `test_case_passed_count` int(11) NOT NULL DEFAULT 0, 
+  `test_case_blocked_count` int(11) NOT NULL DEFAULT 0, 
+  `test_case_retest_count` int(11) NOT NULL DEFAULT 0, 
+  `test_case_failed_count` int(11) NOT NULL DEFAULT 0, 
+  `testrail_created_on` date,
+  `testrail_completed_on` date,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY(`projects_id`) REFERENCES projects(`id`),
+  FOREIGN KEY(`test_suites_id`) REFERENCES test_suites(`id`),
+  FOREIGN KEY(`test_sub_suites_id`) REFERENCES test_sub_suites(`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -195,6 +239,23 @@ LOCK TABLES `test_automation_coverage` WRITE;
 /*!40000 ALTER TABLE `test_automation_coverage` DISABLE KEYS */;
 INSERT INTO `test_automation_coverage`(`testrail_id`, `coverage`) VALUES (1, 'None'), (2, 'Partial'), (3, 'Full');
 /*!40000 ALTER TABLE `test_automation_coverage` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- data for reference table `test_run_result_types`
+--
+
+LOCK TABLES `test_run_result_types` WRITE;
+/*!40000 ALTER TABLE `test_run_result_types` DISABLE KEYS */;
+INSERT INTO `test_run_result_types`(`testrail_id`, `result_type_abbrev`, `result_type`) VALUES 
+(1, 'passed_count', 'Passed'), 
+(2, 'blocked_count', 'Blocked'), 
+(3, 'untested_count', 'Untested'), 
+(4, 'retest_count', 'Failed (known)'), 
+(5, 'failed_count', 'Failed (new)'), 
+(6, 'untested_count', 'Not Applicable'), 
+(7, 'untested_count', 'Not Available');
+/*!40000 ALTER TABLE `test_run_result_types` ENABLE KEYS */;
 UNLOCK TABLES;
 
 

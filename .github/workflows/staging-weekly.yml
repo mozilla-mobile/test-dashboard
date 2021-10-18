@@ -1,12 +1,13 @@
-me: Update testops DB - demo data 
+name: Testops Report WEEKLY 
 
+# UTC Sat. @4am
 on:
   schedule:
-    - cron:  "*/30 * * * *" 
+    - cron:  "0 4 * * 6" 
 
 jobs:
   deploy:
-    name: Update testops DB 
+    name: Test runs
     runs-on: ubuntu-latest
 
     steps:
@@ -24,7 +25,7 @@ jobs:
         with:
           creds: ${{ secrets.GCLOUD_AUTH }}
           instance: ${{ secrets.CLOUD_SQL_CONNECTION_NAME }}
-          port: 3307
+          port: ${{ secrets.CLOUD_SQL_DATABASE_PORT}}
 
       - name: Install requirements 
         run: pip install -r requirements.txt
@@ -34,5 +35,11 @@ jobs:
           CLOUD_SQL_DATABASE_USERNAME: ${{ secrets.CLOUD_SQL_DATABASE_USERNAME }}
           CLOUD_SQL_DATABASE_PASSWORD: ${{ secrets.CLOUD_SQL_DATABASE_PASSWORD }}
           CLOUD_SQL_DATABASE_NAME: ${{ secrets.CLOUD_SQL_DATABASE_NAME }}
-        run: python ./data_pump.py --data-type testrail --project fenix 
+          CLOUD_SQL_DATABASE_PORT: ${{ secrets.CLOUD_SQL_DATABASE_PORT}}
+          TESTRAIL_HOST: ${{ secrets.TESTRAIL_HOST}}
+          TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME}}
+          TESTRAIL_PASSWORD: ${{ secrets.TESTRAIL_PASSWORD}}
+        #run: python ./data_pump.py --report-type test-runs --project fenix 
+        run: |
+            echo "Testops Report: WEEKLY"
 
