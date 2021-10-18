@@ -22,7 +22,6 @@ class Utils:
         number of days in the past.
         If num_days is empty, return a blank start date."""
 
- 
         if num_days:
             n = int(num_days)
         else:

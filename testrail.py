@@ -85,10 +85,8 @@ class TestRailHelpers():
         # Insert data in 'totals' array into DB
         self.db.report_test_coverage_insert(projects_id, totals)
 
-    #def testrail_run_update(self, project, start_date, end_date):
     def testrail_run_update(self, project, num_days):
         start_date = Utils.start_date(num_days)
-        #totals = []
 
         # Get reference IDs from DB
         projects_id, testrail_project_id, functional_test_suite_id = self.db.testrail_identity_ids(project) # noqa 
