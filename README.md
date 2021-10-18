@@ -20,7 +20,3 @@ Backend
 
 Data is aggregated / cached in a Cloud SQL database.  Data queries are constructed using BigQuery views.
 
-
-
-
-
