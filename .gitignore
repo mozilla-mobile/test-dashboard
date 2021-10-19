@@ -4,3 +4,4 @@ __pycache__*
 *.sw[op]
 .DS_Store
 cloud_sql_proxy
+.python-version*
