@@ -64,7 +64,7 @@ class TestRail:
         return self.client.send_get('get_results_for_run/{0}'.format(run_id))
 
 
-class TestRailHelpers():
+class TestRailHelpers:
 
     def __init__(self):
         self.testrail = TestRail()

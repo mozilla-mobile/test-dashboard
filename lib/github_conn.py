@@ -1,136 +1,119 @@
 import os
 import sys
+import json
+from prettytable import PrettyTable
 import requests
-from datetime import datetime
-import datetime as DT
+
+API_BASE = 'https://api.github.com'
+OWNER = 'mozilla-mobile'
 
 
-today = DT.date.today()
-yesterday = str(today - DT.timedelta(days=1))
-BASE_URL = 'https://api.github.com'
-GITHUB_ORG = 'mozilla-mobile'
+# EXAMPLE
+# https://api.github.com/search/issues?q=repo:<owner>/<repo>+is:pr+created:>=2020-08-15
 
 
 class Github:
-    #BASE_URL_ISSUES = 'https://api.github.com/search/issues?q=repo:mozilla-mobile/'
 
+    try:
+        API_TOKEN = os.environ['GITHUB_TOKEN']
+        API_HEADER = {'Authorization': API_TOKEN, 'accept': 'application/json'}
+    except KeyError:
+        print("ERROR: GITHUB_TOKEN env var not set")
+        sys.exit()
 
-    def __init__(self):
-        try:
-            self.API_TOKEN = os.environ['GITHUB_ACCESS_TOKEN']
-            self.API_HEADER = {'Authorization': self.API_TOKEN,
-                               'accept': 'application/json'}
-        except KeyError:
-            print("ERROR: GITHUB_TOKEN env var not set")
-            exit()
-
-
-
-    def get_app(self, project):
-        if not self.APP_REPO:
-            resp = requests.get('https://api.github.com/search/issues?q=repo:mozilla-mobile/{0}'.
-                                format(project, label),
-                                headers=self.API_HEADER)
-            if resp.status_code != 200:
-                print('GET /apps/ {}'.format(resp.status_code))
-                sys.exit(1)
-            return resp.json()
-
-    def get_open_label(self, project, label):
-        if not self.APP_REPO:
-            resp = requests.get(('https://api.github.com/search/issues?q=repo:mozilla-mobile/{0}+is:issue+is:open+label:' + label).
-                                format(project),
-                                headers=self.API_HEADER)
-            if resp.status_code != 200:
-                print('GET /apps/ {}'.format(resp.status_code))
-                sys.exit(1)
-            open_issues_label_count = resp.json()
-            return open_issues_label_count['total_count']
-
-    def get_closed_label(self, project, label):
-        if not self.APP_REPO:
-            resp = requests.get(('https://api.github.com/search/issues?q=repo:mozilla-mobile/{0}+is:issue+is:closed+label:' + label).
-                                format(project),
-                                headers=self.API_HEADER)
-            if resp.status_code != 200:
-                print('GET /apps/ {}'.format(resp.status_code))
-                sys.exit(1)
-            closed_issues_label_count = resp.json()
-            return closed_issues_label_count['total_count']
-
-    def get_open_by_day(self, project, label):
-            resp = requests.get(('https://api.github.com/search/issues?q=repo:mozilla-mobile/{0}+is:issue+is:open+label:' + label + 'created:>=' + yesterday).
-                                format(project),
-                                headers=self.API_HEADER)
-            if resp.status_code != 200:
-                print('GET /apps/ {}'.format(resp.status_code))
-                sys.exit(1)
-            open_issues_day = resp.json()
-            return open_issues_day['total_count']
-
-    def get_closed_by_day(self, project, label):
-            resp = requests.get(('https://api.github.com/search/issues?q=repo:mozilla-mobile/{0}+is:issue+is:closed+label:' + label + 'created:>=' + yesterday).
-                                format(project),
-                                headers=self.API_HEADER)
-            if resp.status_code != 200:
-                print('GET /apps/ {}'.format(resp.status_code))
-                sys.exit(1)
-            closed_issues_day = resp.json()
-            return closed_issues_day['total_count']        
-
-
-class GithubHelpers():
-
-    def __init__(self):
-        self.gh = Github()
-
-
-    def github_url(project,labels):
-        # TODO
-        #BASE_URL_ISSUES = 'https://api.github.com/search/issues?q=repo:mozilla-mobile/'
-        path = ''
-        url = '{0}/{1}'.format(BASE_URL, path)
-        return url
-
-    def issue_url(self, project, labels, status=''):
-        # TODO
-        # labels = 
-        if not status:
-            label_status = ''
-        elif status == 'open':
-            label_status = 'is:open'
-        else:
-             label_status = 'is:closed'
-
-        labels = 'eng:intermittent-test'
-
-        return  '{0}/search/issues?q=repo:{1}/{2}+is:issue+{3}+label:{4}'.format(BASE_URL, GITHUB_ORG, project, label_status, labels)
-
-
+    # UTILS
+    def date_range(self, date_type, date_start, date_end):
+        return 'created:>=2020-08-15'.format()
         
+    # URL: ISSUES 
+    def issues_url_base(self, project):
+        return '{0}/search/issues?q=repo:{1}/{2}'.format(API_BASE, OWNER, project)
+
+    def issues_url_is_issue(self, project, created_date):
+        
+        url_base = self.issues_url_base(project)
+        url =  '{0}+created:>=2020-08-15'.format(url_base)
+        pass
+
+
+    def issues_url_is_pr(self, project):
+        url_base = self.issues_url_base(project)
+        url = '{0}+is:pr'.format(url_base)
+        # return '{0}/search/issues?q=repo:<owner>/<repo>+is:pr+created:>=2020-08-15
+        pass
+
+    # URL: PULLS
+    def url_pr_base(self, project):
+        return  '{0}/repos/{1}/{2}/pulls?state=closed'.format(API_BASE, OWNER, project)
+
+
+class GithubHelpers:
+
+    def __init__(self):
+        self.github = Github()
+
+    def add_rows(data, row_count):
+        for repository in data:
+            title = repository["title"]
+            merged_at = repository["merged_at"]
+            user= repository["user"]["login"]
+         
+            if user not in EXCLUDED:
+                if merged_at:
+                    table.add_row([row_count, title, merged_at, user])
+                    row_count += 1
+
+        return table, row_count 
+
+    def paginate(self):
+        # github API paginates data: default == 30, max == 100
+        PER_PAGE_MAX = 100
+
+        # starting values
+        count = 1
+        row_count = 1
+        another_page = True
+
+        api = self.github.url_pulls_base(project)
+
+        while another_page: 
+            params = {'page': count, 'per_page':PER_PAGE_MAX}
+            response = requests.get(api, params=params, headers=API_HEADER)
+            print(response)
+            r = response.json()
+            
+            # check if there is a next page
+            if 'next' in response.links:
+                api = response.links['next']['url']
+                print(api)
+                table, row_count = self.add_rows(r, row_count)
+                count += 1
+                another_page=True
+            else:
+                another_page=False
+        return table
+
+def diagnostic(project):
+    gh = GithubHelpers()
+    table = PrettyTable()
+    table.field_names = ["count", "title", "merged_at","user"]
+    table.align['count'] = "l"
+    table.align['title'] = "l"
+    table.align['merged_at'] = "l"
+    table.align['user'] = "l"
+    table = gh.paginate(project, table)
+    print(table)
 
 def main():
-    #project = 'reference-browser'
-    #project = 'android-components'
-    #project = 'focus-android'
-    project = 'fenix'
-    labels = "eng:intermittent-test"
-    status = 'open'
+    date_type = 'created'
+    date_start = '2021-09-01'
+    date_end = '2021-10-01'
+    project = 'reference-browser'
 
-    g = GithubHelpers()
-    url = g.issue_url(project, labels, status) 
-    print(url)
-    """
-    # Get general count of issues (any type)
-    repo_open_issues_label = b.get_open_label(args.project, args.label)
-    repo_closed_issues_label = b.get_closed_label(args.project, args.label)
-
-
-    # Get open issues (any type) at a particular date
-    repo_open_issues_today = b.get_open_by_day(args.project, args.label)
-    repo_closed_issues_today = b.get_closed_by_day(args.project, args.label)
-    """
+    g = Github()
+    r = g.date_range(date_type, date_start, date_end)
+    b = g.issues_url_base(project)
+    print(b)
 
 if __name__ == '__main__':
     main()
-

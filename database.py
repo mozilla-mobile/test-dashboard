@@ -32,7 +32,7 @@ class ReportTestRuns(Base):
     __table__ = Table('report_test_runs', Base.metadata, autoload=True)
 
 
-class Database(object):
+class Database:
 
     def __init__(self):
         self.session = Session()
