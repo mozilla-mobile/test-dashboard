@@ -31,6 +31,9 @@ class ReportTestCoverage(Base):
 class ReportTestRuns(Base):
     __table__ = Table('report_test_runs', Base.metadata, autoload=True)
 
+class ReportGithubIssues(Base):
+    __table__ = Table('report_github_issues', Base.metadata, autoload=True)
+
 
 class Database:
 
@@ -103,6 +106,9 @@ class Database:
             totals.append(tmp)
         return totals
 
+    def report_github_issues_totals(self, project_id, totals):
+        return totals
+
     def report_test_coverage_insert(self, project_id, totals):
         # insert data from totals into report_test_coverage table
         for i in range(1, len(totals)):
@@ -135,6 +141,26 @@ class Database:
                                         testrail_completed_on=completed_on)
                 self.session.add(report)
                 self.session.commit()
+
+    def report_github_issues_insert(self, project_id, totals):
+        for total in totals:
+            t = total
+
+            # only count xxxxx 
+            if t['xxxxx']:
+                report = ReportTestRuns(projects_id=project_id,
+                                        issue_id=t['issue_id'],
+                                        issue_title=t['issue_title'], # noqa
+                                        issue_types_id=t['issue_types_id'], #  1=issue, 2=pr
+                                        github_created_at=t['github_created_at'], # noqa
+                                        github_updated_at=t['github_updated_at'], # noqa
+                                        github_closed_at=t['github_closed_at'], # noqa
+                                        github_merged_at=t['github_merged_at']) # noqa
+                self.session.add(report)
+                self.session.commit()
+                self.session.add(report)
+                self.session.commit()
+
 
     def test_automation_status_option_ids(self):
         # ids corresponding to options in the automation status dropdown
