@@ -1,6 +1,7 @@
 import argparse
 import sys
 
+from github import GithubHelpers
 from testrail import TestRailHelpers
 
 
@@ -61,12 +62,9 @@ def main():
             num_days = ''
         h.testrail_run_update(args.project, num_days)
     if args.report_type == 'issue-regression':
-        """
         h = GithubHelpers()
         h.github_issue_regression(args.project)
         h = GithubHelpers()
-        """
-        pass
 
 
 if __name__ == '__main__':
