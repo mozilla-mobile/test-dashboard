@@ -79,6 +79,7 @@ parse_args() {
             ${CMD} < ${DB_DUMP}.sql
             ;;
         *)
+            ${CMD}
             ;;
     esac
 }

@@ -209,7 +209,7 @@ CREATE TABLE `report_github_issues` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   FOREIGN KEY(`projects_id`) REFERENCES projects(`id`),
-  FOREIGN KEY(`issue_types_id`) REFERENCES github_issue_types(`id`),
+  FOREIGN KEY(`issue_types_id`) REFERENCES github_issue_types(`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

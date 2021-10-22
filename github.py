@@ -15,6 +15,13 @@ LABELS = [
     'P1', 'P2', 'P3',
 ]
 
+DATE_TYPES = [
+    'created_at',
+    'updated_at',
+    'closed_at',
+    'merged_at',
+]
+
 
 class Github:
 
@@ -26,10 +33,14 @@ class Github:
         sys.exit()
 
     # UTILS
-    def path_date_range(self, date_type, date_lower_limit, date_upper_limit):
+    def path_date_range(self, issue_status, date_lower_limit, date_upper_limit):
         # created_at, updated_at, closed_at, merged_at
         path = ''
-        date_type = 'created'
+        date_type = ''
+        for item in DATE_TYPES:
+            if issue_status in item:
+                date_type = item
+
         if date_lower_limit:
             path += '+{0}:>={1}'.format(date_type, date_lower_limit )
         if date_upper_limit:
@@ -50,14 +61,14 @@ class Github:
     def issues_url_base(self, project):
         return '{0}/search/issues?q=repo:{1}/{2}'.format(API_BASE, OWNER, project) # noqa
 
-    def url_is_issue(self, project, label_matcher, date_type='', date_lower_limit='', date_upper_limit=''): # noqa
+    def url_is_issue(self, project, label_matcher, issue_status='', date_lower_limit='', date_upper_limit=''): # noqa
         url_base = self.issues_url_base(project)
         url = '{0}+is:issue'.format(url_base)
         if label_matcher:
             labels = self.path_labels(label_matcher)
             url += labels
-        if date_type:
-            date_range = self.path_date_range(date_type, date_lower_limit, date_upper_limit)
+        if issue_status:
+            date_range = self.path_date_range(issue_status, date_lower_limit, date_upper_limit)
             url += date_range
         return url 
 
@@ -129,14 +140,14 @@ class GithubHelpers:
 
     def github_issue_regression(self, project):
         # type_type = created_at, updated_at, closed_at, merged_at
-        date_type = 'created'
+        issue_status= 'created'
         date_lower_limit = '2021-09-01'
         date_upper_limit = '2021-10-01'
 
         g = Github()
         b = g.issues_url_base(project)
         p = g.pulls_url_base(project)
-        u = g.url_is_issue(project, 'intermit', date_type, date_lower_limit, date_upper_limit)
+        u = g.url_is_issue(project, 'intermit', issue_status, date_lower_limit, date_upper_limit)
         print(u)
         print(b)
         label_matcher = 'INTERMIT'

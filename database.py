@@ -31,6 +31,7 @@ class ReportTestCoverage(Base):
 class ReportTestRuns(Base):
     __table__ = Table('report_test_runs', Base.metadata, autoload=True)
 
+
 class ReportGithubIssues(Base):
     __table__ = Table('report_github_issues', Base.metadata, autoload=True)
 
