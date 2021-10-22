@@ -304,6 +304,6 @@ UNLOCK TABLES;
 
 LOCK TABLES `github_issue_types` WRITE;
 /*!40000 ALTER TABLE `github_issue_types` DISABLE KEYS */;
-INSERT INTO `github_issue_types`(`issue_type`) VALUES (1, 'issue'), (2, 'pr');
+INSERT INTO `github_issue_types`(`id`, `issue_type`) VALUES (1, 'issue'), (2, 'pr');
 /*!40000 ALTER TABLE `github_issue_types` ENABLE KEYS */;
 UNLOCK TABLES;
