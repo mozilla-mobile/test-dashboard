@@ -122,6 +122,20 @@ CREATE TABLE `test_run_result_types` (
 
 
 --
+-- Table structure for table `github_issue_types`
+--
+
+DROP TABLE IF EXISTS `github_issue_types`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `github_issue_types` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `issue_type` varchar(75) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `report_test_coverage`
 --
 
@@ -171,6 +185,31 @@ CREATE TABLE `report_test_runs` (
   FOREIGN KEY(`projects_id`) REFERENCES projects(`id`),
   FOREIGN KEY(`test_suites_id`) REFERENCES test_suites(`id`),
   FOREIGN KEY(`test_sub_suites_id`) REFERENCES test_sub_suites(`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `report_github_issues`
+--
+
+DROP TABLE IF EXISTS `report_github_issues`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `report_github_issues` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `projects_id` int(11) NOT NULL, 
+  `issue_id` int(11) NOT NULL, 
+  `issue_title` varchar(75) DEFAULT NULL,
+  `issue_types_id` int(11) DEFAULT 1, 
+  `github_created_at` date NOT NULL,
+  `github_updated_at` date DEFAULT NULL,
+  `github_closed_at` date DEFAULT NULL,
+  `github_merged_at` date DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY(`projects_id`) REFERENCES projects(`id`),
+  FOREIGN KEY(`issue_types_id`) REFERENCES github_issue_types(`id`),
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -259,3 +298,12 @@ INSERT INTO `test_run_result_types`(`testrail_id`, `result_type_abbrev`, `result
 UNLOCK TABLES;
 
 
+--
+-- data for reference table `github_issue_types`
+--
+
+LOCK TABLES `github_issue_types` WRITE;
+/*!40000 ALTER TABLE `github_issue_types` DISABLE KEYS */;
+INSERT INTO `github_issue_types`(`issue_type`) VALUES (1, 'issue'), (2, 'pr');
+/*!40000 ALTER TABLE `github_issue_types` ENABLE KEYS */;
+UNLOCK TABLES;
