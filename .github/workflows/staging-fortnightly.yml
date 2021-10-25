@@ -1,9 +1,9 @@
-name: Testops Report WEEKLY 
+name: Testops Report FORTNIGHTLY 
 
-# Sat. @4am UTC
+# Every other Sat. @4am UTC
 on:
   schedule:
-    - cron:  "0 4 * * 6" 
+    - cron:  "0 4 * * 6/2" 
 
 jobs:
   deploy:
@@ -37,8 +37,5 @@ jobs:
             echo "TESTRAIL_USERNAME=${{ secrets.TESTRAIL_USERNAME }}" >> $GITHUB_ENV
             echo "TESTRAIL_PASSWORD=${{ secrets.TESTRAIL_PASSWORD }}" >> $GITHUB_ENV
 
-      - name: Update DB - test runs 
-        run: python ./data_pump.py --report-type test-runs --project fenix --num-days 7
-
-      #- name: Update DB - test coverage 
-      #  run: python ./data_pump.py --report-type test-cases --project fenix 
+      #- name: Update DB - test runs 
+      #  run: python ./data_pump.py --report-type xxxx --project fenix --num-days 7
