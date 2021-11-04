@@ -3,7 +3,7 @@ import sys
 import json
 import requests
 
-from database import GithubDatabase
+from database import DatabaseGithub
 
 
 API_BASE = 'https://api.github.com'
@@ -101,7 +101,7 @@ class GithubDataPump(Github):
 
     def __init__(self):
         super().__init__()
-        self.database = GithubDatabase()
+        self.database = DatabaseGithub()
 
 
     def add_rows(data, row_count):

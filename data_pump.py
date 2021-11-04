@@ -60,7 +60,7 @@ def main():
             num_days = args.num_days
         else:
             num_days = ''
-        h.testrail_run_update(args.project, num_days)
+        h.testrail_run_counts_update(args.project, num_days)
     if args.report_type == 'issue-regression':
         h = GithubDataPump()
         h.github_issue_regression(args.project)

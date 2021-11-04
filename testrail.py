@@ -2,7 +2,7 @@ import os
 import sys
 
 from lib.testrail_conn import APIClient
-from database import TestRailDatabase
+from database import DatabaseTestRail
 from utils import Utils
 
 
@@ -85,7 +85,7 @@ class TestRailDataPump(TestRail):
         # Insert data in 'totals' array into DB
         self.db.report_test_coverage_insert(projects_id, totals)
 
-    def testrail_run_update(self, project, num_days):
+    def testrail_run_counts_update(self, project, num_days):
         start_date = Utils.start_date(num_days)
 
         # Get reference IDs from DB

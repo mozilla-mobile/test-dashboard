@@ -43,7 +43,7 @@ class Database:
         self.session = Session()
 
 
-class TestRailDatabase(Database):
+class DatabaseTestRail(Database):
 
     def __init__(self):
         super().__init__()
@@ -166,7 +166,7 @@ class TestRailDatabase(Database):
         return p.id, p.testrail_id, p.testrail_functional_test_suite_id
 
 
-class GithubDatabase(Database):
+class DatabaseGithub(Database):
 
     def __init__(self):
         super().__init__()
