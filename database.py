@@ -1,6 +1,3 @@
-import sys
-
-import numpy as np
 import pandas as pd
 from sqlalchemy import Table
 
@@ -45,45 +42,45 @@ class Database:
     def __init__(self):
         self.session = Session()
 
-    def totals_new_row(self, field_list, data_list):
-        """ Given a field list, create an empty dictionary to temporarily
-        store a row of data for totals array"""
-        row = {}
-        i = 0 
-        for key in field_list:
-            row.update({key: data_list[i]})
-            i += 1
-        return row 
+
+class TestRailDatabase(Database):
+
+    def __init__(self):
+        super().__init__()
+        self.db = Database()
 
     def report_test_coverage_totals(self, cases):
         """given testrail data (cases), calculate test case counts by type"""
 
-        totals = [] 
+        totals = []
 
         for case in cases:
-           row = [] 
-           subs = case['custom_sub_test_suites']
-           stat = case['custom_automation_status']
-           cov  = case['custom_automation_coverage']
-           for sub in subs:
-               row = [sub, stat, cov, 1]
-               totals.append(row)
- 
-        totals = pd.DataFrame(data=totals, columns=['sub', 'status', 'cov', 'tally']).groupby(['sub', 'status', 'cov'])['tally'].sum().reset_index()
-     
-        return totals
+            row = []
+            subs = case['custom_sub_test_suites']
+            stat = case['custom_automation_status']
+            cov = case['custom_automation_coverage']
+
+            # iterate through multi-select sub_suite data
+            # we need to create a separate row for each
+            # test case that belongs to multiple sub suites
+            for sub in subs:
+                row = [sub, stat, cov, 1]
+                totals.append(row)
+
+        df = pd.DataFrame(data=totals,
+                          columns=['sub', 'status', 'cov', 'tally'])
+        return df.groupby(['sub', 'status', 'cov'])['tally'].sum().reset_index() # noqa
 
     def report_test_coverage_insert(self, project_id, totals):
         # insert data from totals into report_test_coverage table
-        for index, row in totals.iterrows(): 
+        for index, row in totals.iterrows():
             report = ReportTestCoverage(projects_id=project_id,
-                                        test_automation_status_id=row['status'],
+                                        test_automation_status_id=row['status'], # noqa
                                         test_automation_coverage_id=row['cov'],
                                         test_sub_suites_id=row['sub'],
                                         test_count=row['tally'])
             self.session.add(report)
             self.session.commit()
-
 
     def report_test_run_totals(self, runs):
         """pack testrail data for 1 run in a data array
@@ -122,9 +119,6 @@ class Database:
             totals.append(tmp)
         return totals
 
-    def report_github_issues_totals(self, project_id, totals):
-        return totals
-
     def report_test_runs_insert(self, project_id, totals):
         # insert data from totals into report_test_runs table
 
@@ -146,42 +140,7 @@ class Database:
                 self.session.add(report)
                 self.session.commit()
 
-    def report_github_issues_insert(self, project_id, totals):
-        for total in totals:
-            t = total
-
-            # only count xxxxx 
-            if t['xxxxx']:
-                report = ReportTestRuns(projects_id=project_id,
-                                        issue_id=t['issue_id'],
-                                        issue_title=t['issue_title'], # noqa
-                                        issue_types_id=t['issue_types_id'], #  1=issue, 2=pr
-                                        github_created_at=t['github_created_at'], # noqa
-                                        github_updated_at=t['github_updated_at'], # noqa
-                                        github_closed_at=t['github_closed_at'], # noqa
-                                        github_merged_at=t['github_merged_at']) # noqa
-                self.session.add(report)
-                self.session.commit()
-                self.session.add(report)
-                self.session.commit()
-
-
-    def test_sub_suites_option_ids(self):
-        # ids corresponding to options in the automation status dropdown
-        response = self.session.query(TestSubSuites.testrail_id).all()
-        results = []
-        for row in response:
-            results.append(row[0])
-        return results
-
-    def test_automation_status_option_ids(self):
-        # ids corresponding to options in the automation status dropdown
-        response = self.session.query(TestAutomationStatus.testrail_id).all()
-        results = []
-        for row in response:
-            results.append(row[0])
-        return results
-
+    """
     def test_automation_coverage_option_ids(self):
         # ids corresponding to options in the automation coverage dropdown
         response = self.session.query(TestAutomationCoverage.testrail_id).all()
@@ -189,6 +148,7 @@ class Database:
         for row in response:
             results.append(row[0])
         return results
+    """
 
     def testrail_identity_ids(self, project):
         """ Return the ids needed to be able to query the TestRail API for
@@ -204,3 +164,32 @@ class Database:
         q = self.session.query(Projects)
         p = q.filter_by(project_name_abbrev=project).first()
         return p.id, p.testrail_id, p.testrail_functional_test_suite_id
+
+
+class GithubDatabase(Database):
+
+    def __init__(self):
+        super().__init__()
+        self.db = Database()
+
+    def report_github_issues_totals(self, project_id, totals):
+        return totals
+
+    def report_github_issues_insert(self, project_id, totals):
+        for total in totals:
+            t = total
+
+            # only count xxxxx
+            if t['xxxxx']:
+                report = ReportTestRuns(projects_id=project_id,
+                                        issue_id=t['issue_id'],
+                                        issue_title=t['issue_title'], # noqa
+                                        issue_types_id=t['issue_types_id'], # 1=issue,2=pr # noqa
+                                        github_created_at=t['github_created_at'], # noqa
+                                        github_updated_at=t['github_updated_at'], # noqa
+                                        github_closed_at=t['github_closed_at'], # noqa
+                                        github_merged_at=t['github_merged_at']) # noqa
+                self.session.add(report)
+                self.session.commit()
+                self.session.add(report)
+                self.session.commit()

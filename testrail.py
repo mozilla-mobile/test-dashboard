@@ -2,7 +2,7 @@ import os
 import sys
 
 from lib.testrail_conn import APIClient
-from database import Database
+from database import TestRailDatabase
 from utils import Utils
 
 
@@ -64,12 +64,11 @@ class TestRail:
         return self.client.send_get('get_results_for_run/{0}'.format(run_id))
 
 
-class TestRailClient(TestRail):
+class TestRailDataPump(TestRail):
 
     def __init__(self):
-        #self.testrail = TestRail()
         super().__init__()
-        self.db = Database()
+        self.db = TestRailDatabase()
 
     def testrail_coverage_update(self, project):
 
@@ -77,9 +76,8 @@ class TestRailClient(TestRail):
         projects_id, testrail_project_id, functional_test_suite_id = self.db.testrail_identity_ids(project) # noqa 
 
         # Pull JSON blob from Testrail
-        #cases = self.testrail.test_cases(testrail_project_id,
         cases = self.test_cases(testrail_project_id,
-                                         functional_test_suite_id)
+                                functional_test_suite_id)
 
         # Format and store data in a 'totals' array
         totals = self.db.report_test_coverage_totals(cases)

@@ -3,6 +3,9 @@ import sys
 import json
 import requests
 
+from database import GithubDatabase
+
+
 API_BASE = 'https://api.github.com'
 OWNER = 'mozilla-mobile'
 
@@ -94,10 +97,12 @@ class Github:
         return  '{0}/repos/{1}/{2}/pulls?state=closed'.format(API_BASE, OWNER, project) # noqa
 
 
-class GithubClient:
+class GithubDataPump(Github):
 
     def __init__(self):
-        self.github = Github()
+        super().__init__()
+        self.database = GithubDatabase()
+
 
     def add_rows(data, row_count):
         for repository in data:

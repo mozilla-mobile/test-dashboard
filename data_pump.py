@@ -1,9 +1,8 @@
 import argparse
 import sys
 
-from github import GithubClient 
-#from testrail import TestRailHelpers
-from testrail import TestRailClient
+from testrail import TestRailDataPump
+from github import GithubDataPump
 
 
 PROJECTS_ABBREV = [
@@ -16,7 +15,7 @@ PROJECTS_ABBREV = [
 
 REPORT_TYPES = [
     'test-cases',
-    'test-runs',
+    'test-run-counts',
     'issue-regression',
 ]
 
@@ -53,21 +52,19 @@ def main():
     args = parse_args(sys.argv[1:])
 
     if args.report_type == 'test-cases':
-        #h = TestRailHelpers()
-        h = TestRailClient()
+        h = TestRailDataPump()
         h.testrail_coverage_update(args.project)
-    if args.report_type == 'test-runs':
-        #h = TestRailHelpers()
-        h = TestRailClient()
+    if args.report_type == 'test-run-counts':
+        h = TestRailDataPump()
         if args.num_days:
             num_days = args.num_days
         else:
             num_days = ''
         h.testrail_run_update(args.project, num_days)
     if args.report_type == 'issue-regression':
-        h = GithubClient()
+        h = GithubDataPump()
         h.github_issue_regression(args.project)
-        h = GithubClient()
+        h = GithubDataPump()
 
 
 if __name__ == '__main__':
