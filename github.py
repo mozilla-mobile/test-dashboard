@@ -81,6 +81,8 @@ class Github:
         is:open
         is:closed
         label:<label>
+        label:bug
+        label:crash
         """
         url_base = self.issues_url_base(project)
         url = '{0}+is:issue'.format(url_base)
@@ -92,7 +94,7 @@ class Github:
         return  '{0}/repos/{1}/{2}/pulls?state=closed'.format(API_BASE, OWNER, project) # noqa
 
 
-class GithubHelpers:
+class GithubClient:
 
     def __init__(self):
         self.github = Github()
@@ -155,7 +157,7 @@ class GithubHelpers:
 
     def diagnostic(self, project, table):
         from prettytable import PrettyTable
-        gh = GithubHelpers()
+        gh = GithubClient()
         table = PrettyTable()
         table.field_names = ["count", "title", "merged_at","user"]
         table.align['count'] = "l"

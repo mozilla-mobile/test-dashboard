@@ -64,10 +64,11 @@ class TestRail:
         return self.client.send_get('get_results_for_run/{0}'.format(run_id))
 
 
-class TestRailHelpers:
+class TestRailClient(TestRail):
 
     def __init__(self):
-        self.testrail = TestRail()
+        #self.testrail = TestRail()
+        super().__init__()
         self.db = Database()
 
     def testrail_coverage_update(self, project):
@@ -76,7 +77,8 @@ class TestRailHelpers:
         projects_id, testrail_project_id, functional_test_suite_id = self.db.testrail_identity_ids(project) # noqa 
 
         # Pull JSON blob from Testrail
-        cases = self.testrail.test_cases(testrail_project_id,
+        #cases = self.testrail.test_cases(testrail_project_id,
+        cases = self.test_cases(testrail_project_id,
                                          functional_test_suite_id)
 
         # Format and store data in a 'totals' array
@@ -99,7 +101,8 @@ class TestRailHelpers:
         # {'blocked_count': 0}, {'untested_count': 0}, {'untested_count': 0}]
 
         # Pull JSON blob from Testrail
-        runs = self.testrail.test_runs(testrail_project_id, start_date) # noqa
+        #runs = self.testrail.test_runs(testrail_project_id, start_date) # noqa
+        runs = self.test_runs(testrail_project_id, start_date) # noqa
 
         # Format and store data in a 'totals' array
         totals = self.db.report_test_run_totals(runs)

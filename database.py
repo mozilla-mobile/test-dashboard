@@ -1,3 +1,7 @@
+import sys
+
+import numpy as np
+import pandas as pd
 from sqlalchemy import Table
 
 from lib.database_conn import Session, Base
@@ -41,34 +45,93 @@ class Database:
     def __init__(self):
         self.session = Session()
 
+    def totals_new_row(self, field_list, data_list):
+        """ Given a field list, create an empty dictionary to temporarily
+        store a row of data for totals array"""
+        row = {}
+        i = 0 
+        for key in field_list:
+            row.update({key: data_list[i]})
+            i += 1
+        return row 
+
     def report_test_coverage_totals(self, cases):
         """given testrail data (cases), parse for test case counts"""
 
         # determine range for a data array for temp storing values to insert
+        sub_ids = self.test_sub_suites_option_ids()
+        b = len(sub_ids) + 1
         stat_ids = self.test_automation_status_option_ids()
-        stat_ids = len(stat_ids) + 1
+        s = len(stat_ids) + 1
         cov_ids = self.test_automation_coverage_option_ids()
-        cov_ids = len(cov_ids) + 1
+        c = len(cov_ids) + 1
 
-        # create array to store values to insert in database
-        totals = [[0]*(cov_ids) for _ in range(stat_ids)]
-        count = 0
+        totals = [] 
+
         for case in cases:
-            t = case['title']
-            s = case['custom_automation_status']
-            c = case['custom_automation_coverage']
+           b = case['custom_sub_test_suites']
+           s = case['custom_automation_status']
+           c = case['custom_automation_coverage']
+           row = [] 
+           for i in b:
+               row = [i, s, c, 1]
+               totals.append(row)
+ 
+        """
+        df1 = pd.DataFrame(totals, columns=['custom_sub_test_suites',
+                                           'custom_automation_status',
+                                           'custom_automation_coverage'])
+        df1.groupby(['custom_automation_status', 'custom_automation_coverage']).sum()
+        """
+        df1 = pd.DataFrame(data=totals, columns=['sub', 'status', 'cov', 'tally']).groupby(['sub', 'status', 'cov'])['tally'].sum().reset_index()
+     
+        #df1.groupby(['sub'])['count'].sum().reset_index()
 
-            if c is None:
-                # ============================================
-                # DIAGNOSTIC
-                # ============================================
-                # Testrail data needs housekeeping
-                # List out cases missing Coverage
-                print('{0}. {1}'.format(count, t))
-                c = 1
-                count += 1
-            totals[s][c] += 1
+        print(df1)
+        sys.exit(1)
         return totals
+
+    def report_test_coverage_totals_NEW(self, cases):
+        """given testrail data (cases), parse for test case counts"""
+
+        # create a 'totals' list to store rows of data to insert in database
+        totals = []
+
+        # desired fields in 'cases' 
+        keys = ['title',
+                'custom_automation_status',
+                'custom_automation_coverage',
+                'custom_sub_test_suites']
+
+        for case in cases:
+            vals  = [case[i] for i in keys]
+            print(case)
+            # each testcase can have MULTIPLE custom_sub_test_suites ids
+            # instead of total per test case count
+            # we have to decide how to pack in extra counts for sub_test_suites
+            for j in case['custom_sub_test_suites']:
+                row = self.totals_new_row(keys, vals) 
+                # need to fix the last custom_sub_suites_id
+                print(row)
+                totals.append(row)
+        #print(totals)
+
+        sys.exit(1)
+        return totals
+
+    def report_test_coverage_insert(self, project_id, totals):
+        # insert data from totals into report_test_coverage table
+        for i in range(1, len(totals)):
+            for j in range(1, len(totals[i])):
+                for k in range(1, len(totals[i][j])):
+					# sqlalchemy insert statement
+                    report = ReportTestCoverage(projects_id=project_id,
+                                                test_automation_status_id=i,
+                                                test_automation_coverage_id=j,
+                                                test_sub_suites_id=k,
+                                                test_count=totals[i][j])
+                    self.session.add(report)
+                    self.session.commit()
 
     def report_test_run_totals(self, runs):
         """pack testrail data for 1 run in a data array
@@ -110,18 +173,6 @@ class Database:
     def report_github_issues_totals(self, project_id, totals):
         return totals
 
-    def report_test_coverage_insert(self, project_id, totals):
-        # insert data from totals into report_test_coverage table
-        for i in range(1, len(totals)):
-            for j in range(1, len(totals[i])):
-                # sqlalchemy insert statement
-                report = ReportTestCoverage(projects_id=project_id,
-                                            test_automation_status_id=i,
-                                            test_automation_coverage_id=j,
-                                            test_count=totals[i][j])
-                self.session.add(report)
-                self.session.commit()
-
     def report_test_runs_insert(self, project_id, totals):
         # insert data from totals into report_test_runs table
 
@@ -162,6 +213,14 @@ class Database:
                 self.session.add(report)
                 self.session.commit()
 
+
+    def test_sub_suites_option_ids(self):
+        # ids corresponding to options in the automation status dropdown
+        response = self.session.query(TestSubSuites.testrail_id).all()
+        results = []
+        for row in response:
+            results.append(row[0])
+        return results
 
     def test_automation_status_option_ids(self):
         # ids corresponding to options in the automation status dropdown

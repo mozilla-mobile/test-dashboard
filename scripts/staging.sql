@@ -135,6 +135,7 @@ CREATE TABLE `github_issue_types` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+
 --
 -- Table structure for table `report_test_coverage`
 --
@@ -153,7 +154,6 @@ CREATE TABLE `report_test_coverage` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   FOREIGN KEY(`projects_id`) REFERENCES projects(`id`),
-  FOREIGN KEY(`test_suites_id`) REFERENCES test_suites(`id`),
   FOREIGN KEY(`test_sub_suites_id`) REFERENCES test_sub_suites(`id`),
   FOREIGN KEY(`test_automation_status_id`) REFERENCES test_automation_status(`id`),
   FOREIGN KEY(`test_automation_coverage_id`) REFERENCES test_automation_coverage(`id`)
