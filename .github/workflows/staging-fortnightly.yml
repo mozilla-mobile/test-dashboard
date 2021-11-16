@@ -38,4 +38,4 @@ jobs:
             echo "TESTRAIL_PASSWORD=${{ secrets.TESTRAIL_PASSWORD }}" >> $GITHUB_ENV
 
       #- name: Update DB - test runs 
-      #  run: python ./data_pump.py --report-type xxxx --project fenix --num-days 7
+      #  run: python ./__main__.py --report-type xxxx --project ALL --num-days 7

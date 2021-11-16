@@ -137,13 +137,13 @@ CREATE TABLE `github_issue_types` (
 
 
 --
--- Table structure for table `report_test_coverage`
+-- Table structure for table `report_test_case_coverage`
 --
 
-DROP TABLE IF EXISTS `report_test_coverage`;
+DROP TABLE IF EXISTS `report_test_case_coverage`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `report_test_coverage` (
+CREATE TABLE `report_test_case_coverage` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `projects_id` int(11) NOT NULL, 
   `test_suites_id` int(11) NOT NULL DEFAULT 1, 
@@ -162,13 +162,13 @@ CREATE TABLE `report_test_coverage` (
 
 
 --
--- Table structure for table `report_test_runs`
+-- Table structure for table `report_test_run_counts`
 --
 
-DROP TABLE IF EXISTS `report_test_runs`;
+DROP TABLE IF EXISTS `report_test_run_counts`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `report_test_runs` (
+CREATE TABLE `report_test_run_counts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `projects_id` int(11) NOT NULL, 
   `test_suites_id` int(11) NOT NULL DEFAULT 1, 

@@ -2,7 +2,7 @@ import pandas as pd
 from sqlalchemy import Table
 
 from lib.database_conn import Session, Base
-from utils import Utils
+from utils.datetime_utils import DatetimeUtils
 
 
 class Projects(Base):
@@ -25,12 +25,12 @@ class TestSubSuites(Base):
     __table__ = Table('test_sub_suites', Base.metadata, autoload=True)
 
 
-class ReportTestCoverage(Base):
-    __table__ = Table('report_test_coverage', Base.metadata, autoload=True)
+class ReportTestCaseCoverage(Base):
+    __table__ = Table('report_test_case_coverage', Base.metadata, autoload=True)
 
 
-class ReportTestRuns(Base):
-    __table__ = Table('report_test_runs', Base.metadata, autoload=True)
+class ReportTestRunCounts(Base):
+    __table__ = Table('report_test_run_counts', Base.metadata, autoload=True)
 
 
 class ReportGithubIssues(Base):

@@ -99,7 +99,7 @@ class Github:
         return  '{0}/repos/{1}/{2}/pulls?state=closed'.format(API_BASE, OWNER, project) # noqa
 
 
-class GithubDataPump(Github):
+class GithubClient(Github):
 
     EXCLUDED = []
 

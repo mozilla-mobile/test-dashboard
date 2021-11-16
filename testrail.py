@@ -7,11 +7,11 @@ from lib.testrail_conn import APIClient
 from database import (
     Database,
     Projects,
-    ReportTestCoverage,
-    ReportTestRuns
+    ReportTestCaseCoverage,
+    ReportTestRunCounts
 )
 
-from utils import Utils
+from utils.datetime_utils import DatetimeUtils as dt
 
 
 class TestRail:
@@ -58,10 +58,10 @@ class TestRail:
     def test_runs(self, project_id, start_date='', end_date=''):
         date_range = ''
         if start_date:
-            after = Utils.convert_datetime_to_epoch(start_date)
+            after = dt.convert_datetime_to_epoch(start_date)
             date_range += '&created_after={0}'.format(after)
         if end_date:
-            before = Utils.convert_datetime_to_epoch(end_date)
+            before = dt.convert_datetime_to_epoch(end_date)
             date_range += '&created_before={0}'.format(before)
         return self.client.send_get('get_runs/{0}{1}'.format(project_id, date_range)) # noqa
 
@@ -72,11 +72,56 @@ class TestRail:
         return self.client.send_get('get_results_for_run/{0}'.format(run_id))
 
 
-class TestRailDataPump(TestRail):
+class TestRailClient(TestRail):
 
     def __init__(self):
         super().__init__()
         self.db = DatabaseTestRail()
+
+    def data_pump(self, project='all', suite='all'):
+        # call database for 'all' values
+        # convert inputs to a list so we can easily
+        # loop thru them
+        if project == 'all':
+            print('all')
+            sys.exit(1)
+            """
+            for project in projects:
+                for suite in suites:
+                    self.testrail_coverage_update(project, suite)
+           """
+        else:
+            self.testrail_coverage_update(project)
+
+    def testrail_identity_ids(self, project):
+        """ Return the ids needed to be able to query the TestRail API for
+        a specific test suite from a specific project
+
+        projects.id = projects table id
+        testrail_id = id of project in testrail
+        testrail_functional_test_suite_id = Full Functional Tests Suite id
+
+        # Note:
+        # These never change, so we store them in DB for convenience """
+
+        q = self.session.query(Projects)
+        p = q.filter_by(project_name_abbrev=project).first()
+        return p.id, p.testrail_id, p.testrail_functional_test_suite_id
+
+    def testrail_identity_ids_OLD(self, project):
+        """ Return the ids needed to be able to query the TestRail API for
+        a specific test suite from a specific project
+
+        projects.id = projects table id
+        testrail_id = id of project in testrail
+        testrail_functional_test_suite_id = Full Functional Tests Suite id
+
+        # Note:
+        # These never change, so we store them in DB for convenience """
+
+        q = self.session.query(Projects)
+        p = q.filter_by(project_name_abbrev=project).first()
+        return p.id, p.testrail_id, p.testrail_functional_test_suite_id
 
     def testrail_coverage_update(self, project):
 
@@ -94,7 +139,7 @@ class TestRailDataPump(TestRail):
         self.db.report_test_coverage_insert(projects_id, totals)
 
     def testrail_run_counts_update(self, project, num_days):
-        start_date = Utils.start_date(num_days)
+        start_date = dt.start_date(num_days)
 
         # Get reference IDs from DB
         projects_id, testrail_project_id, functional_test_suite_id = self.db.testrail_identity_ids(project) # noqa 
@@ -194,16 +239,16 @@ class DatabaseTestRail(Database):
         return totals
 
     def report_test_runs_insert(self, project_id, totals):
-        # insert data from totals into report_test_runs table
+        # insert data from totals into report_test_run_counts table
 
         for total in totals:
             t = total
 
             # only count completed testruns
             if t['testrail_completed_on']:
-                created_on = Utils.convert_epoch_to_datetime(t['testrail_created_on']) # noqa
-                completed_on = Utils.convert_epoch_to_datetime(t['testrail_completed_on']) # noqa
-                report = ReportTestRuns(projects_id=project_id,
+                created_on = dt.convert_epoch_to_datetime(t['testrail_created_on']) # noqa
+                completed_on = dt.convert_epoch_to_datetime(t['testrail_completed_on']) # noqa
+                report = ReportTestRunCounts(projects_id=project_id,
                                         testrail_run_id=t['testrail_run_id'],
                                         test_case_passed_count=t['passed_count'], # noqa
                                         test_case_retest_count=t['retest_count'], # noqa
@@ -224,17 +269,3 @@ class DatabaseTestRail(Database):
         return results
     """
 
-    def testrail_identity_ids(self, project):
-        """ Return the ids needed to be able to query the TestRail API for
-        a specific test suite from a specific project
-
-        projects.id = projects table id
-        testrail_id = id of project in testrail
-        testrail_functional_test_suite_id = Full Functional Tests Suite id
-
-        # Note:
-        # These never change, so we store them in DB for convenience """
-
-        q = self.session.query(Projects)
-        p = q.filter_by(project_name_abbrev=project).first()
-        return p.id, p.testrail_id, p.testrail_functional_test_suite_id
