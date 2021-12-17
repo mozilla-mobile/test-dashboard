@@ -82,31 +82,60 @@ class TestRailClient(TestRail):
         # call database for 'all' values
         # convert inputs to a list so we can easily
         # loop thru them
-        if project == 'all':
-            print('all')
-            sys.exit(1)
-            """
-            for project in projects:
-                for suite in suites:
-                    self.testrail_coverage_update(project, suite)
-           """
-        else:
-            self.testrail_coverage_update(project)
+        ids_list = self.testrail_project_ids(project)
+        print(f'IDS_LIST: {ids_list}')
+        for ids in ids_list:         
+            suite_ids = self.testrail_suite_ids(testrail_project_id=ids[1])
+            for suite_id in suite_ids:
+                print(f"ID: {ids[1]}")
+                print(f"SUITE_ID: {suite_id}")
+                print('--------')
+                self.testrail_coverage_update(ids[0], ids[1], suite_id)
+                # testrail_coverage_update(self, projects_id, testrail_project_id, test_suite_id):
 
-    def testrail_identity_ids(self, project):
+        """
+        for project in projects:
+            for suite in suites:
+                self.testrail_coverage_update(project, suite)
+       """
+
+    def testrail_suite_ids(self, testrail_project_id):
+        suite_ids = []
+        suites = self.test_suites(testrail_project_id) # testrail_project_id
+        for suite in suites:
+            suite_ids.append(suite['id'])
+        return suite_ids
+
+    def testrail_project_ids(self, project):
         """ Return the ids needed to be able to query the TestRail API for
         a specific test suite from a specific project
 
         projects.id = projects table id
         testrail_id = id of project in testrail
-        testrail_functional_test_suite_id = Full Functional Tests Suite id
 
-        # Note:
-        # These never change, so we store them in DB for convenience """
+        Note:
+         - These never change, so we store them in DB for convenience
+         - We'll use these to query the test suites from each respective project
+        """
 
-        q = self.session.query(Projects)
-        p = q.filter_by(project_name_abbrev=project).first()
-        return p.id, p.testrail_id, p.testrail_functional_test_suite_id
+        q = self.db.session.query(Projects)
+
+        if project == 'all':
+            p = q.all()
+        else:
+            p = []
+            proj = q.filter_by(project_name_abbrev=project).first()
+            p.append(proj)
+        ids = []
+        tmp = []
+
+        for item in p:
+            if type(item.testrail_id == int):
+                tmp.append(item.id)
+                tmp.append(item.testrail_id)
+                ids.append(tmp)
+            tmp = []
+        return ids
 
     def testrail_identity_ids_OLD(self, project):
         """ Return the ids needed to be able to query the TestRail API for
@@ -119,24 +148,23 @@ class TestRailClient(TestRail):
         # Note:
         # These never change, so we store them in DB for convenience """
 
-        q = self.session.query(Projects)
+        #q = self.session.query(Projects)
+        q = self.db.session.query(Projects)
         p = q.filter_by(project_name_abbrev=project).first()
         return p.id, p.testrail_id, p.testrail_functional_test_suite_id
 
-    def testrail_coverage_update(self, project):
-
-        # Get reference IDs from DB
-        projects_id, testrail_project_id, functional_test_suite_id = self.db.testrail_identity_ids(project) # noqa 
+    def testrail_coverage_update(self, projects_id, testrail_project_id, test_suite_id):
 
         # Pull JSON blob from Testrail
-        cases = self.test_cases(testrail_project_id,
-                                functional_test_suite_id)
+        cases = self.test_cases(testrail_project_id, test_suite_id)
 
         # Format and store data in a 'totals' array
         totals = self.db.report_test_coverage_totals(cases)
+        print(totals)
 
         # Insert data in 'totals' array into DB
         self.db.report_test_coverage_insert(projects_id, totals)
+
 
     def testrail_run_counts_update(self, project, num_days):
         start_date = dt.start_date(num_days)
@@ -175,7 +203,15 @@ class DatabaseTestRail(Database):
 
         for case in cases:
             row = []
+            """
+            # TODO: remove conditional once Focus-iOS data has been fixed
+            if not case['custom_sub_test_suites']:
+                 print('NOT FOUND: ', case['id'])
+                 subs = 1
+            """
+            suit = case['suite_id']
             subs = case['custom_sub_test_suites']
+            print('suite_id: {0}, case_id: {1}, subs: {2}'.format(suit, case['id'], subs))
             stat = case['custom_automation_status']
             cov = case['custom_automation_coverage']
 
@@ -183,21 +219,25 @@ class DatabaseTestRail(Database):
             # we need to create a separate row for each
             # test case that belongs to multiple sub suites
             for sub in subs:
-                row = [sub, stat, cov, 1]
+                row = [suit, sub, stat, cov, 1]
                 totals.append(row)
 
         df = pd.DataFrame(data=totals,
-                          columns=['sub', 'status', 'cov', 'tally'])
-        return df.groupby(['sub', 'status', 'cov'])['tally'].sum().reset_index() # noqa
+                          columns=['suit', 'sub', 'status', 'cov', 'tally'])
+        return df.groupby(['suit', 'sub', 'status', 'cov'])['tally'].sum().reset_index() # noqa
 
     def report_test_coverage_insert(self, project_id, totals):
+        # TODO:  Error on insert
         # insert data from totals into report_test_coverage table
         for index, row in totals.iterrows():
-            report = ReportTestCoverage(projects_id=project_id,
-                                        test_automation_status_id=row['status'], # noqa
-                                        test_automation_coverage_id=row['cov'],
-                                        test_sub_suites_id=row['sub'],
-                                        test_count=row['tally'])
+            print('ROW - suit: {0}, asid: {1}, acid: {2}, ssid: {3}, tally: {4}'.format(row['suit'], row['status'], row['cov'], row['sub'], row['tally'])) 
+     
+            report = ReportTestCaseCoverage(projects_id=project_id,
+                                            testrail_suites_id=row['suit'], # noqa
+                                            test_automation_status_id=row['status'], # noqa
+                                            test_automation_coverage_id=row['cov'],
+                                            test_sub_suites_id=row['sub'],
+                                            test_count=row['tally'])
             self.session.add(report)
             self.session.commit()
 
