@@ -1,9 +1,7 @@
 name: Testops Report DAILY 
 
-# Daily @4am UTC
 on:
-  schedule:
-    - cron:  "0 4 * * *" 
+  push:
     - branches: demo-workflow
 
 jobs:
