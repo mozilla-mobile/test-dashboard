@@ -2,7 +2,8 @@ name: Testops Report DAILY
 
 on:
   push:
-    - branches: demo-workflow
+    branches:
+      - 'demo-workflow'
 
 jobs:
   deploy:
