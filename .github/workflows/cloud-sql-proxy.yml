@@ -1,7 +1,14 @@
 name: Testops Report XXX 
 
 on:
-  workflow_call 
+  workflow_call:
+    secrets:
+      GCLOUD_AUTH:
+        required: true 
+      CLOUD_SQL_CONNECTION_NAME:
+        required: true 
+      CLOUD_SQL_DATABASE_PORT:
+        required: true 
 
 jobs:
   deploy:
