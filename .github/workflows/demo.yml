@@ -8,7 +8,7 @@ on:
 jobs:
   deploy:
     uses: mozilla-mobile/test-dashboard/.github/workflows/cloud-sql-proxy.yml@demo-workflow
-    inputs:
+    with:
       REPORT_NAME: Update DB - test coverage
       REPORT_TYPE: test-cases
       PROJECT: fenix

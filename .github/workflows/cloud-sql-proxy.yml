@@ -5,10 +5,13 @@ on:
     inputs:
       REPORT_NAME:
         required: true 
+        type: string 
       REPORT_TYPE:
         required: true 
+        type: string 
       REPORT_PROJECT:
         required: true 
+        type: string 
     secrets:
       GCLOUD_AUTH:
         required: true 
@@ -51,5 +54,5 @@ jobs:
       #- name: Update DB - test runs 
       #  run: python ./data_pump.py --report-type test-runs --project fenix --start-date 2021-08-15 --end-date 2021-10-01 
 
-      - name: Update DB - test coverage 
-        run: python ./data_pump.py --report-type test-cases --project fenix 
+      - name: ${{ inputs.REPORT_NAME }}U
+        run: python ./data_pump.py --report-type ${{ inputs.REPORT_TYPE }} --project ${{ inputs.PROJECT }} 
