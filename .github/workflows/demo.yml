@@ -8,7 +8,7 @@ on:
 jobs:
   deploy:
     uses: mozilla-mobile/test-dashboard/.github/workflows/cloud-sql-proxy.yml@demo-workflow
-    with:
+    secrets:
       GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
       CLOUD_SQL_CONNECTION_NAME: ${{ secrets.CLOUD_SQL_CONNECTION_NAME }}
       CLOUD_SQL_DATABASE_PORT: ${{ secrets.CLOUD_SQL_DATABASE_PORT }}
