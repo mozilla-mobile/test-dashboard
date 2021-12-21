@@ -8,6 +8,10 @@ on:
 jobs:
   deploy:
     uses: mozilla-mobile/test-dashboard/.github/workflows/cloud-sql-proxy.yml@demo-workflow
+    with:
+      GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
+      CLOUD_SQL_CONNECTION_NAME: ${{ secrets.CLOUD_SQL_CONNECTION_NAME }}
+      CLOUD_SQL_DATABASE_PORT: ${{ secrets.CLOUD_SQL_DATABASE_PORT }}
       #- name: Update DB - test runs 
       #  run: python ./data_pump.py --report-type test-runs --project fenix --start-date 2021-08-15 --end-date 2021-10-01 
 
