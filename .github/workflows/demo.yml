@@ -14,6 +14,7 @@ jobs:
       CLOUD_SQL_DATABASE_PORT: ${{ secrets.CLOUD_SQL_DATABASE_PORT }}
       #- name: Update DB - test runs 
       #  run: python ./data_pump.py --report-type test-runs --project fenix --start-date 2021-08-15 --end-date 2021-10-01 
-
-      #- name: Update DB - test coverage 
-      #  run: python ./data_pump.py --report-type test-cases --project fenix 
+    
+    steps:
+      - name: Update DB - test coverage 
+        run: python ./data_pump.py --report-type test-cases --project fenix 
