@@ -9,7 +9,7 @@ on:
       REPORT_TYPE:
         required: true 
         type: string 
-      REPORT_PROJECT:
+      PROJECT:
         required: true 
         type: string 
     secrets:
