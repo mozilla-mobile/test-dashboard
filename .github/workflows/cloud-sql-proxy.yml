@@ -1,42 +1,42 @@
-name: Testrail Report 
+name: Testrail Report
 
 on:
   workflow_call:
     inputs:
       REPORT_NAME:
-        required: true 
-        type: string 
+        required: true
+        type: string
       REPORT_TYPE:
-        required: true 
-        type: string 
+        required: true
+        type: string
       PROJECT:
-        required: true 
-        type: string 
+        required: true
+        type: string
     secrets:
       GCLOUD_AUTH:
-        required: true 
+        required: true
       CLOUD_SQL_CONNECTION_NAME:
-        required: true 
+        required: true
       CLOUD_SQL_DATABASE_PORT:
-        required: true 
+        required: true
       CLOUD_SQL_DATABASE_USERNAME:
-        required: true 
+        required: true
       CLOUD_SQL_DATABASE_PASSWORD:
-        required: true 
+        required: true
       CLOUD_SQL_DATABASE_NAME:
-        required: true 
+        required: true
       CLOUD_SQL_DATABASE_PORT:
-        required: true 
+        required: true
       TESTRAIL_HOST:
-        required: true 
+        required: true
       TESTRAIL_USERNAME:
-        required: true 
+        required: true
       TESTRAIL_PASSWORD:
-        required: true 
+        required: true
 
 jobs:
   deploy:
-    name: ${{ input.REPORT_NAME }} 
+    name: Testrail report . 
     runs-on: ubuntu-latest
 
     steps:
