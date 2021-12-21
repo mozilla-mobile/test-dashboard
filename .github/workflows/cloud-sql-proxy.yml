@@ -1,4 +1,4 @@
-name: Testops Report XXX 
+name: ${{ input.REPORT_NAME }} 
 
 on:
   workflow_call:
@@ -18,6 +18,20 @@ on:
       CLOUD_SQL_CONNECTION_NAME:
         required: true 
       CLOUD_SQL_DATABASE_PORT:
+        required: true 
+      CLOUD_SQL_DATABASE_USERNAME:
+        required: true 
+      CLOUD_SQL_DATABASE_PASSWORD:
+        required: true 
+      CLOUD_SQL_DATABASE_NAME:
+        required: true 
+      CLOUD_SQL_DATABASE_PORT:
+        required: true 
+      TESTRAIL_HOST:
+        required: true 
+      TESTRAIL_USERNAME:
+        required: true 
+      TESTRAIL_PASSWORD:
         required: true 
 
 jobs:
