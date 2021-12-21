@@ -1,4 +1,4 @@
-name: ${{ input.REPORT_NAME }} 
+name: Testrail Report 
 
 on:
   workflow_call:
@@ -36,7 +36,7 @@ on:
 
 jobs:
   deploy:
-    name: TestOps Report XXX 
+    name: ${{ input.REPORT_NAME }} 
     runs-on: ubuntu-latest
 
     steps:
