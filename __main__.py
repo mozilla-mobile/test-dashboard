@@ -39,7 +39,6 @@ def main():
 
     if args.report_type == 'test-case-coverage':
         h = TestRailClient()
-        #h.testrail_coverage_update(args.project)
         h.data_pump(args.project.lower())
 
     if args.report_type == 'test-run-counts':

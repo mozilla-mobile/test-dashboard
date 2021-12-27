@@ -49,9 +49,9 @@ DROP TABLE IF EXISTS `test_suites`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `test_suites` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `testrail_id` int(11) NOT NULL,
-  `test_suite_abbrev` varchar(25) NOT NULL,
-  `test_suite` varchar(75) NOT NULL,
+  `testrail_project_id` int(11) NOT NULL,
+  `testrail_test_suites_id` int(11) NOT NULL,
+  `test_suite_name` varchar(75) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -147,7 +147,7 @@ DROP TABLE IF EXISTS `report_test_case_coverage`;
 CREATE TABLE `report_test_case_coverage` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `projects_id` int(11) NOT NULL, 
-  `testrail_suites_id` int(11) NOT NULL, 
+  `testrail_test_suites_id` int(11) NOT NULL, 
   `test_sub_suites_id` int(11) NOT NULL DEFAULT 1, 
   `test_automation_status_id` int(11) NOT NULL, 
   `test_automation_coverage_id` int(11) NOT NULL, 
@@ -155,6 +155,7 @@ CREATE TABLE `report_test_case_coverage` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   FOREIGN KEY(`projects_id`) REFERENCES projects(`id`),
+  FOREIGN KEY(`testrail_test_suites_id`) REFERENCES testrail_test_suites(`id`),
   FOREIGN KEY(`test_sub_suites_id`) REFERENCES test_sub_suites(`id`),
   FOREIGN KEY(`test_automation_status_id`) REFERENCES test_automation_status(`id`),
   FOREIGN KEY(`test_automation_coverage_id`) REFERENCES test_automation_coverage(`id`)
