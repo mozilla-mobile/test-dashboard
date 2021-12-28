@@ -112,18 +112,6 @@ class TestRailClient(TestRail):
                 self.testrail_coverage_update(projects_id,
                                               testrail_project_id, suite['id'])
 
-    def testrail_suite_ids(self, testrail_project_id):
-        """ Given a testrail_project_id, return all corresponding suite_ids
-        """
-        suite_ids = []
-        suites = self.test_suites(testrail_project_id)
-        for suite in suites:
-            suite_ids.append(suite['id'])
-            self.test_suites_update(testrail_project_id,
-                                    suite['id'], suite['name'])
-
-        return suite_ids
-
     def testrail_project_ids(self, project):
         """ Return the ids needed to be able to query the TestRail API for
         a specific test suite from a specific project
@@ -162,12 +150,12 @@ class TestRailClient(TestRail):
         # Pull JSON blob from Testrail
         cases = self.test_cases(testrail_project_id, test_suite_id)
 
-        # Format and store data in a 'totals' array
-        totals = self.db.report_test_coverage_totals(cases)
-        print(totals)
+        # Format and store data in a data payload array
+        payload = self.db.report_test_coverage_payload(cases)
+        print(payload)
 
         # Insert data in 'totals' array into DB
-        self.db.report_test_coverage_insert(projects_id, totals)
+        self.db.report_test_coverage_insert(projects_id, payload)
 
     def testrail_run_counts_update(self, project, num_days):
         start_date = dt.start_date(num_days)
@@ -187,7 +175,7 @@ class TestRailClient(TestRail):
         runs = self.test_runs(testrail_project_id, start_date) # noqa
 
         # Format and store data in a 'totals' array
-        totals = self.db.report_test_run_totals(runs)
+        totals = self.db.report_test_run_payload(runs)
 
         # Insert data in 'totals' array into DB
         self.db.report_test_runs_insert(projects_id, totals)
@@ -213,10 +201,10 @@ class DatabaseTestRail(Database):
         self.session.add(suites)
         self.session.commit()
 
-    def report_test_coverage_totals(self, cases):
+    def report_test_coverage_payload(self, cases):
         """given testrail data (cases), calculate test case counts by type"""
 
-        totals = []
+        payload = []
 
         for case in cases:
             row = []
@@ -238,16 +226,16 @@ class DatabaseTestRail(Database):
             # test case that belongs to multiple sub suites
             for sub in subs:
                 row = [suit, sub, stat, cov, 1]
-                totals.append(row)
+                payload.append(row)
 
-        df = pd.DataFrame(data=totals,
+        df = pd.DataFrame(data=payload,
                           columns=['suit', 'sub', 'status', 'cov', 'tally'])
         return df.groupby(['suit', 'sub', 'status', 'cov'])['tally'].sum().reset_index() # noqa
 
-    def report_test_coverage_insert(self, projects_id, totals):
+    def report_test_coverage_insert(self, projects_id, payload):
         # TODO:  Error on insert
         # insert data from totals into report_test_coverage table
-        for index, row in totals.iterrows():
+        for index, row in payload.iterrows():
             # TODO: diagnostic - delete
             print('ROW - suit: {0}, asid: {1}, acid: {2}, ssid: {3}, tally: {4}' # noqa
                   .format(row['suit'], row['status'], row['cov'], row['sub'], row['tally'])) # noqa
@@ -261,7 +249,7 @@ class DatabaseTestRail(Database):
             self.session.add(report)
             self.session.commit()
 
-    def report_test_run_totals(self, runs):
+    def report_test_run_payload(self, runs):
         """pack testrail data for 1 run in a data array
 
         NOTE:
@@ -277,7 +265,7 @@ class DatabaseTestRail(Database):
         For suite_id, we will always default to Full Functional.
         """
         # create array to store values to insert in database
-        totals = []
+        payload = []
 
         for run in runs:
             tmp = {}
@@ -295,12 +283,13 @@ class DatabaseTestRail(Database):
             tmp.update({'retest_count': run['retest_count']})
             tmp.update({'failed_count': run['failed_count']})
             tmp.update({'blocked_count': run['blocked_count']})
-            totals.append(tmp)
-        return totals
+            payload.append(tmp)
+        return payload
 
-    def report_test_runs_insert(self, project_id, totals):
-        # insert data from totals into report_test_run_counts table
+    def report_test_runs_insert(self, project_id, payload):
+        # insert data from payload into report_test_run_counts table
 
+        totals = payload
         for total in totals:
             t = total
 
