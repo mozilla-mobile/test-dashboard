@@ -208,12 +208,6 @@ class DatabaseTestRail(Database):
 
         for case in cases:
             row = []
-            """
-            # TODO: remove conditional once Focus-iOS data has been fixed
-            if not case['custom_sub_test_suites']:
-                 print('NOT FOUND: ', case['id'])
-                 subs = 1
-            """
             suit = case['suite_id']
             subs = case['custom_sub_test_suites']
             # TODO: diagnostic - delete
