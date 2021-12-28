@@ -1,8 +1,15 @@
+from datetime import datetime
+from enum import Enum
 import os
 import sys
+
 import argparse
+import logging
 import requests
-from datetime import datetime
+
+
+logging.basicConfig(level=logging.INFO)
+_logger = logging.getLogger(__name__)
 
 
 def parse_args(cmdln_args):
@@ -65,6 +72,7 @@ class Bitrise:
             self.API_TOKEN = os.environ['BITRISE_TOKEN']
             self.API_HEADER = {'Authorization': self.API_TOKEN,
                                'accept': 'application/json'}
+
         except KeyError:
             print("ERROR: must set BITRISE_TOKEN")
             exit()
@@ -145,7 +153,7 @@ def main():
           .format(aborted_success))
 
     print(*workflows['data'], sep=", ")
-    
+
 
 if __name__ == '__main__':
     main()
