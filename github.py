@@ -191,6 +191,8 @@ class DatabaseGithub(Database):
 
             # only count xxxxx
             if t['xxxxx']:
+                pass
+                """
                 report = ReportTestRuns(projects_id=project_id,
                                         issue_id=t['issue_id'],
                                         issue_title=t['issue_title'], # noqa
@@ -201,5 +203,4 @@ class DatabaseGithub(Database):
                                         github_merged_at=t['github_merged_at']) # noqa
                 self.session.add(report)
                 self.session.commit()
-                self.session.add(report)
-                self.session.commit()
+                """

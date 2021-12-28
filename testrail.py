@@ -91,26 +91,26 @@ class TestRailClient(TestRail):
 
         # TODO:
         # currently only setup for test_case report
+        # fix this for test run data
 
         # Test suite data is dynamic. Wipe out old test suite data
         # in database before updating.
         self.db.test_suites_delete()
 
         for project_ids in project_ids_list:
+            projects_id = project_ids[0]
             testrail_project_id = project_ids[1]
             suites = self.test_suites(testrail_project_id)
             for suite in suites:
+                """
                 print("testrail_project_id: {0}".format(testrail_project_id))
                 print("suite_id: {0}".format(suite['id']))
                 print("suite_name: {0}".format(suite['name']))
+                """
                 self.db.test_suites_update(testrail_project_id,
                                            suite['id'], suite['name'])
-                # TODO: fix this!
-                #self.testrail_coverage_update(ids[0],
-                #                               project_ids[1], suite_id)
-            # TODO: delete
-            import sys
-            sys.exit()
+                self.testrail_coverage_update(projects_id,
+                                              testrail_project_id, suite['id'])
 
     def testrail_suite_ids(self, testrail_project_id):
         """ Given a testrail_project_id, return all corresponding suite_ids
@@ -228,8 +228,8 @@ class DatabaseTestRail(Database):
             """
             suit = case['suite_id']
             subs = case['custom_sub_test_suites']
-            # TODO: delete
-            #print('suite_id: {0}, case_id: {1}, subs: {2}'.format(suit, case['id'], subs))
+            # TODO: diagnostic - delete
+            # print('suite_id: {0}, case_id: {1}, subs: {2}'.format(suit, case['id'], subs)) # noqa
             stat = case['custom_automation_status']
             cov = case['custom_automation_coverage']
 
@@ -248,9 +248,9 @@ class DatabaseTestRail(Database):
         # TODO:  Error on insert
         # insert data from totals into report_test_coverage table
         for index, row in totals.iterrows():
-            # TODO: delete
-            print('ROW - suit: {0}, asid: {1}, acid: {2}, ssid: {3}, tally: {4}'
-                  .format(row['suit'], row['status'], row['cov'], row['sub'], row['tally']))
+            # TODO: diagnostic - delete
+            print('ROW - suit: {0}, asid: {1}, acid: {2}, ssid: {3}, tally: {4}' # noqa
+                  .format(row['suit'], row['status'], row['cov'], row['sub'], row['tally'])) # noqa
 
             report = ReportTestCaseCoverage(projects_id=projects_id,
                                             testrail_test_suites_id=row['suit'], # noqa

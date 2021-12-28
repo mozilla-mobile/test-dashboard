@@ -1,8 +1,6 @@
-import pandas as pd
 from sqlalchemy import Table
 
 from lib.database_conn import Session, Base
-from utils.datetime_utils import DatetimeUtils
 
 
 class Projects(Base):
@@ -26,7 +24,7 @@ class TestSubSuites(Base):
 
 
 class ReportTestCaseCoverage(Base):
-    __table__ = Table('report_test_case_coverage', Base.metadata, autoload=True)
+    __table__ = Table('report_test_case_coverage', Base.metadata, autoload=True) # noqa
 
 
 class ReportTestRunCounts(Base):
