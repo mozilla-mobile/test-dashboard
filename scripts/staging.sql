@@ -32,7 +32,7 @@ DROP TABLE IF EXISTS `projects`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `projects` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `testrail_id` int(11) NOT NULL,
+  `testrail_project_id` int(11) NOT NULL,
   `project_name_abbrev` varchar(25) NOT NULL,
   `project_name` varchar(75) NOT NULL,
   PRIMARY KEY (`id`)
@@ -155,7 +155,6 @@ CREATE TABLE `report_test_case_coverage` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   FOREIGN KEY(`projects_id`) REFERENCES projects(`id`),
-  FOREIGN KEY(`testrail_test_suites_id`) REFERENCES testrail_test_suites(`id`),
   FOREIGN KEY(`test_sub_suites_id`) REFERENCES test_sub_suites(`id`),
   FOREIGN KEY(`test_automation_status_id`) REFERENCES test_automation_status(`id`),
   FOREIGN KEY(`test_automation_coverage_id`) REFERENCES test_automation_coverage(`id`)
@@ -233,7 +232,7 @@ CREATE TABLE `report_github_issues` (
 
 LOCK TABLES `projects` WRITE;
 /*!40000 ALTER TABLE `projects` DISABLE KEYS */;
-INSERT INTO `projects` (`testrail_id`, `project_name_abbrev`, `project_name`) VALUES (59, 'fenix', 'Fenix Browser'), (48, 'focus-android', 'Focus for Android'), (14, 'firefox-ios', 'Firefox for iOS'), (27, 'focus-ios', 'Focus for iOS'), (58, 'reference-browser', 'Reference Browser');
+INSERT INTO `projects` (`testrail_project_id`, `project_name_abbrev`, `project_name`) VALUES (59, 'fenix', 'Fenix Browser'), (48, 'focus-android', 'Focus for Android'), (14, 'firefox-ios', 'Firefox for iOS'), (27, 'focus-ios', 'Focus for iOS'), (58, 'reference-browser', 'Reference Browser');
 /*!40000 ALTER TABLE `projects` ENABLE KEYS */;
 UNLOCK TABLES;
 

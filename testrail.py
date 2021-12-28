@@ -32,12 +32,14 @@ class TestRail:
         return self.client.send_get('get_projects')
 
     def project(self, testrail_project_id):
-        return self.client.send_get('get_project/{0}'.format(testrail_project_id))
+        return self.client.send_get(
+            'get_project/{0}'.format(testrail_project_id))
 
     # API: Cases
     def test_cases(self, testrail_project_id, testrail_test_suite_id):
         return self.client.send_get(
-            'get_cases/{0}&suite_id={1}'.format(testrail_project_id, testrail_test_suite_id))
+            'get_cases/{0}&suite_id={1}'
+            .format(testrail_project_id, testrail_test_suite_id))
 
     def test_case(self, testrail_test_case_id):
         return self.client.send_get(
@@ -50,10 +52,12 @@ class TestRail:
 
     # API: Suites
     def test_suites(self, testrail_project_id):
-        return self.client.send_get('get_suites/{0}'.format(testrail_project_id))
+        return self.client \
+                   .send_get('get_suites/{0}'.format(testrail_project_id))
 
     def test_suite(self, testrail_test_suite_id):
-        return self.client.send_get('get_suite/{0}'.format(testrail_test_suite_id))
+        return self.client \
+                   .send_get('get_suite/{0}'.format(testrail_test_suite_id))
 
     # API: Runs
     def test_runs(self, testrail_project_id, start_date='', end_date=''):
@@ -84,7 +88,7 @@ class TestRailClient(TestRail):
         # convert inputs to a list so we can easily
         # loop thru them
         project_ids_list = self.testrail_project_ids(project)
- 
+
         # TODO:
         # currently only setup for test_case report
 
@@ -92,30 +96,21 @@ class TestRailClient(TestRail):
         # in database before updating.
         self.db.test_suites_delete()
 
-        for project_ids in project_ids_list:         
-            #suite_ids = self.testrail_suite_ids(testrail_project_id=project_ids[1])
+        for project_ids in project_ids_list:
             testrail_project_id = project_ids[1]
             suites = self.test_suites(testrail_project_id)
             for suite in suites:
                 print("testrail_project_id: {0}".format(testrail_project_id))
                 print("suite_id: {0}".format(suite['id']))
                 print("suite_name: {0}".format(suite['name']))
-                self.db.test_suites_update(testrail_project_id, suite['id'], suite['name'])
-                #self.testrail_coverage_update(ids[0], project_ids[1], suite_id)
-        import sys;sys.exit()
-
-        """
-            for suite_id in suite_ids:
-                print(f"ID: {project_ids[1]}")
-                print(f"SUITE_ID: {suite_id}")
-                print('--------')
-        """
-
-        """
-        for project in projects:
-            for suite in suites:
-                self.testrail_coverage_update(project, suite)
-       """
+                self.db.test_suites_update(testrail_project_id,
+                                           suite['id'], suite['name'])
+                # TODO: fix this!
+                #self.testrail_coverage_update(ids[0],
+                #                               project_ids[1], suite_id)
+            # TODO: delete
+            import sys
+            sys.exit()
 
     def testrail_suite_ids(self, testrail_project_id):
         """ Given a testrail_project_id, return all corresponding suite_ids
@@ -124,7 +119,8 @@ class TestRailClient(TestRail):
         suites = self.test_suites(testrail_project_id)
         for suite in suites:
             suite_ids.append(suite['id'])
-            self.test_suites_update(testrail_project_id, suite['id'], suite['name'])
+            self.test_suites_update(testrail_project_id,
+                                    suite['id'], suite['name'])
 
         return suite_ids
 
@@ -132,13 +128,13 @@ class TestRailClient(TestRail):
         """ Return the ids needed to be able to query the TestRail API for
         a specific test suite from a specific project
 
-        [0]. projects.id = id of project in database table: projects 
+        [0]. projects.id = id of project in database table: projects
         [1]. testrail_id = id of project in testrail
 
         Note:
-         - These testrail project ids will never change, so we store them
-           in DB for convenience.
-         - We'll use these to query the test suites from each respective project
+         - Testrail project ids will never change, so we store them
+           in DB for convenience and use them to query test suites
+           from each respective project
         """
 
         q = self.db.session.query(Projects)
@@ -160,8 +156,8 @@ class TestRailClient(TestRail):
             tmp = []
         return ids
 
-
-    def testrail_coverage_update(self, projects_id, testrail_project_id, test_suite_id):
+    def testrail_coverage_update(self, projects_id,
+                                 testrail_project_id, test_suite_id):
 
         # Pull JSON blob from Testrail
         cases = self.test_cases(testrail_project_id, test_suite_id)
@@ -172,7 +168,6 @@ class TestRailClient(TestRail):
 
         # Insert data in 'totals' array into DB
         self.db.report_test_coverage_insert(projects_id, totals)
-
 
     def testrail_run_counts_update(self, project, num_days):
         start_date = dt.start_date(num_days)
@@ -210,13 +205,13 @@ class DatabaseTestRail(Database):
         self.session.query(TestSuites).delete()
         self.session.commit()
 
-    def test_suites_update(self, testrail_project_id, testrail_test_suites_id, test_suite_name):
+    def test_suites_update(self, testrail_project_id,
+                           testrail_test_suites_id, test_suite_name):
         suites = TestSuites(testrail_project_id=testrail_project_id,
                             testrail_test_suites_id=testrail_test_suites_id,
                             test_suite_name=test_suite_name)
         self.session.add(suites)
         self.session.commit()
-
 
     def report_test_coverage_totals(self, cases):
         """given testrail data (cases), calculate test case counts by type"""
@@ -233,6 +228,7 @@ class DatabaseTestRail(Database):
             """
             suit = case['suite_id']
             subs = case['custom_sub_test_suites']
+            # TODO: delete
             #print('suite_id: {0}, case_id: {1}, subs: {2}'.format(suit, case['id'], subs))
             stat = case['custom_automation_status']
             cov = case['custom_automation_coverage']
@@ -248,16 +244,18 @@ class DatabaseTestRail(Database):
                           columns=['suit', 'sub', 'status', 'cov', 'tally'])
         return df.groupby(['suit', 'sub', 'status', 'cov'])['tally'].sum().reset_index() # noqa
 
-    def report_test_coverage_insert(self, project_id, totals):
+    def report_test_coverage_insert(self, projects_id, totals):
         # TODO:  Error on insert
         # insert data from totals into report_test_coverage table
         for index, row in totals.iterrows():
-            print('ROW - suit: {0}, asid: {1}, acid: {2}, ssid: {3}, tally: {4}'.format(row['suit'], row['status'], row['cov'], row['sub'], row['tally'])) 
-     
-            report = ReportTestCaseCoverage(testrail_project_id=testrail_project_id,
+            # TODO: delete
+            print('ROW - suit: {0}, asid: {1}, acid: {2}, ssid: {3}, tally: {4}'
+                  .format(row['suit'], row['status'], row['cov'], row['sub'], row['tally']))
+
+            report = ReportTestCaseCoverage(projects_id=projects_id,
                                             testrail_test_suites_id=row['suit'], # noqa
                                             test_automation_status_id=row['status'], # noqa
-                                            test_automation_coverage_id=row['cov'],
+                                            test_automation_coverage_id=row['cov'], # noqa
                                             test_sub_suites_id=row['sub'],
                                             test_count=row['tally'])
             self.session.add(report)
@@ -310,13 +308,14 @@ class DatabaseTestRail(Database):
             if t['testrail_completed_on']:
                 created_on = dt.convert_epoch_to_datetime(t['testrail_created_on']) # noqa
                 completed_on = dt.convert_epoch_to_datetime(t['testrail_completed_on']) # noqa
-                report = ReportTestRunCounts(projects_id=project_id,
-                                        testrail_run_id=t['testrail_run_id'],
-                                        test_case_passed_count=t['passed_count'], # noqa
-                                        test_case_retest_count=t['retest_count'], # noqa
-                                        test_case_failed_count=t['failed_count'], # noqa
-                                        test_case_blocked_count=t['blocked_count'], # noqa
-                                        testrail_created_on=created_on,
-                                        testrail_completed_on=completed_on)
+                report = ReportTestRunCounts(
+                    projects_id=project_id,
+                    testrail_run_id=t['testrail_run_id'],
+                    test_case_passed_count=t['passed_count'],
+                    test_case_retest_count=t['retest_count'],
+                    test_case_failed_count=t['failed_count'],
+                    test_case_blocked_count=t['blocked_count'],
+                    testrail_created_on=created_on,
+                    testrail_completed_on=completed_on)
                 self.session.add(report)
                 self.session.commit()
