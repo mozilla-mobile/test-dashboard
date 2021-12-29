@@ -13,10 +13,10 @@ The following is an overview of the test-dashboard.
 The code is in this repository provides the backend which enables us to publish graphs in Looker.  
 
 It is constructed to function as follows
-1. script invoked on a cron via a github workflow to initiate a data extraction
-2. Data is 'pumped' from a source API
-3. Data is temporarily packaged into a payload
-4. Payload is used to update Cloud SQL database
+1. ```__main__.py``` script invoked via github workflow cron to initiate a data extraction
+2. Data 'pumped' from source API indicated
+3. Data temporarily packaged into a payload
+4. Payload used to update Cloud SQL database
 
 Once the updated data is available in the database, it is made available to our Looker graphs via BigQuery views.
 
