@@ -1,4 +1,3 @@
-#! /usr/bin/env python
 """Base database connector module
 https://github.com/swaathi/sqlalchemy"""
 

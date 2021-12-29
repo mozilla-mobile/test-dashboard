@@ -1,22 +1,9 @@
 import argparse
 import sys
 
-from testrail import TestRailHelpers
-
-
-PROJECTS_ABBREV = [
-    'fenix',
-    'focus-android',
-    'reference-browser',
-    'firefox-ios',
-    'focus-ios',
-]
-
-REPORT_TYPES = [
-    'test-cases',
-    'test-runs',
-    'issue-regression',
-]
+from github import GithubClient
+from testrail import TestRailClient
+from utils.constants import PROJECTS_ABBREV, REPORT_TYPES
 
 
 def parse_args(cmdln_args):
@@ -48,25 +35,23 @@ def parse_args(cmdln_args):
 
 
 def main():
-    args = parse_args(sys.argv[1:])
+    args = parse_args(args=None if sys.argv[1:] else ['--help'])
 
-    if args.report_type == 'test-cases':
-        h = TestRailHelpers()
-        h.testrail_coverage_update(args.project)
-    if args.report_type == 'test-runs':
-        h = TestRailHelpers()
+    if args.report_type == 'test-case-coverage':
+        h = TestRailClient()
+        h.data_pump(args.project.lower())
+
+    if args.report_type == 'test-run-counts':
+        h = TestRailClient()
         if args.num_days:
             num_days = args.num_days
         else:
             num_days = ''
-        h.testrail_run_update(args.project, num_days)
+        h.testrail_run_counts_update(args.project, num_days)
     if args.report_type == 'issue-regression':
-        """
-        h = GithubHelpers()
+        h = GithubClient()
         h.github_issue_regression(args.project)
-        h = GithubHelpers()
-        """
-        pass
+        h = GithubClient()
 
 
 if __name__ == '__main__':

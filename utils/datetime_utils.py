@@ -5,7 +5,7 @@ format_date = "%Y-%m-%d"
 format_datetime = '%Y-%m-%dT%H:%M:%S.%fZ'
 
 
-class Utils:
+class DatetimeUtils:
 
     def convert_datetime_to_epoch(str_date):
         str_to_dt = datetime.strptime(str_date, format_date)
