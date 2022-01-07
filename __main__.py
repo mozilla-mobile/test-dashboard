@@ -35,7 +35,7 @@ def parse_args(cmdln_args):
 
 
 def main():
-    args = parse_args(args=None if sys.argv[1:] else ['--help'])
+    args = parse_args(sys.argv[1:])
 
     if args.report_type == 'test-case-coverage':
         h = TestRailClient()
