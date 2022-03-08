@@ -9,7 +9,7 @@ from database import (
     Projects,
     TestSuites,
     ReportTestCaseCoverage,
-    ReportTestRunCounts
+    # ReportTestRunCounts
 )
 
 from utils.datetime_utils import DatetimeUtils as dt
