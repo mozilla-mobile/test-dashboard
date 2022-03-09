@@ -211,7 +211,7 @@ class DatabaseTestRail(Database):
             suit = case['suite_id']
             subs = case['custom_sub_test_suites']
             # TODO: diagnostic - delete
-            # print('suite_id: {0}, case_id: {1}, subs: {2}'.format(suit, case['id'], subs)) # noqa
+            print('suite_id: {0}, case_id: {1}, subs: {2}'.format(suit, case['id'], subs)) # noqa
             stat = case['custom_automation_status']
             cov = case['custom_automation_coverage']
 
