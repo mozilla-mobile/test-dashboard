@@ -102,6 +102,7 @@ class TestRailClient(TestRail):
             testrail_project_id = project_ids[1]
             suites = self.test_suites(testrail_project_id)
             for suite in suites:
+                print("...............................")
                 print("testrail_project_id: {0}".format(testrail_project_id))
                 print("suite_id: {0}".format(suite['id']))
                 print("suite_name: {0}".format(suite['name']))
