@@ -1,9 +1,9 @@
 PROJECTS_ABBREV = [
-    'fenix',
+    #'fenix',
     'focus-android',
     'reference-browser',
-    'firefox-ios',
-    'focus-ios',
+    #'firefox-ios',
+    #'focus-ios',
     'ALL',
 ]
 

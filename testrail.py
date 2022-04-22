@@ -102,11 +102,10 @@ class TestRailClient(TestRail):
             testrail_project_id = project_ids[1]
             suites = self.test_suites(testrail_project_id)
             for suite in suites:
-                """
                 print("testrail_project_id: {0}".format(testrail_project_id))
                 print("suite_id: {0}".format(suite['id']))
                 print("suite_name: {0}".format(suite['name']))
-                """
+
                 self.db.test_suites_update(testrail_project_id,
                                            suite['id'], suite['name'])
                 self.testrail_coverage_update(projects_id,
