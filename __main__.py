@@ -37,9 +37,9 @@ def parse_args(cmdln_args):
 def main():
     args = parse_args(sys.argv[1:])
 
-    if args.report_type == 'test-case-coverage':
+    if args.report_type == 'testcase-coverage':
         h = TestRailClient()
-        h.data_pump(args.project.lower())
+        h.data_pump_test_case_coverage(args.project.lower())
 
     if args.report_type == 'test-run-counts':
         h = TestRailClient()
@@ -47,7 +47,9 @@ def main():
             num_days = args.num_days
         else:
             num_days = ''
-        h.testrail_run_counts_update(args.project, num_days)
+        #h.testrail_run_counts_update(args.project, num_days)
+        h.data_pump_test_run_counts(args.project.lower(), num_days)
+
     if args.report_type == 'issue-regression':
         h = GithubClient()
         h.github_issue_regression(args.project)

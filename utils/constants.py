@@ -8,7 +8,12 @@ PROJECTS_ABBREV = [
 ]
 
 REPORT_TYPES = [
-    'test-case-coverage',
+    'testcase-coverage',
     'test-run-counts',
     'issue-regression',
 ]
+
+WEEK = 7
+SPRINT = 14
+FORTNIGHT = SPRINT
+YEAR = 365

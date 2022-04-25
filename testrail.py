@@ -12,6 +12,7 @@ from database import (
     ReportTestRunCounts
 )
 
+from utils.constants import WEEK, SPRINT, FORTNIGHT, YEAR 
 from utils.datetime_utils import DatetimeUtils as dt
 
 
@@ -83,15 +84,11 @@ class TestRailClient(TestRail):
         super().__init__()
         self.db = DatabaseTestRail()
 
-    def data_pump(self, project='all', suite='all'):
+    def data_pump_test_case_coverage(self, project='all', suite='all'):
         # call database for 'all' values
         # convert inputs to a list so we can easily
         # loop thru them
         project_ids_list = self.testrail_project_ids(project)
-
-        # TODO:
-        # currently only setup for test_case report
-        # fix this for test run data
 
         # Test suite data is dynamic. Wipe out old test suite data
         # in database before updating.
@@ -111,6 +108,33 @@ class TestRailClient(TestRail):
                                            suite['id'], suite['name'])
                 self.testrail_coverage_update(projects_id,
                                               testrail_project_id, suite['id'])
+
+    def data_pump_test_run_counts(self, project='all', num_days=SPRINT):
+        # call database for 'all' values
+        # convert inputs to a list so we can easily
+        # loop thru them
+        project_ids_list = self.testrail_project_ids(project)
+
+        # Test suite data is dynamic. Wipe out old test suite data
+        # in database before updating.
+        self.db.test_suites_delete()
+
+        # TODO: this is a copy of the above data pump
+        for project_ids in project_ids_list:
+            projects_id = project_ids[0]
+            testrail_project_id = project_ids[1]
+            print('=========================')
+            print('TR_PROJ_ID: {0}'.format(testrail_project_id))
+            print('=========================')
+            suites = self.test_suites(testrail_project_id)
+            for suite in suites:
+                print("testrail_project_id: {0}".format(testrail_project_id))
+                print("suite_id: {0}".format(suite['id']))
+                print("suite_name: {0}".format(suite['name']))
+                self.db.test_suites_update(testrail_project_id,
+                                           suite['id'], suite['name'])
+                self.testrail_run_counts_update(projects_id,
+                                                testrail_project_id, project, num_days)
 
     def testrail_project_ids(self, project):
         """ Return the ids needed to be able to query the TestRail API for
@@ -152,16 +176,12 @@ class TestRailClient(TestRail):
 
         # Format and store data in a data payload array
         payload = self.db.report_test_coverage_payload(cases)
-        print(payload)
 
         # Insert data in 'totals' array into DB
         self.db.report_test_coverage_insert(projects_id, payload)
 
-    def testrail_run_counts_update(self, project, num_days):
-        start_date = dt.start_date(num_days)
-
-        # Get reference IDs from DB
-        projects_id, testrail_project_id, functional_test_suite_id = self.db.testrail_identity_ids(project) # noqa 
+    def testrail_run_counts_update(self, projects_id, 
+                                   testrail_project_id, project, num_days):
 
         # Sample Testrail data from one run:
         # [{'run_id': 44113}, {'project_id': 59}, {'suite_id': 3192},
@@ -170,15 +190,16 @@ class TestRailClient(TestRail):
         # {'failed_count': 0}, {'passed_count': 35}, {'retest_count': 0},
         # {'blocked_count': 0}, {'untested_count': 0}, {'untested_count': 0}]
 
+        start_date = dt.start_date(num_days)
+
         # Pull JSON blob from Testrail
-        #runs = self.testrail.test_runs(testrail_project_id, start_date) # noqa
         runs = self.test_runs(testrail_project_id, start_date) # noqa
 
-        # Format and store data in a 'totals' array
-        totals = self.db.report_test_run_payload(runs)
+        # Format and store data in a data payload array
+        payload = self.db.report_test_run_payload(runs)
 
         # Insert data in 'totals' array into DB
-        self.db.report_test_runs_insert(projects_id, totals)
+        self.db.report_test_runs_insert(projects_id, payload)
 
 
 class DatabaseTestRail(Database):
@@ -260,12 +281,24 @@ class DatabaseTestRail(Database):
         """
         # create array to store values to insert in database
         payload = []
+ 
+        import sys
 
         for run in runs:
             tmp = {}
 
+
+            # ---------------------
+            # 3 NEW DB FIELDS
+            # ---------------------
+
+            # 1. projects_id
+            # 2. testrail_suite_id
+            # 3. test_sub_suites_id
+
             # identifiers
             # tmp.append({'name': run['name']})
+            
             tmp.update({'testrail_run_id': run['id']})
 
             # epoch dates
@@ -278,6 +311,9 @@ class DatabaseTestRail(Database):
             tmp.update({'failed_count': run['failed_count']})
             tmp.update({'blocked_count': run['blocked_count']})
             payload.append(tmp)
+            print(tmp)
+            print('-------------')
+
         return payload
 
     def report_test_runs_insert(self, project_id, payload):
@@ -293,6 +329,8 @@ class DatabaseTestRail(Database):
                 completed_on = dt.convert_epoch_to_datetime(t['testrail_completed_on']) # noqa
                 report = ReportTestRunCounts(
                     projects_id=project_id,
+                    testrail_suites_id=t['testrail_suites_id'],
+                    test_sub_suites_id=t['test_sub_suites_id'],
                     testrail_run_id=t['testrail_run_id'],
                     test_case_passed_count=t['passed_count'],
                     test_case_retest_count=t['retest_count'],

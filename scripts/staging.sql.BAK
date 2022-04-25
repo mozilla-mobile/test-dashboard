@@ -172,19 +172,20 @@ DROP TABLE IF EXISTS `report_test_run_counts`;
 CREATE TABLE `report_test_run_counts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `projects_id` int(11) NOT NULL, 
-  `testrail_test_suites_id` int(11) NOT NULL, 
+  `testrail_suites_id` int(11) NOT NULL, 
   `testrail_run_id` int(11) NOT NULL, 
   `test_case_passed_count` int(11) NOT NULL DEFAULT 0, 
   `test_case_blocked_count` int(11) NOT NULL DEFAULT 0, 
   `test_case_retest_count` int(11) NOT NULL DEFAULT 0, 
   `test_case_failed_count` int(11) NOT NULL DEFAULT 0, 
-  `testrail_created_on` date, 
-  `testrail_completed_on` date, 
+  `testrail_created_on` date,
+  `testrail_completed_on` date,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   FOREIGN KEY(`projects_id`) REFERENCES projects(`id`),
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
 
 --
 -- Table structure for table `report_github_issues`
