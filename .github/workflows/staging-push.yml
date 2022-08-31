@@ -43,6 +43,6 @@ jobs:
 
       - name: Update DB - test coverage
         #run: python ./__main__.py --report-type test-case-coverage --project ALL 
-        run: python ./__main__.py --report-type test-case-coverage --project fenix 
+        #run: python ./__main__.py --report-type test-case-coverage --project fenix 
       
 
