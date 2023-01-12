@@ -2,9 +2,6 @@ test-dashboard
 ==================
 The Mozilla Mobile TestOps Dashboard is data pump that collects data from diverse APIs (datasources) and aggregates it in a Cloud SQL database for display in Looker graphs. 
 
-Note:
-The test-dashboard is currently in a DRAFT state.
-
 
 Overview
 ---------------
