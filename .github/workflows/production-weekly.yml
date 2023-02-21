@@ -4,6 +4,7 @@ name: Testops Report WEEKLY
 on:
   schedule:
     - cron:  "0 4 * * 6" 
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -28,7 +29,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Set env vars 
-        run: | 
+        run: |
             echo "CLOUD_SQL_DATABASE_USERNAME=${{ secrets.CLOUD_SQL_DATABASE_USERNAME }}" >> $GITHUB_ENV
             echo "CLOUD_SQL_DATABASE_PASSWORD=${{ secrets.CLOUD_SQL_DATABASE_PASSWORD }}" >> $GITHUB_ENV
             echo "CLOUD_SQL_DATABASE_NAME=production" >> $GITHUB_ENV
