@@ -1,12 +1,79 @@
-{
-    "text": "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
-    "blocks": [
-      {
-	"type": "section",
-	"text": {
-	  "type": "mrkdwn",
-	  "text": "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
-	}
-      }
-    ]
+
+cks": [
+		{
+			"type": "header",
+			"text": {
+				"type": "plain_text",
+				"text": "Telemetry Probe Expiry :newspaper:"
+			}
+		},
+		{
+			"type": "divider"
+		},
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": ":calendar: |   *ALREADY EXPIRED*  | :calendar: "
+			}
+		},
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "`11/20-11/22` telemetry_probe.some_info"
+			},
+			"accessory": {
+				"type": "button",
+				"text": {
+					"type": "plain_text",
+					"text": "RSVP",
+					"emoji": true
+				}
+			}
+		},
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "`11/13` telemetry_probe.some_info "
+			},
+			"accessory": {
+				"type": "button",
+				"text": {
+					"type": "plain_text",
+					"text": "RSVP",
+					"emoji": true
+				}
+			}
+		},
+		{
+			"type": "divider"
+		},
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": ":calendar: |   *EXPIRING SOON*  | :calendar: "
+			}
+		},
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "`10/21` telemetry_probe.some_info"
+			},
+			"accessory": {
+				"type": "button",
+				"text": {
+					"type": "plain_text",
+					"text": "Watch Recording",
+					"emoji": true
+				}
+			}
+		},
+		{
+			"type": "divider"
+		}
+	]
 }
