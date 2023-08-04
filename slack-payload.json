@@ -21,14 +21,7 @@
 			"type": "section",
 			"text": {
 				"type": "mrkdwn",
-				"text": "`11/20-11/22` telemetry_probe.some_info `2022-03-01`"
-			}
-		},
-		{
-			"type": "section",
-			"text": {
-				"type": "mrkdwn",
-				"text": "`11/13` telemetry_probe.some_info "
+				"text": "telemetry_probe.some_info `2022-01-01`"
 			},
 			"accessory": {
 				"type": "button",
