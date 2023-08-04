@@ -56,7 +56,7 @@
 			"type": "context",
 			"elements": [
                             {
-                                "type": "mrkdown", 
+                                "type": "mrkdwn", 
                                 "text": ":testops-notify: created by <https://mozilla-hub.atlassian.net/wiki/spaces/MTE/overview>"
                             }
                         ] 
