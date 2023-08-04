@@ -19,18 +19,35 @@
 				"text": "*ALREADY EXPIRED* :traffic-red:"
 			}
 		},
-		{ "type": "section", "text": { "type": "mrkdwn",
-				"text": "telemetry_probe.some_info - expiration: `2022-01-01`"
-			}
-		},
-		{ "type": "section", "text": { "type": "mrkdwn",
-				"text": "telemetry_probe.some_info - expiration: `2022-01-01`"
-			}
-		},
-		{ "type": "section", "text": { "type": "mrkdwn",
-				"text": "telemetry_probe.some_info - expiration: `2022-01-01`"
-			}
-		},
+ { "type": "section", "text": { "type": "mrkdwn", "text":  "app.opened_as_default_browser.expires - expiration: 2023-03-14 (145 days ago)"  } }, 
+{ "type": "section", "text": { "type": "mrkdwn", "text":  "mozilla_products.has_firefox_installed.expires - expiration: 2022-09-01 (339 days ago)"  } }, 
+{ "type": "section", "text": { "type": "mrkdwn", "text":  "settings_screen.set_as_default_browser_pressed.expires - expiration: 2023-07-20 (17 days ago)"  } }, 
+{ "type": "section", "text": { "type": "mrkdwn", "text":  "settings_screen.autocomplete_domain_added.expires - expiration: 2022-08-17 (354 days ago)"  } }, 
+{ "type": "section", "text": { "type": "mrkdwn", "text":  "tracking_protection.toolbar_shield_clicked.expires - expiration: 2022-08-17 (354 days ago)"  } }, 
+{ "type": "section", "text": { "type": "mrkdwn", "text":  "tracking_protection.tracking_protection_changed.expires - expiration: 2022-08-17 (354 days ago)"  } }, 
+{ "type": "section", "text": { "type": "mrkdwn", "text":  "tracking_protection.tracker_setting_changed.expires - expiration: 2022-08-17 (354 days ago)"  } }, 
+{ "type": "section", "text": { "type": "mrkdwn", "text":  "tracking_protection.has_social_blocked.expires - expiration: 2022-08-17 (354 days ago)"  } }, 
+{ "type": "section", "text": { "type": "mrkdwn", "text":  "tracking_protection.has_advertising_blocked.expires - expiration: 2022-08-17 (354 days ago)"  } }, 
+{ "type": "section", "text": { "type": "mrkdwn", "text":  "tracking_protection.has_analytics_blocked.expires - expiration: 2022-08-17 (354 days ago)"  } }, 
+{ "type": "section", "text": { "type": "mrkdwn", "text":  "tracking_protection.has_content_blocked.expires - expiration: 2022-08-17 (354 days ago)"  } }, 
+{ "type": "section", "text": { "type": "mrkdwn", "text":  "shortcuts.shortcuts_on_home_number.expires - expiration: 2022-08-20 (351 days ago)"  } }, 
+{ "type": "section", "text": { "type": "mrkdwn", "text":  "shortcuts.shortcut_opened_counter.expires - expiration: 2022-08-20 (351 days ago)"  } }, 
+{ "type": "section", "text": { "type": "mrkdwn", "text":  "shortcuts.shortcut_added_counter.expires - expiration: 2022-08-20 (351 days ago)"  } }, 
+{ "type": "section", "text": { "type": "mrkdwn", "text":  "shortcuts.shortcut_removed_counter.expires - expiration: 2022-08-20 (351 days ago)"  } }, 
+{ "type": "section", "text": { "type": "mrkdwn", "text":  "preferences.user_theme.expires - expiration: 2022-10-01 (309 days ago)"  } }, 
+{ "type": "section", "text": { "type": "mrkdwn", "text":  "browser_menu.browser_menu_action.expires - expiration: 2023-02-02 (185 days ago)"  } }, 
+{ "type": "section", "text": { "type": "mrkdwn", "text":  "show_search_suggestions.enabled_from_panel.expires - expiration: 2023-02-14 (173 days ago)"  } }, 
+{ "type": "section", "text": { "type": "mrkdwn", "text":  "show_search_suggestions.disabled_from_panel.expires - expiration: 2023-02-14 (173 days ago)"  } }, 
+{ "type": "section", "text": { "type": "mrkdwn", "text":  "show_search_suggestions.changed_from_settings.expires - expiration: 2023-02-14 (173 days ago)"  } }, 
+{ "type": "section", "text": { "type": "mrkdwn", "text":  "search_suggestions.suggestion_tapped.expires - expiration: 2023-02-14 (173 days ago)"  } }, 
+{ "type": "section", "text": { "type": "mrkdwn", "text":  "search_suggestions.search_tapped.expires - expiration: 2023-02-14 (173 days ago)"  } }, 
+{ "type": "section", "text": { "type": "mrkdwn", "text":  "search_suggestions.autocomplete_arrow_tapped.expires - expiration: 2023-02-14 (173 days ago)"  } }, 
+{ "type": "section", "text": { "type": "mrkdwn", "text":  "url_interaction.drag_started.expires - expiration: 2023-02-15 (172 days ago)"  } }, 
+{ "type": "section", "text": { "type": "mrkdwn", "text":  "url_interaction.drop_ended.expires - expiration: 2023-02-15 (172 days ago)"  } }, 
+{ "type": "section", "text": { "type": "mrkdwn", "text":  "url_interaction.paste_and_go.expires - expiration: 2023-02-15 (172 days ago)"  } }, 
+{ "type": "section", "text": { "type": "mrkdwn", "text":  "siri.open_favorite_site.expires - expiration: 2023-02-16 (171 days ago)"  } }, 
+{ "type": "section", "text": { "type": "mrkdwn", "text":  "siri.erase_and_open.expires - expiration: 2023-02-16 (171 days ago)"  } }, 
+{ "type": "section", "text": { "type": "mrkdwn", "text":  "siri.erase_in_background.expires - expiration: 2023-02-16 (171 days ago)"  } }, 
 		{
 			"type": "divider"
 		},
@@ -39,14 +56,6 @@
 			"text": {
 				"type": "mrkdwn",
 				"text": "*EXPIRING SOON* :traffic-yellow:"
-			}
-		},
-		{ "type": "section", "text": { "type": "mrkdwn",
-				"text": "telemetry_probe.some_info - expiration: `2022-01-01`"
-			}
-		},
-		{ "type": "section", "text": { "type": "mrkdwn",
-				"text": "telemetry_probe.some_info - expiration: `2022-01-01`"
 			}
 		},
 		{
