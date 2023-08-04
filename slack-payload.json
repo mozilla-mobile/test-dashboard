@@ -1,21 +1,19 @@
-[
-  {
-    "type": "header",
-    "text": {
-      "type": "plain_text",
-      "text": "firefox-android :firefox: xyz :x:\n "
-    }
-  },
-  {
-    "type": "divider"
-  },
-  {
-    "type": "context",
-    "elements": [
-	{
-	    "type": "mrkdwn",
-	    "text": ":testops-notify: created by <https://mana.mozilla.org/wiki/x/P_zNBw|Mobile Test Engineering>"
-	}
-    ]
+{
+  "type": "header",
+  "text": {
+    "type": "plain_text",
+    "text": "firefox-android :firefox: xyz :x:\n "
   }
-]
+},
+{
+  "type": "divider"
+},
+{
+  "type": "context",
+  "elements": [
+      {
+	  "type": "mrkdwn",
+	  "text": ":testops-notify: created by <https://mana.mozilla.org/wiki/x/P_zNBw|Mobile Test Engineering>"
+      }
+  ]
+}
