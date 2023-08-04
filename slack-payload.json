@@ -16,13 +16,10 @@
 			"type": "section",
 			"text": {
 				"type": "mrkdwn",
-				"text": "*ALREADY EXPIRED* "
+				"text": "*ALREADY EXPIRED* :traffic-red:"
 			}
 		},
-		{
-			"type": "section",
-			"text": {
-				"type": "mrkdwn",
+		{ "type": "section", "text": { "type": "mrkdwn",
 				"text": "telemetry_probe.some_info `2022-01-01`"
 			}
 		},
@@ -33,7 +30,7 @@
 			"type": "section",
 			"text": {
 				"type": "mrkdwn",
-				"text": ":calendar: |   *EXPIRING SOON*  | :calendar: "
+				"text": "*EXPIRING SOON* :traffic-yellow:"
 			}
 		},
 		{
