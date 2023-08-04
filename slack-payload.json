@@ -1,10 +1,12 @@
+
+
 {
 	"blocks": [
 		{
 			"type": "header",
 			"text": {
 				"type": "plain_text",
-				"text": "firefox-android :firefox: Telemetry Probe Expiry "x"\n"
+				"text": "firefox-android :firefox: Telemetry Probe Expiry :x:\n"
 			}
 		},
 		{
@@ -22,6 +24,21 @@
 			"text": {
 				"type": "mrkdwn",
 				"text": "telemetry_probe.some_info `2022-01-01`"
+			},
+			"accessory": {
+				"type": "button",
+				"text": {
+					"type": "plain_text",
+					"text": "RSVP",
+					"emoji": true
+				}
+			}
+		},
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "`11/13` telemetry_probe.some_info "
 			},
 			"accessory": {
 				"type": "button",
