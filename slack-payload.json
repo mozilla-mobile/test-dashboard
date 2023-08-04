@@ -6,7 +6,7 @@
 			"type": "header",
 			"text": {
 				"type": "plain_text",
-				"text": "firefox-android :firefox: Telemetry Probe Expiry :x:\n"
+				"text": "Telemetry Probe Expiry: firefox-android :firefox: \n"
 			}
 		},
 		{
@@ -20,7 +20,15 @@
 			}
 		},
 		{ "type": "section", "text": { "type": "mrkdwn",
-				"text": "telemetry_probe.some_info `2022-01-01`"
+				"text": "telemetry_probe.some_info - expiration: `2022-01-01`"
+			}
+		},
+		{ "type": "section", "text": { "type": "mrkdwn",
+				"text": "telemetry_probe.some_info - expiration: `2022-01-01`"
+			}
+		},
+		{ "type": "section", "text": { "type": "mrkdwn",
+				"text": "telemetry_probe.some_info - expiration: `2022-01-01`"
 			}
 		},
 		{
@@ -33,11 +41,12 @@
 				"text": "*EXPIRING SOON* :traffic-yellow:"
 			}
 		},
-		{
-			"type": "section",
-			"text": {
-				"type": "mrkdwn",
-				"text": "telemetry_probe.some_info `2022-01-01`"
+		{ "type": "section", "text": { "type": "mrkdwn",
+				"text": "telemetry_probe.some_info - expiration: `2022-01-01`"
+			}
+		},
+		{ "type": "section", "text": { "type": "mrkdwn",
+				"text": "telemetry_probe.some_info - expiration: `2022-01-01`"
 			}
 		},
 		{
