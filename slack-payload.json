@@ -27,21 +27,6 @@
 			}
 		},
 		{
-			"type": "section",
-			"text": {
-				"type": "mrkdwn",
-				"text": "`11/13` telemetry_probe.some_info "
-			},
-			"accessory": {
-				"type": "button",
-				"text": {
-					"type": "plain_text",
-					"text": "RSVP",
-					"emoji": true
-				}
-			}
-		},
-		{
 			"type": "divider"
 		},
 		{
@@ -55,15 +40,7 @@
 			"type": "section",
 			"text": {
 				"type": "mrkdwn",
-				"text": "`10/21` telemetry_probe.some_info"
-			},
-			"accessory": {
-				"type": "button",
-				"text": {
-					"type": "plain_text",
-					"text": "Watch Recording",
-					"emoji": true
-				}
+				"text": "telemetry_probe.some_info `2022-01-01`"
 			}
 		},
 		{
