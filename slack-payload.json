@@ -3,31 +3,7 @@
     "type": "header",
     "text": {
       "type": "plain_text",
-      "text": "firefox-android :firefox: ${task.metadata.name} :x:\n "
-    }
-  },
-  {
-    "type": "divider"
-  },
-  {
-     "type": "section",
-     "text": {
-	 "type": "mrkdwn",
-	 "text": "*Task*: <https://firefox-ci-tc.services.mozilla.com/tasks/${status.taskId}|Taskcluster>"
-    }
-  },
-  {
-    "type": "section",
-    "text": {
-      "type": "mrkdwn",
-      "text": "*Owner*: ${task.metadata.owner}"
-    }
-  },
-  {
-    "type": "section",
-    "text": {
-      "type": "mrkdwn",
-      "text": "*Source*: <${task.payload.env.MOBILE_BASE_REPOSITORY}/commit/${task.payload.env.MOBILE_HEAD_REV}|Commit> :github:"
+      "text": "firefox-android :firefox: xyz :x:\n "
     }
   },
   {
