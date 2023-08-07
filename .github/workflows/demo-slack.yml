@@ -9,8 +9,17 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout source repo
         uses: actions/checkout@v2
+
+      - name: Setup python 
+        uses: actions/setup-python@v1
+ 
+      - name: Install requirements 
+        uses: pip install -r requirements.txt 
+ 
+      - name: Run telemetry probe expiry check 
+        uses: python ./check_metrics.py 
 
       - name: Demo Slack Message
         id: slack
