@@ -1,5 +1,4 @@
-{ "blocks": [ { "type": "header", "text": { "type": "plain_text", "text": "telemetry probe expiry: focus-ios :firefox: 
-" } },{ "type": "divider" }, { "type": "section", "text": { "type": "mrkdwn", "text": "*ALREADY EXPIRED* :traffic-red:" } },{ "type": "section", "text": { "type": "mrkdwn", "text":  "app.opened_as_default_browser.expires - expiration: 2023-03-14 (147 days ago)"  } }, 
+{ "blocks": [ { "type": "header", "text": { "type": "plain_text", "text": "telemetry probe expiry: focus-ios :firefox: " } },{ "type": "divider" }, { "type": "section", "text": { "type": "mrkdwn", "text": "*ALREADY EXPIRED* :traffic-red:" } },{ "type": "section", "text": { "type": "mrkdwn", "text":  "app.opened_as_default_browser.expires - expiration: 2023-03-14 (147 days ago)"  } }, 
 { "type": "section", "text": { "type": "mrkdwn", "text":  "mozilla_products.has_firefox_installed.expires - expiration: 2022-09-01 (341 days ago)"  } }, 
 { "type": "section", "text": { "type": "mrkdwn", "text":  "settings_screen.set_as_default_browser_pressed.expires - expiration: 2023-07-20 (19 days ago)"  } }, 
 { "type": "section", "text": { "type": "mrkdwn", "text":  "settings_screen.autocomplete_domain_added.expires - expiration: 2022-08-17 (356 days ago)"  } }, 
