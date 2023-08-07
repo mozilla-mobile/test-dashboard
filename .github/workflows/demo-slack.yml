@@ -19,7 +19,7 @@ jobs:
         run: pip install -r requirements.txt 
  
       - name: Run telemetry probe expiry check 
-        run: python ./check_metrics.py 
+        run: python ./check_metrics.py -p focus-ios 
 
       - name: Demo Slack Message
         id: slack

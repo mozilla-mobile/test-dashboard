@@ -6,11 +6,13 @@ The purpose of this module is to:
 2. Send a slack notification for (soon-to-be) expired probes
 
 """
-import datetime
-import re
-import yaml
-import urllib.request
+import argparse
 import configparser
+import datetime
+import sys
+import re
+import urllib.request
+import yaml
 
 
 CONFIG_INI = 'check_metrics.ini'
@@ -21,6 +23,21 @@ expiring_soon = []
 
 
 METRICS_FILENAME = 'metrics.yaml'
+
+
+def parse_args(cmdln_args):
+    p = projects(CONFIG_INI)
+    parser = argparse.ArgumentParser(
+        description=f"Generate {PAYLOAD_JSON} file"
+    )
+
+    parser.add_argument(
+        "-p", "--project",
+        help="Indicate project",
+        required=True,
+        choices=p
+    )
+    return parser.parse_args(args=cmdln_args)
 
 
 def filestream(filename):
@@ -56,15 +73,11 @@ def is_date_format(date_input):
         return False
 
 
-#def projects(config):
-#    # traverse all projects one-by-one
-#    print(config.sections())
-#    print(x)
-#    for section in config.sections():
-#        print(section)
-#        
-#        for item in config.items(section):
-#            print(item)
+def projects(CONFIG_INI):
+    config = configparser.ConfigParser()
+    config.read(CONFIG_INI)
+    s = config.sections()
+    return list(s)
 
 
 def project(CONFIG_INI, project_name):
@@ -72,7 +85,8 @@ def project(CONFIG_INI, project_name):
 
     config = configparser.ConfigParser()
     #c = config.read(CONFIG_INI)
-    config.read('check_metrics.ini')
+    #config.read('check_metrics.ini')
+    config.read(CONFIG_INI)
 
     # pull data from a single project
     url = config.get(project_name, 'file')
@@ -175,10 +189,17 @@ def generate_payload(name_project, expired_already, expiring_soon):
         f.write(payload)
 
 def main():
+    """
     name_project = 'firefox-android'
     name_project = 'focus-android'
     #name_project = 'android-components'
     name_project = 'focus-ios'
+    name_project = 'firefox-android'
+    """
+
+    args = parse_args(sys.argv[1:])
+    name_project = args.project
+
     project(CONFIG_INI, name_project) 
     metrics = filestream(METRICS_FILENAME)
     create_probe_lists(metrics)
@@ -193,6 +214,8 @@ if __name__ == '__main__':
 
 
 
-import datetime
+
+
+
 
 
