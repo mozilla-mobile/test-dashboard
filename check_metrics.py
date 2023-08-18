@@ -189,13 +189,6 @@ def generate_payload(name_project, expired_already, expiring_soon):
         f.write(payload)
 
 def main():
-    """
-    name_project = 'firefox-android'
-    name_project = 'focus-android'
-    #name_project = 'android-components'
-    name_project = 'focus-ios'
-    name_project = 'firefox-android'
-    """
 
     args = parse_args(sys.argv[1:])
     name_project = args.project
