@@ -1,0 +1,51 @@
+name: Update TestOps DB
+
+on:
+  workflow_call:
+    inputs:
+      project_name:
+        required: false
+        type: string
+        default: "ALL"
+      frequency:
+        required: true
+        type: string
+      is_update_db:
+        required: true
+        type: boolean
+
+jobs:
+  deploy:
+    name: TestOps Report (${{ inputs.frequency }})
+    runs-on: ubuntu-latest
+    steps:
+        - name: Check out source repository
+          uses: actions/checkout@v4.1.1
+      
+        - name: Setup python 
+          uses: actions/setup-python@v4.7.1
+      
+        - name: Establish Cloud SQL Proxy
+          uses: mattes/gce-cloudsql-proxy-action@v1.0.1
+          with:
+            creds: ${{ secrets.GCLOUD_AUTH }}
+            instance: ${{ secrets.CLOUD_SQL_CONNECTION_NAME }}
+            port: ${{ secrets.CLOUD_SQL_DATABASE_PORT }}
+
+        - name: Install requirements
+          run: pip install -r requirements.txt
+      
+        - name: Set env vars
+          run: |
+            echo "CLOUD_SQL_DATABASE_USERNAME=${{ secrets.CLOUD_SQL_DATABASE_USERNAME }}" >> $GITHUB_ENV
+            echo "CLOUD_SQL_DATABASE_PASSWORD=${{ secrets.CLOUD_SQL_DATABASE_PASSWORD }}" >> $GITHUB_ENV
+            echo "CLOUD_SQL_DATABASE_NAME=production" >> $GITHUB_ENV
+            echo "CLOUD_SQL_DATABASE_PORT=${{ secrets.CLOUD_SQL_DATABASE_PORT }}" >> $GITHUB_ENV
+            echo "TESTRAIL_HOST=${{ secrets.TESTRAIL_HOST }}" >> $GITHUB_ENV
+            echo "TESTRAIL_USERNAME=${{ secrets.TESTRAIL_USERNAME }}" >> $GITHUB_ENV
+            echo "TESTRAIL_PASSWORD=${{ secrets.TESTRAIL_PASSWORD }}" >> $GITHUB_ENV
+            echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
+      
+        - name: Update DB - test coverage
+          if: ${{ inputs.is_update_db }}
+          run: python ./__main__.py --report-type test-case-coverage --project ${{ inputs.project_name }}
