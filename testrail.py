@@ -2,6 +2,7 @@ import os
 import sys
 
 import pandas as pd
+from pprint import pprint
 
 from lib.testrail_conn import APIClient
 from database import (
@@ -311,4 +312,4 @@ if __name__ == "__main__":
     SUITE_ID = 3192
     response = testrail.test_cases(PROJECT_ID, SUITE_ID)
     # response = testrail.test_cases(PROJECT_ID)
-    pprint(response)
+    print(response)
