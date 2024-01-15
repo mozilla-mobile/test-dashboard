@@ -43,4 +43,4 @@ jobs:
           echo "Hello world!"
           ls
           pwd
-
+          python testrail.py

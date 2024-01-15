@@ -302,3 +302,13 @@ class DatabaseTestRail(Database):
                     testrail_completed_on=completed_on)
                 self.session.add(report)
                 self.session.commit()
+
+if __name__ == "__main__":
+    testrail = TestRail()
+
+    # PROJECT_IDS = [59, 14, 27, 48]
+    PROJECT_ID = 59 # Fenix
+    SUITE_ID = 3192
+    response = testrail.test_cases(PROJECT_ID, SUITE_ID)
+    # response = testrail.test_cases(PROJECT_ID)
+    pprint(response)
