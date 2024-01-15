@@ -39,5 +39,8 @@ jobs:
             echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
 
       - name: Do Stuff!
-        run: echo "Hello world!"
+        run: | 
+          echo "Hello world!"
+          ls
+          pwd
 
