@@ -3,7 +3,7 @@ name: Linter for python modules
 on:
   push:
     branches:
-      - '**'
+      - main
 
 jobs:
   flake8-lint:
