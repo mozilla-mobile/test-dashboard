@@ -2,7 +2,7 @@ import os
 import sys
 
 import pandas as pd
-from pprint import pprint
+import pprint
 
 from lib.testrail_conn import APIClient
 from database import (
