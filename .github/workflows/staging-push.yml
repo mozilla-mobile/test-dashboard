@@ -44,3 +44,9 @@ jobs:
           ls
           pwd
           python testrail.py
+
+      # Connect to GCP bucket
+      # Use Github Actions marketplace
+      - name: Connect to GCP bucket
+        run: |
+          which gcloud
