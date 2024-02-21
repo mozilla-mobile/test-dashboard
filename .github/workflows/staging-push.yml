@@ -49,5 +49,4 @@ jobs:
       # Use Github Actions marketplace
       - name: Connect to GCP bucket
         run: |
-          which gcloud
-          which cloud-sql-proxy
+        mysql --host 127.0.0.1 --port ${{ secrets.CLOUD_SQL_DATABASE_PORT }} --user ${{ secrets.CLOUD_SQL_DATABASE_USERNAME }} --password ${{ secrets.CLOUD_SQL_DATABASE_PASSWORD }}
