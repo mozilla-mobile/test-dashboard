@@ -50,4 +50,4 @@ jobs:
       - name: Connect to GCP bucket
         run: |
           which sqlcmd
-          sqlcmd -S tcp:127.0.0.1,${{ secrets.CLOUD_SQL_DATABASE_PORT }} -U ${{ secrets.CLOUD_SQL_DATABASE_USERNAME }} -P ${{ secrets.CLOUD_SQL_DATABASE_PASSWORD }}
+          sqlcmd
