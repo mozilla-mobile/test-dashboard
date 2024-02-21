@@ -50,4 +50,4 @@ jobs:
       - name: Connect to GCP bucket
         run: |
           which gcloud
-          gcloud init
+          which cloud-sql-proxy
