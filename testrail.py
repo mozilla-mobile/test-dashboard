@@ -323,5 +323,5 @@ if __name__ == "__main__":
     current = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
     output_filename = "hello-{timestamp}.txt".format(timestamp = current)
     output_file = open(output_filename, "w")
-    output_file.write(str(response))
+    output_file.write(str(response)) # Not a csv yet
     output_file.close()
