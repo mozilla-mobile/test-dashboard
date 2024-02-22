@@ -49,4 +49,5 @@ jobs:
       # Use Github Actions marketplace
       - name: Connect to GCP bucket
         run: |
-          gcloud auth login --cred-file=$GITHUB_ENV
+          echo "${{ secrets.GCLOUD_AUTH }}" >> ./key.json
+          gcloud auth activate-service-account moz-mobile-tools@appspot.gserviceaccount.com --cred-file=./key.json --project=moz-mobile-tools
