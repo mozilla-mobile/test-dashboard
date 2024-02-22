@@ -45,10 +45,21 @@ jobs:
           pwd
           python testrail.py
 
-      # Connect to GCP bucket
+      
       # Use Github Actions marketplace
+      - name: Sign in to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCLOUD_AUTH }}
+      
+      # Set up Cloud SDK
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      # Connect to GCP bucket
+      # gcloud auth activate-service-account test-dashboard-cloud-run@moz-mobile-tools.iam.gserviceaccount.com --key-file=/tmp/gce-cloudsql-proxy/key.json --project=moz-mobile-tools
       - name: Upload file to GCP bucket
         run: |
           echo "Hello World!" >> `date +"hello-%Y-%m-%dT%H:%M:%S.txt"`
-          gcloud auth activate-service-account test-dashboard-cloud-run@moz-mobile-tools.iam.gserviceaccount.com --key-file=/tmp/gce-cloudsql-proxy/key.json --project=moz-mobile-tools
           gcloud storage cp hello-*.txt gs://backups-testrail-test-suites
