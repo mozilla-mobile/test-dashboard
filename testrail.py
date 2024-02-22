@@ -313,6 +313,8 @@ if __name__ == "__main__":
     # Cloud SQL database
     # PROJECT_IDS = [59, 14, 27, 48]
     PROJECT_ID = 59 # Fenix
+    all_test_suites = testrail.test_suites(PROJECT_ID)
+    print(all_test_suites)
     
     # TODO: Loop through all test suites for each project.
     SUITE_ID = 3192
