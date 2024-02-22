@@ -323,5 +323,5 @@ if __name__ == "__main__":
     # print(response)
     current = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
     output_filename = "testrail-backup-{timestamp}.json".format(timestamp = current)
-    with open(output_filename, "w") as output_file
+    with open(output_filename, "w") as output_file:
         json.dump(response, output_file)
