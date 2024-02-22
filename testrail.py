@@ -307,14 +307,14 @@ class DatabaseTestRail(Database):
                 self.session.commit()
 
 if __name__ == "__main__":
-    testrail = TestRail()
+    testrail = TestRailClient()
 
     # TODO: Loop through reference tables for projects in 
     # Cloud SQL database
     # PROJECT_IDS = [59, 14, 27, 48]
     PROJECT_ID = 59 # Fenix
-    all_test_suites = testrail.test_suites(PROJECT_ID)
-    print(all_test_suites)
+    all_test_suites_ids = testrail_client.testrail_project_ids(PROJECT_ID)
+    print(all_test_suites_ids)
     
     # TODO: Loop through all test suites for each project.
     SUITE_ID = 3192
