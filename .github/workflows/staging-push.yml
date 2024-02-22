@@ -62,6 +62,7 @@ jobs:
       - name: Upload file to GCP bucket
         uses: google-github-actions/upload-cloud-storage@v2
         with:
-          path: ./hello.txt
+          path: '.'
+          glob: ./hello-*.txt
           destination: backups-testrail-test-suites/
           
