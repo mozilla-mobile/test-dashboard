@@ -50,4 +50,4 @@ jobs:
       - name: Connect to GCP bucket
         run: |
           echo "${{ secrets.GCLOUD_AUTH }}" >> ./key.json
-          gcloud auth activate-service-account moz-mobile-tools@appspot.gserviceaccount.com --cred-file=./key.json --project=moz-mobile-tools
+          gcloud auth activate-service-account moz-mobile-tools@appspot.gserviceaccount.com --key-file=./key.json --project=moz-mobile-tools
