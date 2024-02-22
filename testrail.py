@@ -308,6 +308,7 @@ class DatabaseTestRail(Database):
 
 if __name__ == "__main__":
     testrail = TestRailClient()
+    testrail.data_pump()
 
     # TODO: Loop through reference tables for projects in 
     # Cloud SQL database
