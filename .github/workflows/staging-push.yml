@@ -49,6 +49,6 @@ jobs:
       # Use Github Actions marketplace
       - name: Upload file to GCP bucket
         run: |
-          echo "Hello World!" >> date +"hello-%Y-%m-%dT%H:%M:%S.txt"
+          echo "Hello World!" >> `date +"hello-%Y-%m-%dT%H:%M:%S.txt"`
           gcloud auth activate-service-account test-dashboard-cloud-run@moz-mobile-tools.iam.gserviceaccount.com --key-file=/tmp/gce-cloudsql-proxy/key.json --project=moz-mobile-tools
           gcloud storage cp hello-*.txt gs://backups-testrail-test-suites
