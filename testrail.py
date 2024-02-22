@@ -15,6 +15,7 @@ from database import (
 
 from utils.datetime_utils import DatetimeUtils as dt
 
+from datetime import datetime
 
 class TestRail:
 
@@ -307,9 +308,20 @@ class DatabaseTestRail(Database):
 if __name__ == "__main__":
     testrail = TestRail()
 
+    # TODO: Loop through reference tables for projects in 
+    # Cloud SQL database
     # PROJECT_IDS = [59, 14, 27, 48]
     PROJECT_ID = 59 # Fenix
+    
+    # TODO: Loop through all test suites for each project.
     SUITE_ID = 3192
     response = testrail.test_cases(PROJECT_ID, SUITE_ID)
     # response = testrail.test_cases(PROJECT_ID)
-    print(response)
+    
+    # Put response to a file for uploading later
+    # print(response)
+    current = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+    output_filename = "hello-{timestamp}.txt".format(timestamp = current)
+    output_file = open(output_filename, "w")
+    output_file.write(response)
+    output_file.close()
