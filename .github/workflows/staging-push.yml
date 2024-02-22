@@ -63,6 +63,6 @@ jobs:
         uses: google-github-actions/upload-cloud-storage@v2
         with:
           path: '.'
-          glob: ./hello-*.txt
+          glob: ./testrail-backup-*.json
           destination: backups-testrail-test-suites/
           

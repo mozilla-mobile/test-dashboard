@@ -3,6 +3,7 @@ import sys
 
 import pandas as pd
 import pprint
+import json
 
 from lib.testrail_conn import APIClient
 from database import (
@@ -321,7 +322,6 @@ if __name__ == "__main__":
     # Put response to a file for uploading later
     # print(response)
     current = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
-    output_filename = "hello-{timestamp}.txt".format(timestamp = current)
-    output_file = open(output_filename, "w")
-    output_file.write(str(response)) # Not a csv yet
-    output_file.close()
+    output_filename = "testrail-backup-{timestamp}.json".format(timestamp = current)
+    with open(output_filename, "w") as output_file
+        json.dump(response, output_file)
