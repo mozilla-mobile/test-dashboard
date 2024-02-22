@@ -47,6 +47,8 @@ jobs:
 
       # Connect to GCP bucket
       # Use Github Actions marketplace
-      - name: Connect to GCP bucket
+      - name: Upload file to GCP bucket
         run: |
+          echo "Hello World!" >> hello.txt
           gcloud auth activate-service-account test-dashboard-cloud-run@moz-mobile-tools.iam.gserviceaccount.com --key-file=/tmp/gce-cloudsql-proxy/key.json --project=moz-mobile-tools
+          gcloud storage cp hello.txt gs://backups-testrail-test-suites
