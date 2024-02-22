@@ -320,8 +320,9 @@ if __name__ == "__main__":
     
     # Put response to a file for uploading later
     # print(response)
-    current = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
-    output_filename = "hello-{timestamp}.txt".format(timestamp = current)
+    #current = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+    #output_filename = "hello-{timestamp}.txt".format(timestamp = current)
+    output_filename = "hello.txt"
     output_file = open(output_filename, "w")
     output_file.write(str(response)) # Not a csv yet
     output_file.close()
