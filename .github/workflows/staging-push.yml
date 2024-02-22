@@ -49,5 +49,4 @@ jobs:
       # Use Github Actions marketplace
       - name: Connect to GCP bucket
         run: |
-          which sqlcmd
-          sqlcmd -S 127.0.0.1 -U ${{ secrets.CLOUD_SQL_DATABASE_USERNAME }}
+          gcloud auth login --cred-file=$GITHUB_ENV
