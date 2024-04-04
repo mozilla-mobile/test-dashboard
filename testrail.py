@@ -99,8 +99,10 @@ class TestRailClient(TestRail):
 
         for project_ids in project_ids_list:
             projects_id = project_ids[0]
+
             testrail_project_id = project_ids[1]
             suites = self.test_suites(testrail_project_id)
+
             for suite in suites:
                 """
                 print("testrail_project_id: {0}".format(testrail_project_id))
@@ -148,10 +150,10 @@ class TestRailClient(TestRail):
                                  testrail_project_id, test_suite_id):
 
         # Pull JSON blob from Testrail
-        cases = self.test_cases(testrail_project_id, test_suite_id)
+        cases_metadata = self.test_cases(testrail_project_id, test_suite_id)
 
         # Format and store data in a data payload array
-        payload = self.db.report_test_coverage_payload(cases)
+        payload = self.db.report_test_coverage_payload(cases_metadata)
         print(payload)
 
         # Insert data in 'totals' array into DB
@@ -201,15 +203,18 @@ class DatabaseTestRail(Database):
         self.session.add(suites)
         self.session.commit()
 
-    def report_test_coverage_payload(self, cases):
+    def report_test_coverage_payload(self, cases_metadata):
         """given testrail data (cases), calculate test case counts by type"""
 
         payload = []
+        cases = cases_metadata['cases']
 
         for case in cases:
+
             row = []
             suit = case['suite_id']
-            subs = case['custom_sub_test_suites']
+            subs = case.get("custom_sub_test_suites", [7])
+
             # TODO: diagnostic - delete
             print('suite_id: {0}, case_id: {1}, subs: {2}'.format(suit, case['id'], subs)) # noqa
             stat = case['custom_automation_status']
@@ -221,6 +226,7 @@ class DatabaseTestRail(Database):
             for sub in subs:
                 row = [suit, sub, stat, cov, 1]
                 payload.append(row)
+
 
         df = pd.DataFrame(data=payload,
                           columns=['suit', 'sub', 'status', 'cov', 'tally'])
