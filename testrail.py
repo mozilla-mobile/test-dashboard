@@ -307,5 +307,5 @@ class DatabaseTestRail(Database):
                     testrail_created_on=created_on,
                     testrail_completed_on=completed_on)
                 '''
-                self.session.add(report)
+                # self.session.add(report)
                 self.session.commit()
