@@ -1,10 +1,15 @@
 name: Testops Report PUSH 
 
 on:
-  push:
-    branches:
-      - master 
-
+  #push:
+  #  branches:
+  #    - master
+  workflow_dispatch:
+    inputs:
+      branchName:
+        description: 'Default branch'
+        required: true
+        default: 'master'
 jobs:
   deploy:
     name: Update testops DB 
@@ -28,12 +33,12 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Set env vars 
-        run: | 
+        run: |
             echo "CLOUD_SQL_DATABASE_USERNAME=${{ secrets.CLOUD_SQL_DATABASE_USERNAME }}" >> $GITHUB_ENV
             echo "CLOUD_SQL_DATABASE_PASSWORD=${{ secrets.CLOUD_SQL_DATABASE_PASSWORD }}" >> $GITHUB_ENV
-            echo "CLOUD_SQL_DATABASE_NAME=staging" >> $GITHUB_ENV
+            echo "CLOUD_SQL_DATABASE_NAME=staging-2024-03-12" >> $GITHUB_ENV
             echo "CLOUD_SQL_DATABASE_PORT=${{ secrets.CLOUD_SQL_DATABASE_PORT }}" >> $GITHUB_ENV
-            echo "TESTRAIL_HOST=${{ secrets.TESTRAIL_HOST }}" >> $GITHUB_ENV
+            echo "TESTRAIL_HOST=${{ secrets.TESTRAIL_HOST_TEST }}" >> $GITHUB_ENV
             echo "TESTRAIL_USERNAME=${{ secrets.TESTRAIL_USERNAME }}" >> $GITHUB_ENV
             echo "TESTRAIL_PASSWORD=${{ secrets.TESTRAIL_PASSWORD }}" >> $GITHUB_ENV
             echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
@@ -42,7 +47,7 @@ jobs:
       #  run: python ./__main__.py --report-type test-run-counts --project fenix --start-date 2021-08-15 --end-date 2021-10-01 
 
       - name: Update DB - test coverage
-        #run: python ./__main__.py --report-type test-case-coverage --project ALL 
-        run: python ./__main__.py --report-type test-case-coverage --project fenix 
+        run: python ./__main__.py --report-type test-case-coverage --project ALL
+        #run: python ./__main__.py --report-type test-case-coverage --project fenix
       
 
