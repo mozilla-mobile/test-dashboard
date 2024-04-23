@@ -1,5 +1,3 @@
-import os
-import sys
 import requests
 
 from database import (
