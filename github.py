@@ -1,5 +1,3 @@
-import os
-import sys
 import requests
 
 from database import (
@@ -28,14 +26,14 @@ DATE_TYPES = [
 
 
 class Github:
-
+    '''
     try:
         API_TOKEN = os.environ['GITHUB_TOKEN']
         API_HEADER = {'Authorization': API_TOKEN, 'accept': 'application/json'}
     except KeyError:
         print("ERROR: GITHUB_TOKEN env var not set")
         sys.exit()
-
+    '''
     # UTILS
     def path_date_range(self, issue_status, date_lower_limit, date_upper_limit): # noqa
         # created_at, updated_at, closed_at, merged_at
