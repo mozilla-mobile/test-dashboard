@@ -9,7 +9,7 @@ from database import (
     Projects,
     TestSuites,
     ReportTestCaseCoverage,
-    ReportTestRunCounts
+    # ReportTestRunCounts
 )
 
 from utils.datetime_utils import DatetimeUtils as dt
@@ -296,6 +296,7 @@ class DatabaseTestRail(Database):
             if t['testrail_completed_on']:
                 created_on = dt.convert_epoch_to_datetime(t['testrail_created_on']) # noqa
                 completed_on = dt.convert_epoch_to_datetime(t['testrail_completed_on']) # noqa
+                '''
                 report = ReportTestRunCounts(
                     projects_id=project_id,
                     testrail_run_id=t['testrail_run_id'],
@@ -305,5 +306,6 @@ class DatabaseTestRail(Database):
                     test_case_blocked_count=t['blocked_count'],
                     testrail_created_on=created_on,
                     testrail_completed_on=completed_on)
+                '''
                 self.session.add(report)
                 self.session.commit()
