@@ -9,7 +9,7 @@ from database import (
     Projects,
     TestSuites,
     ReportTestCaseCoverage,
-    # ReportTestRunCounts
+    ReportTestRunCounts
 )
 
 from utils.datetime_utils import DatetimeUtils as dt
@@ -226,7 +226,6 @@ class DatabaseTestRail(Database):
             for sub in subs:
                 row = [suit, sub, stat, cov, 1]
                 payload.append(row)
-
 
         df = pd.DataFrame(data=payload,
                           columns=['suit', 'sub', 'status', 'cov', 'tally'])
