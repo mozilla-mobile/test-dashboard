@@ -10,6 +10,7 @@ on:
         description: 'Default branch'
         required: true
         default: 'master'
+
 jobs:
   deploy:
     name: Update testops DB 
@@ -47,7 +48,20 @@ jobs:
       #  run: python ./__main__.py --report-type test-run-counts --project fenix --start-date 2021-08-15 --end-date 2021-10-01 
 
       - name: Update DB - test coverage
-        run: python ./__main__.py --report-type test-case-coverage --project ALL
-        #run: python ./__main__.py --report-type test-case-coverage --project fenix
-      
+        #run: python ./__main__.py --report-type test-case-coverage --project ALL
+        run: python ./__main__.py --report-type test-case-coverage --project fenix
+      - name: Set job log URL
+        if: always()
+        run: echo "JOB_LOG_URL=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_ENV
+      - name: Send custom JSON data to Slack workflow
+        if: always()
+        id: slack
+        uses: slackapi/slack-github-action@v1.26.0
+        env:
+          JOB_STATUS: ${{ job.status == 'success' && ':white_check_mark:' || job.status == 'failure' && ':x:' }}
+          JOB_STATUS_COLOR: ${{ job.status == 'success' && '#36a64f' || job.status == 'failure' && '#FF0000' }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
+        with:
+          payload-file-path: "./payload-slack-content.json"
