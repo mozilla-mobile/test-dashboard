@@ -48,7 +48,8 @@ jobs:
       #  run: python ./__main__.py --report-type test-run-counts --project fenix --start-date 2021-08-15 --end-date 2021-10-01 
 
       - name: Update DB - test coverage
-        #run: python ./__main__.py --report-type test-case-coverage --project ALL
+        run: python ./__main__.py --report-type test-case-coverage --project ALL
+      - name: Jira query
         run: python ./__main__.py --report-type jira
       - name: Set job log URL
         if: always()

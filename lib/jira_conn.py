@@ -24,7 +24,7 @@ class JiraAPIClient:
         """Issue a GET request (read) against the API.
 
         Args:
-            filter{id}: The API method to call including parameters, 
+            filter{id}: The API method to call including parameters,
             e.g. GET /rest/api/2/filter/{id}.
 
         Returns:
@@ -47,9 +47,10 @@ class JiraAPIClient:
 
         while start_at < total:
             # Send GET request
-            response = requests.get(url, \
-                headers=headers, \
-                auth=HTTPBasicAuth(self.user, self.password))
+            response = requests.get(
+                        url,
+                        headers=headers,
+                        auth=HTTPBasicAuth(self.user, self.password))
 
             if response.status_code == 200:
                 data = response.json()
