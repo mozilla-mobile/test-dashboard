@@ -15,7 +15,7 @@ def parse_args(cmdln_args):
     parser.add_argument(
         "--project",
         help="Indicate project",
-        required=True,
+        required=False,
         choices=PROJECTS_ABBREV
     )
 
