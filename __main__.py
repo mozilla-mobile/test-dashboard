@@ -52,6 +52,9 @@ def main():
         h = GithubClient()
         h.github_issue_regression(args.project)
         h = GithubClient()
+    if args.report_type == 'jira':
+        h = Jira()
+        h.filters()
 
 
 if __name__ == '__main__':
