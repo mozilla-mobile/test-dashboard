@@ -24,13 +24,13 @@ class JiraAPIClient:
         """Issue a GET request (read) against the API.
 
         Args:
-            filter{id}: The API method to call including parameters, e.g. GET /rest/api/2/filter/{id}.
+            filter{id}: The API method to call including parameters, 
+            e.g. GET /rest/api/2/filter/{id}.
 
         Returns:
             JSON representation of the search results.
         """
         return self.__send_request('GET', query)
-
 
     def __send_request(self, method, query):
         url = self.__url + '?' + query
@@ -38,16 +38,18 @@ class JiraAPIClient:
         # Store all results
         all_results = []
 
-        headers = { "Content-Type": "application/json"}
+        headers = {"Content-Type": "application/json"}
 
         # Pagination variables
         start_at = 0
         max_results = 100
-        total = 1  # Initialize with a value greater than start_at to enter the loop
+        total = 1  # Initial value greater than start_at to enter the loop
 
         while start_at < total:
             # Send GET request
-            response = requests.get(url, headers=headers, auth=HTTPBasicAuth(self.user, self.password))
+            response = requests.get(url, \
+                headers=headers, \
+                auth=HTTPBasicAuth(self.user, self.password))
 
             if response.status_code == 200:
                 data = response.json()

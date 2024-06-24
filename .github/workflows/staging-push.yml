@@ -49,7 +49,7 @@ jobs:
 
       - name: Update DB - test coverage
         #run: python ./__main__.py --report-type test-case-coverage --project ALL
-        run: python ./__main__.py --report-type test-case-coverage --project fenix
+        run: python ./__main__.py --report-type jira
       - name: Set job log URL
         if: always()
         run: echo "JOB_LOG_URL=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_ENV

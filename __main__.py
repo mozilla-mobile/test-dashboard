@@ -2,6 +2,7 @@ import argparse
 import sys
 
 from github import GithubClient
+from jira import Jira
 from testrail import TestRailClient
 from utils.constants import PROJECTS_ABBREV, REPORT_TYPES
 

@@ -5,7 +5,8 @@ from lib.jira_conn import JiraAPIClient
 
 
 # JQL query All QA Requests since 2022 filter_id: 13856
-query = 'jql=filter=13856&fields=id,key,status,created,customfield_10037,customfield_10134,customfield_10155&maxResults=100'
+query = 'jql=filter=13856&fields=id,key,status,created,\
+        customfield_10037,customfield_10134,customfield_10155&maxResults=100'
 
 
 class Jira:
