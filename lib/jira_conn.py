@@ -64,4 +64,5 @@ class JiraAPIClient:
 
         # Print the total number of issues retrieved
         print(f"Total issues retrieved: {len(all_results)}")
+        print(data)
         return data
