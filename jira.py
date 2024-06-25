@@ -15,6 +15,7 @@ MAX_RESULT = "maxResults=100"
 
 JQL_QUERY = 'jql=filter='
 
+
 class Jira:
 
     def __init__(self):
