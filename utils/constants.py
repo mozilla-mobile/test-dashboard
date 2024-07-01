@@ -11,5 +11,5 @@ REPORT_TYPES = [
     'test-case-coverage',
     'test-run-counts',
     'issue-regression',
-    'jira'
+    'jira-qa-requests'
 ]

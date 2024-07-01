@@ -10,7 +10,7 @@ FILTER_ID_ALL_REQUESTS_2022 = "13856"
 STORY_POINTS = "customfield_10037"
 FIREFOX_RELEASE_TRAIN = "customfield_10155"
 ENGINEERING_TEAM = "customfield_10134"
-DEFAULT_COLUMNS = "id,key,status,created,summary,labels,"
+DEFAULT_COLUMNS = "id,key,status,created,summary,labels,assignee,"
 MAX_RESULT = "maxResults=100"
 
 JQL_QUERY = 'jql=filter='
