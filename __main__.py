@@ -2,6 +2,7 @@ import argparse
 import sys
 
 from github import GithubClient
+from jira import Jira
 from testrail import TestRailClient
 from utils.constants import PROJECTS_ABBREV, REPORT_TYPES
 
@@ -14,7 +15,7 @@ def parse_args(cmdln_args):
     parser.add_argument(
         "--project",
         help="Indicate project",
-        required=True,
+        required=False,
         choices=PROJECTS_ABBREV
     )
 
@@ -52,6 +53,9 @@ def main():
         h = GithubClient()
         h.github_issue_regression(args.project)
         h = GithubClient()
+    if args.report_type == 'jira-qa-requests':
+        h = Jira()
+        h.filters()
 
 
 if __name__ == '__main__':
