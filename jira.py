@@ -107,10 +107,17 @@ class DatabaseJira(Database):
         return df_selected
 
     def report_jira_qa_requests_insert(self, payload):
-        pass
-        # TBD
-        # This is the way used in testrail.py
-        report = ReportJiraQARequests()
+        print(payload)
+        for index, row in payload.iterrows():
+
+            report = ReportJiraQARequests(jira_key=row['jira_key'],
+                                          jira_created_at=row['jira_created_at'], # noqa
+                                          jira_firefox_release_train=row['jira_firefox_release_train'], # noqa
+                                          jira_engineering_team=row['jira_engineering_team'], # noqa
+                                          jira_story_points=row['jira_story_points'], # noqa
+                                          jira_status=row['jira_status'], # noqa
+                                          jira_assignee_username=row['jira_assignee_username'], # noqa
+                                          jira_labels=row['jira_labels'])
 
         # This is the only way working locally to insert data
         # payload.to_sql('report_jira_qa_requests', con=engine, if_exists='append', index=False) # noqa
