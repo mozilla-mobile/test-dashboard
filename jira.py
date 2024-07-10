@@ -120,7 +120,7 @@ class DatabaseJira(Database):
         # Rename columns
         df_selected = df_selected.rename(columns=selected_columns)
 
-        df_selected['jira_created_at'] = df_selected['jira_created_at'].apply(dt.convert_to_utc) # noqa
+        #df_selected['jira_created_at'] = df_selected['jira_created_at'].apply(dt.convert_to_utc) # noqa
 
         # Join list of labels into a single string
         df_selected['jira_labels'] = df_selected['jira_labels'].apply(lambda x: ','.join(x) if isinstance(x, list) else x) # noqa
