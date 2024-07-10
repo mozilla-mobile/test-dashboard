@@ -6,18 +6,18 @@ import pandas as pd
 from lib.jira_conn import JiraAPIClient
 from database import (
     Database,
-    # ReportJiraQARequests
+    ReportJiraQARequests
 )
 from utils.datetime_utils import DatetimeUtils as dt
+from utils.constants import FILTER_ID_ALL_REQUESTS_2022, MAX_RESULT
+
 
 # JQL query All QA Requests since 2022 filter_id: 13856
-FILTER_ID_ALL_REQUESTS_2022 = "13856"
-# Fields needed
+# Extra fields needed
 STORY_POINTS = "customfield_10037"
 FIREFOX_RELEASE_TRAIN = "customfield_10155"
 ENGINEERING_TEAM = "customfield_10134"
 DEFAULT_COLUMNS = "id,key,status,created,summary,labels,assignee,"
-MAX_RESULT = "maxResults=100"
 
 JQL_QUERY = 'jql=filter='
 
