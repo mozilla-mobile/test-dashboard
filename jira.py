@@ -51,7 +51,28 @@ class JiraClient(Jira):
         self.db = DatabaseJira()
 
     def jira_qa_requests(self):
-        payload = self.filters()
+        # payload = self.filters()
+
+        payload = [{
+            "key": "QA-2503",
+            "fields": {
+                "summary": "QA for password generator Android",
+                "created": "2024-07-08 10:00:00",
+                "assignee": "None",
+                "customfield_10155": {
+                    "value": "Fx129"
+                },
+                "customfield_10134": {
+                    "value": "Mobile Android"
+                },
+                "customfield_10037": "2",
+                "status": {
+                    "name": "Created"
+                },
+                "labels": [
+                ]
+            }
+        }]
 
         data_frame = self.db.report_jira_qa_requests_payload(payload)
         print(data_frame)
@@ -108,10 +129,12 @@ class DatabaseJira(Database):
 
     def report_jira_qa_requests_insert(self, payload):
         print(payload)
-        for index, row in payload.iterrows():
 
+        for index, row in payload.iterrows():
+            print(row)
             report = ReportJiraQARequests(jira_key=row['jira_key'],
                                           jira_created_at=row['jira_created_at'], # noqa
+                                          jira_summary=row['jira_summary'], # noqa
                                           jira_firefox_release_train=row['jira_firefox_release_train'], # noqa
                                           jira_engineering_team=row['jira_engineering_team'], # noqa
                                           jira_story_points=row['jira_story_points'], # noqa
