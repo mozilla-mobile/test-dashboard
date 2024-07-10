@@ -110,7 +110,7 @@ class DatabaseJira(Database):
         pass
         # TBD
         # This is the way used in testrail.py
-        # report = ReportJiraQARequests(payload)
+        report = ReportJiraQARequests(payload)
 
         # This is the only way working locally to insert data
         # payload.to_sql('report_jira_qa_requests', con=engine, if_exists='append', index=False) # noqa
