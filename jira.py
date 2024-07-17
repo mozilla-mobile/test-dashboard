@@ -26,6 +26,7 @@ class Jira:
 
     def __init__(self):
         try:
+
             JIRA_HOST = os.environ['JIRA_HOST']
             self.client = JiraAPIClient(JIRA_HOST)
             self.client.user = os.environ['JIRA_USER']
@@ -51,13 +52,16 @@ class JiraClient(Jira):
         self.db = DatabaseJira()
 
     def jira_qa_requests(self):
-        # payload = self.filters()
-
+        payload = self.filters()
+        print("This is the payload returning from filter")
+        print(payload)
+        '''
+        Working Test Payload
         payload = [{
-            "key": "QA-2503",
+            "key": "QA-2555",
             "fields": {
-                "summary": "QA for password generator Android",
-                "created": "2024-07-08 10:00:00",
+                "summary": "[QA for] password generator Android",
+                "created": "2024-07-01T19:00:26.017-0400",
                 "assignee": "None",
                 "customfield_10155": {
                     "value": "Fx129"
@@ -71,8 +75,42 @@ class JiraClient(Jira):
                 },
                 "labels": [
                 ]
-            }
-        }]
+            }},{
+            "key": "QA-2555",
+            "fields": {
+                "summary": "[QA for] password generator Android",
+                "created": "2024-08-01T19:00:26.017-0400",
+                "assignee": {
+                    "self": "https://mozilla-hub.atlassian.net/rest/api/2/user?accountId=712020%3A94a51a44-b5cc-4200-b015-b3344f6829a7",
+                    "accountId": "712020:94a51a44-b5cc-4200-b015-b3344f6829a7",
+                    "emailAddress": "dbarladeanu@mozilla.com",
+                    "avatarUrls": {
+                        "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:94a51a44-b5cc-4200-b015-b3344f6829a7/744bb20e-d66a-475a-839a-765800c8cfda/48",
+                        "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:94a51a44-b5cc-4200-b015-b3344f6829a7/744bb20e-d66a-475a-839a-765800c8cfda/24",
+                        "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:94a51a44-b5cc-4200-b015-b3344f6829a7/744bb20e-d66a-475a-839a-765800c8cfda/16",
+                        "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:94a51a44-b5cc-4200-b015-b3344f6829a7/744bb20e-d66a-475a-839a-765800c8cfda/32"
+                    },
+                    "displayName": "Diana Andreea Barladeanu",
+                    "active": True,
+                    "timeZone": "America/Indiana/Indianapolis",
+                    "accountType": "atlassian"
+                },
+                "customfield_10155": {
+                    "value": "Fx129"
+                },
+                "customfield_10134": {
+                    "value": "Mobile Android"
+                },
+                "customfield_10037": None,
+                "status": {
+                    "name": "CI/Execution"
+                },
+                "labels": [
+                    ]
+                }
+                }
+        ]
+        '''
 
         data_frame = self.db.report_jira_qa_requests_payload(payload)
         print(data_frame)
@@ -120,7 +158,7 @@ class DatabaseJira(Database):
         # Rename columns
         df_selected = df_selected.rename(columns=selected_columns)
 
-        #df_selected['jira_created_at'] = df_selected['jira_created_at'].apply(dt.convert_to_utc) # noqa
+        df_selected['jira_created_at'] = df_selected['jira_created_at'].apply(dt.convert_to_utc) # noqa
 
         # Join list of labels into a single string
         df_selected['jira_labels'] = df_selected['jira_labels'].apply(lambda x: ','.join(x) if isinstance(x, list) else x) # noqa
@@ -133,7 +171,7 @@ class DatabaseJira(Database):
         for index, row in payload.iterrows():
             print(row)
             report = ReportJiraQARequests(jira_key=row['jira_key'],
-                                          jira_created_at=row['jira_created_at'], # noqa
+                                          jira_created_at=row['jira_created_at'].date(), # noqa
                                           jira_summary=row['jira_summary'], # noqa
                                           jira_firefox_release_train=row['jira_firefox_release_train'], # noqa
                                           jira_engineering_team=row['jira_engineering_team'], # noqa
@@ -144,6 +182,5 @@ class DatabaseJira(Database):
 
         # This is the only way working locally to insert data
         # payload.to_sql('report_jira_qa_requests', con=engine, if_exists='append', index=False) # noqa
-
         self.session.add(report)
         self.session.commit()
