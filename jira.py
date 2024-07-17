@@ -81,14 +81,14 @@ class JiraClient(Jira):
                 "summary": "[QA for] password generator Android",
                 "created": "2024-08-01T19:00:26.017-0400",
                 "assignee": {
-                    "self": "https://mozilla-hub.atlassian.net/rest/api/2/user?accountId=712020%3A94a51a44-b5cc-4200-b015-b3344f6829a7",
+                    "self": "https://mozilla-hub.atlassian.net/rest/api/2/user?accountId=712020%3A94a51a44-b5cc-4200-b015-b3344f6829a7", # noqa
                     "accountId": "712020:94a51a44-b5cc-4200-b015-b3344f6829a7",
                     "emailAddress": "dbarladeanu@mozilla.com",
                     "avatarUrls": {
-                        "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:94a51a44-b5cc-4200-b015-b3344f6829a7/744bb20e-d66a-475a-839a-765800c8cfda/48",
-                        "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:94a51a44-b5cc-4200-b015-b3344f6829a7/744bb20e-d66a-475a-839a-765800c8cfda/24",
-                        "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:94a51a44-b5cc-4200-b015-b3344f6829a7/744bb20e-d66a-475a-839a-765800c8cfda/16",
-                        "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:94a51a44-b5cc-4200-b015-b3344f6829a7/744bb20e-d66a-475a-839a-765800c8cfda/32"
+                        "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:94a51a44-b5cc-4200-b015-b3344f6829a7/744bb20e-d66a-475a-839a-765800c8cfda/48", # noqa
+                        "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:94a51a44-b5cc-4200-b015-b3344f6829a7/744bb20e-d66a-475a-839a-765800c8cfda/24", # noqa
+                        "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:94a51a44-b5cc-4200-b015-b3344f6829a7/744bb20e-d66a-475a-839a-765800c8cfda/16", # noqa
+                        "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:94a51a44-b5cc-4200-b015-b3344f6829a7/744bb20e-d66a-475a-839a-765800c8cfda/32"  # noqa
                     },
                     "displayName": "Diana Andreea Barladeanu",
                     "active": True,
@@ -111,6 +111,7 @@ class JiraClient(Jira):
                 }
         ]
         '''
+        self.db.qa_requests_delete()
 
         data_frame = self.db.report_jira_qa_requests_payload(payload)
         print(data_frame)
@@ -123,6 +124,12 @@ class DatabaseJira(Database):
     def __init__(self):
         super().__init__()
         self.db = Database()
+
+    def qa_requests_delete(self):
+        """ Wipe out all test suite data.
+        NOTE: we'll renew this data from Testrail every session."""
+        self.session.query(ReportJiraQARequests).delete()
+        self.session.commit()
 
     def report_jira_qa_requests_payload(self, payload):
         # Normalize the JSON data
