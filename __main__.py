@@ -2,7 +2,7 @@ import argparse
 import sys
 
 from github import GithubClient
-from jira import Jira
+from jira import JiraClient
 from testrail import TestRailClient
 from utils.constants import PROJECTS_ABBREV, REPORT_TYPES
 
@@ -54,8 +54,8 @@ def main():
         h.github_issue_regression(args.project)
         h = GithubClient()
     if args.report_type == 'jira-qa-requests':
-        h = Jira()
-        h.filters()
+        h = JiraClient()
+        h.jira_qa_requests()
 
 
 if __name__ == '__main__':

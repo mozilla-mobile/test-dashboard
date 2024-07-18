@@ -37,32 +37,35 @@ class JiraAPIClient:
 
         # Store all results
         all_results = []
+        params = {}
 
         headers = {"Content-Type": "application/json"}
 
         # Pagination variables
-        start_at = 0
         max_results = 100
-        total = 1  # Initial value greater than start_at to enter the loop
+        total = None
+        params['startAt'] = 0
 
-        while start_at < total:
+        while True:
             # Send GET request
             response = requests.get(
                         url,
                         headers=headers,
-                        auth=HTTPBasicAuth(self.user, self.password))
+                        auth=HTTPBasicAuth(self.user, self.password),
+                        params=params)
 
-            if response.status_code == 200:
-                data = response.json()
-                all_results.extend(data['issues'])
-                total = data['total']  # Update total based on the response
-                start_at += max_results  # Move to the next page
-            else:
-                print(f"Failed to fetch data: {response.status_code}")
-                print(response.text)
+            data = response.json()
+            all_results.extend(data['issues'])
+            if total is None:
+                total = data['total']
+
+            # Increment the startAt parameter
+            params['startAt'] += max_results
+
+            # Check if we've retrieved all results
+            if params['startAt'] >= total:
                 break
 
         # Print the total number of issues retrieved
         print(f"Total issues retrieved: {len(all_results)}")
-        print(data)
-        return data
+        return all_results

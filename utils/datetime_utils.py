@@ -1,3 +1,5 @@
+import pytz
+
 from datetime import datetime, timedelta
 
 
@@ -15,6 +17,11 @@ class DatetimeUtils:
     def convert_epoch_to_datetime(int_epoch_date):
         ts = datetime.fromtimestamp(int_epoch_date)
         return ts.strftime(format_date)
+
+    def convert_to_utc(datetime_str):
+        """Convert datetime string with timezone offset to UTC."""
+        dt = datetime.strptime(datetime_str, "%Y-%m-%dT%H:%M:%S.%f%z")
+        return dt.astimezone(pytz.UTC)
 
     def start_date(num_days, end_date=''):
         """ given num_days, calculate a start_date

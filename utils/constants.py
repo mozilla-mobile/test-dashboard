@@ -13,3 +13,7 @@ REPORT_TYPES = [
     'issue-regression',
     'jira-qa-requests'
 ]
+
+# JQL query All QA Requests since 2022 filter_id: 13856
+FILTER_ID_ALL_REQUESTS_2022 = "13856"
+MAX_RESULT = "maxResults=100"
