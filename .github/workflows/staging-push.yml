@@ -52,6 +52,8 @@ jobs:
 
       - name: Jira query
         run: python ./__main__.py --report-type jira-qa-requests
+      - name: Jira query
+        run: python ./__main__.py --report-type jira-qa-needed
       - name: Set job log URL
         if: always()
         run: echo "JOB_LOG_URL=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_ENV

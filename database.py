@@ -39,6 +39,10 @@ class ReportJiraQARequests(Base):
     __table__ = Table('report_jira_qa_requests', Base.metadata, autoload=True) # noqa
 
 
+class ReportJiraQANeeded(Base):
+    __table__ = Table('report_jira_qa_needed', Base.metadata, autoload=True) # noqa
+
+
 class Database:
 
     def __init__(self):
