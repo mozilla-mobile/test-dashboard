@@ -72,7 +72,7 @@ class JiraClient(Jira):
         data_frame = self.db.report_jira_qa_needed(payload)
         print(data_frame)
 
-        self.db.report_jira_qa_needed_instert(data_frame)
+        self.db.report_jira_qa_needed_insert(data_frame)
 
 
 class DatabaseJira(Database):
@@ -156,7 +156,7 @@ class DatabaseJira(Database):
 
         # Join list of labels into a single string
         jira_labels = df['fields_labels'] = df['fields_labels'].apply(lambda x: ','.join(x) if isinstance(x, list) else x) # noqa
-        # Calcule the Nightly Verified label
+        # Calculate Nightly Verified label
         verified_nightly_count = jira_labels.str.contains('verified', case=False, na=False).sum() # noqa
 
         not_verified_count = total_rows - verified_nightly_count
@@ -164,7 +164,7 @@ class DatabaseJira(Database):
         data = [total_rows, not_verified_count, verified_nightly_count]
         return data
 
-    def report_jira_qa_needed_instert(self, payload):
+    def report_jira_qa_needed_insert(self, payload):
         report = ReportJiraQANeeded(jira_total_qa_needed=payload[0],
                                     jira_qa_needed_not_verified=payload[1],
                                     jira_qa_needed_verified_nightly=payload[2])

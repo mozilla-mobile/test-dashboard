@@ -50,9 +50,10 @@ jobs:
       #- name: Update DB - test runs 
       #  run: python ./__main__.py --report-type test-run-counts --project fenix --start-date 2021-08-15 --end-date 2021-10-01 
 
-      - name: Jira query
+      - name: Jira query qa-requests
         run: python ./__main__.py --report-type jira-qa-requests
-      - name: Jira query
+      - name: Jira query qa-needed
+        if: always()
         run: python ./__main__.py --report-type jira-qa-needed
       - name: Set job log URL
         if: always()
