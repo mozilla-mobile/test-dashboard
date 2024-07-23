@@ -6,11 +6,12 @@ import pandas as pd
 from lib.jira_conn import JiraAPIClient
 from database import (
     Database,
-    ReportJiraQARequests
+    ReportJiraQARequests,
+    ReportJiraQANeeded
 )
 from utils.datetime_utils import DatetimeUtils as dt
 from utils.constants import FILTER_ID_ALL_REQUESTS_2022, MAX_RESULT
-
+from utils.constants import FILTER_ID_QA_NEEDED_iOS
 
 # JQL query All QA Requests since 2022 filter_id: 13856
 # Extra fields needed
@@ -44,6 +45,10 @@ class Jira:
 
         return self.client.get_search(query)
 
+    def filter_qa_needed(self):
+        query = JQL_QUERY + FILTER_ID_QA_NEEDED_iOS + '&' + MAX_RESULT
+        return self.client.get_search(query)
+
 
 class JiraClient(Jira):
     def __init__(self):
@@ -61,6 +66,13 @@ class JiraClient(Jira):
         print(data_frame)
 
         self.db.report_jira_qa_requests_insert(data_frame)
+
+    def jira_qa_needed(self):
+        payload = self.filter_qa_needed()
+        data_frame = self.db.report_jira_qa_needed(payload)
+        print(data_frame)
+
+        self.db.report_jira_qa_needed_insert(data_frame)
 
 
 class DatabaseJira(Database):
@@ -135,4 +147,27 @@ class DatabaseJira(Database):
                                           jira_assignee_username=row['jira_assignee_username'], # noqa
                                           jira_labels=row['jira_labels'])
             self.session.add(report)
+        self.session.commit()
+
+    def report_jira_qa_needed(self, payload):
+        # Normalize the JSON data
+        df = pd.json_normalize(payload, sep='_')
+        total_rows = len(df)
+
+        # Join list of labels into a single string
+        jira_labels = df['fields_labels'] = df['fields_labels'].apply(lambda x: ','.join(x) if isinstance(x, list) else x) # noqa
+        # Calculate Nightly Verified label
+        verified_nightly_count = jira_labels.str.contains('verified', case=False, na=False).sum() # noqa
+
+        not_verified_count = total_rows - verified_nightly_count
+
+        data = [total_rows, not_verified_count, verified_nightly_count]
+        return data
+
+    def report_jira_qa_needed_insert(self, payload):
+        report = ReportJiraQANeeded(jira_total_qa_needed=payload[0],
+                                    jira_qa_needed_not_verified=payload[1],
+                                    jira_qa_needed_verified_nightly=payload[2])
+
+        self.session.add(report)
         self.session.commit()

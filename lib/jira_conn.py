@@ -34,7 +34,6 @@ class JiraAPIClient:
 
     def __send_request(self, method, query):
         url = self.__url + '?' + query
-
         # Store all results
         all_results = []
         params = {}
@@ -55,6 +54,7 @@ class JiraAPIClient:
                         params=params)
 
             data = response.json()
+
             all_results.extend(data['issues'])
             if total is None:
                 total = data['total']

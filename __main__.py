@@ -37,7 +37,6 @@ def parse_args(cmdln_args):
 
 def main():
     args = parse_args(sys.argv[1:])
-
     if args.report_type == 'test-case-coverage':
         h = TestRailClient()
         h.data_pump(args.project.lower())
@@ -56,6 +55,9 @@ def main():
     if args.report_type == 'jira-qa-requests':
         h = JiraClient()
         h.jira_qa_requests()
+    if args.report_type == 'jira-qa-needed':
+        h = JiraClient()
+        h.jira_qa_needed()
 
 
 if __name__ == '__main__':
