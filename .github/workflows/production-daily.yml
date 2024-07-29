@@ -31,7 +31,8 @@ jobs:
           port: ${{ secrets.CLOUD_SQL_DATABASE_PORT }}
 
       - name: Install requirements 
-        run: pip install -r requirements.txt
+        run: |
+            pip install -r requirements.txt
 
       - name: Set env vars 
         run: |
