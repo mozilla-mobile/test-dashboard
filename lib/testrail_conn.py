@@ -75,8 +75,30 @@ class APIClient:
                 payload = bytes(json.dumps(data), 'utf-8')
                 response = requests.post(url, headers=headers, data=payload)
         else:
+            all_items = []
+            offset = 0
+            limit = 250
+
             headers['Content-Type'] = 'application/json'
-            response = requests.get(url, headers=headers)
+
+            while True:
+                response = requests.get(f"{url}&limit={limit}&offset={offset}", headers=headers)
+                data = response.json()
+
+                # Check if 'cases' key exists in the response
+                if 'cases' in data:
+                    all_items.extend(data['cases'])
+
+                    # Break if fewer items are returned than the limit, indicating the last page
+                    if len(data['cases']) < limit:
+                        break
+                else:
+                    all_items = data
+                    break  # If 'cases' key is not present, exit the loop
+
+                offset += limit
+
+            return all_items
 
         if response.status_code > 201:
             try:

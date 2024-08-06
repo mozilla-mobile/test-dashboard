@@ -102,7 +102,6 @@ class TestRailClient(TestRail):
 
             testrail_project_id = project_ids[1]
             suites = self.test_suites(testrail_project_id)
-
             for suite in suites:
                 """
                 print("testrail_project_id: {0}".format(testrail_project_id))
@@ -150,10 +149,10 @@ class TestRailClient(TestRail):
                                  testrail_project_id, test_suite_id):
 
         # Pull JSON blob from Testrail
-        cases_metadata = self.test_cases(testrail_project_id, test_suite_id)
+        cases = self.test_cases(testrail_project_id, test_suite_id)
 
         # Format and store data in a data payload array
-        payload = self.db.report_test_coverage_payload(cases_metadata)
+        payload = self.db.report_test_coverage_payload(cases)
         print(payload)
 
         # Insert data in 'totals' array into DB
@@ -203,11 +202,10 @@ class DatabaseTestRail(Database):
         self.session.add(suites)
         self.session.commit()
 
-    def report_test_coverage_payload(self, cases_metadata):
+    def report_test_coverage_payload(self, cases):
         """given testrail data (cases), calculate test case counts by type"""
 
         payload = []
-        cases = cases_metadata['cases']
 
         for case in cases:
 
