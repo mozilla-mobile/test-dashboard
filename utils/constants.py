@@ -4,6 +4,7 @@ PROJECTS_ABBREV = [
     'reference-browser',
     'firefox-ios',
     'focus-ios',
+    'experimenter',
     'ALL',
 ]
 
