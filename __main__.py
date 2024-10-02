@@ -1,6 +1,7 @@
 import argparse
 import sys
 
+from bugz import BugzillaClient
 from github import GithubClient
 from jira import JiraClient
 from testrail import TestRailClient
@@ -37,10 +38,10 @@ def parse_args(cmdln_args):
 
 def main():
     args = parse_args(sys.argv[1:])
+
     if args.report_type == 'test-case-coverage':
         h = TestRailClient()
         h.data_pump(args.project.lower())
-
     if args.report_type == 'test-run-counts':
         h = TestRailClient()
         if args.num_days:
@@ -58,7 +59,9 @@ def main():
     if args.report_type == 'jira-qa-needed':
         h = JiraClient()
         h.jira_qa_needed()
-
+    if args.report_type == 'bugzilla-qe-verify':
+        h = BugzillaClient()
+        h.bugzilla_qe_verify()
 
 if __name__ == '__main__':
     main()
