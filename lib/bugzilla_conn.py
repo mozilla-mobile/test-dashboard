@@ -26,6 +26,6 @@ class BugzillaAPIClient:
     def __init__(self) -> None:
         self.key = os.environ.get("BUGZILLA_API_KEY")
         if not self.key:
-            raise Exception("Please set the BUGZILLA_API_KEY environment variable")
+            raise Exception("Missing BUGZILLA_API_KEY")
         if self.key:
             self.bz_client = bugzilla.Bugzilla(self.URL, api_key=self.key)

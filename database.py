@@ -46,6 +46,7 @@ class ReportJiraQANeeded(Base):
 class ReportBugzillaQENeeded(Base):
     __table__ = Table('report_bugzilla_qe_needed', Base.metadata, autoload=True) # noqa
 
+
 class ReportBugzillaQEVerifyCount(Base):
     __table__ = Table('report_bugzilla_qe_needed_count', Base.metadata, autoload=True) # noqa
 

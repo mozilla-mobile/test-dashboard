@@ -1,15 +1,6 @@
-import os
-import sys
-import re
-import json
-
 import pandas as pd
-import bugzilla
 
 from lib.bugzilla_conn import BugzillaAPIClient
-from utils.datetime_utils import DatetimeUtils as dt
-
-from datetime import datetime
 
 from database import (
     Database,
@@ -17,9 +8,9 @@ from database import (
     ReportBugzillaQENeeded
 )
 
-
 PRODUCTS = ["Fenix", "Focus", "GeckoView"]
-FIELDS = ["id", "summary", "flags", "severity", "priority", "status", "resolution"]
+FIELDS = ["id", "summary", "flags", "severity",
+          "priority", "status", "resolution"]
 
 
 class Bugz:
@@ -43,6 +34,7 @@ class Bugz:
         query = self.conn.bz_client.url_to_query(url)
         return query
 
+
 class BugzillaHelper:
     def __init__(self) -> None:
         self.bugzilla = Bugz()
@@ -63,6 +55,7 @@ class BugzillaHelper:
         """Get a query from a Bugzilla URL."""
         return self.bugzilla.get_query_from_url(url)
 
+
 class BugzillaClient(Bugz):
     def __init__(self):
         super().__init__()
@@ -79,9 +72,10 @@ class BugzillaClient(Bugz):
             bugs = self.BugzillaHelperClient.query(query)
 
             for bug in bugs:
-                bug_ = [bug.id, bug.summary, bug.flags, bug.severity, bug.priority, bug.status, bug.resolution]
+                bug_ = [bug.id, bug.summary, bug.flags,
+                        bug.severity, bug.priority, bug.status, bug.resolution]
                 allBugs.append(bug_)
-            
+
         return allBugs
 
     def bugzilla_query_qe_verify(self):
@@ -89,22 +83,22 @@ class BugzillaClient(Bugz):
         search_criteria = {'name': 'qe-verify', 'status': '+'}
 
         payload = self.bugzilla_query()
-        
+
         for bug in payload:
-            result = any(self.contains_criteria(entry, search_criteria) for entry in bug[2])
-            if result == True:
+            result = any(self.contains_criteria(entry, search_criteria) for entry in bug[2]) # noqa
+            if result:
                 qe_bugs.append(bug)
 
         return qe_bugs
 
     def bugzilla_query_severity(self):
-        payload = self.bugzilla_query()
+        # payload = self.bugzilla_query()
 
         # TBD to get all NEW bugs
         return
 
     def bugzilla_qe_verify(self):
-        payload=self.bugzilla_query_qe_verify()
+        payload = self.bugzilla_query_qe_verify()
 
         rows = []
         for entry in payload:
@@ -117,11 +111,17 @@ class BugzillaClient(Bugz):
             # If there are additional fields (sub-entry), iterate over them
             if entry[2]:
                 for sub_entry in entry[2]:
-                    row = {"bug_id": bug_id, "description": description, **sub_entry, "severity": severity, "priority": priority, "bug_status": status, "resolution": resolution}
+                    row = {"bug_id": bug_id, "description": description,
+                           **sub_entry, "severity": severity,
+                           "priority": priority,
+                           "bug_status": status, "resolution": resolution}
                     rows.append(row)
             else:
                 # If no sub-entry, just add the bug_id description
-                row = {"bug_id": bug_id, "description": description, "severity": severity, "priority": priority, "priority": priority, "bug_status": status, "resolution": resolution}
+                row = {"bug_id": bug_id, "description": description,
+                       "severity": severity, "priority": priority,
+                       "priority": priority, "bug_status": status,
+                       "resolution": resolution}
                 rows.append(row)
 
         # Create the DataFrame
@@ -135,7 +135,7 @@ class BugzillaClient(Bugz):
 
         data_frame = self.db.report_bugzilla_qa_needed(df_cleaned)
         self.db.report_bugzilla_qa_needed_insert(data_frame)
-        
+
         qe_needed_count = self.db.report_bugzilla_qa_needed_count(data_frame)
         self.db.report_bugzilla_qa_needed_count_insert(qe_needed_count)
 
@@ -160,31 +160,31 @@ class DatabaseBugzilla(Database):
             'priority': 'bugzilla_bug_priority',
             'bug_status': 'bugzilla_bug_status',
             'resolution': 'bugzilla_bug_resolution'
-            
         }
 
         # Select specific columns
         df = payload[selected_columns.keys()]
-    
+
         # Rename columns
         df = df.rename(columns=selected_columns)
         return df
-        
+
     def report_bugzilla_qa_needed_insert(self, payload):
         for index, row in payload.iterrows():
             print(row)
-            report = ReportBugzillaQENeeded(bugzilla_key=row['bugzilla_key'],
-                bugzilla_summary=row['bugzilla_summary'],
-                buzilla_modified_at=row['bugzilla_modified_at'].date(),
-                bugzilla_tag_name=row['bugzilla_tag_name'],
-                bugzilla_created_at=row['bugzilla_created_at'].date(),
-                bugzilla_tag_status=row['bugzilla_tag_status'],
-                bugzilla_tag_setter=row['bugzilla_tag_setter'],
-                bugzilla_bug_severity=row['bugzilla_bug_severity'],
-                bugzilla_bug_priority=row['bugzilla_bug_priority'],
-                bugzilla_bug_status=row['bugzilla_bug_status'],
-                bugzilla_bug_resolution=row['bugzilla_bug_resolution']
-                        )
+            report = ReportBugzillaQENeeded(
+                        bugzilla_key=row['bugzilla_key'],
+                        bugzilla_summary=row['bugzilla_summary'],
+                        buzilla_modified_at=row['bugzilla_modified_at'].date(),
+                        bugzilla_tag_name=row['bugzilla_tag_name'],
+                        bugzilla_created_at=row['bugzilla_created_at'].date(),
+                        bugzilla_tag_status=row['bugzilla_tag_status'],
+                        bugzilla_tag_setter=row['bugzilla_tag_setter'],
+                        bugzilla_bug_severity=row['bugzilla_bug_severity'],
+                        bugzilla_bug_priority=row['bugzilla_bug_priority'],
+                        bugzilla_bug_status=row['bugzilla_bug_status'],
+                        bugzilla_bug_resolution=row['bugzilla_bug_resolution']
+                )
 
             self.session.add(report)
         self.session.commit()
@@ -195,7 +195,8 @@ class DatabaseBugzilla(Database):
         return data
 
     def report_bugzilla_qa_needed_count_insert(self, payload):
-        report = ReportBugzillaQEVerifyCount(bugzilla_total_qa_needed=payload[0])
+        report = ReportBugzillaQEVerifyCount(
+                        bugzilla_total_qa_needed=payload[0])
 
         self.session.add(report)
         self.session.commit()
