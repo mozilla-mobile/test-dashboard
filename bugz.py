@@ -120,11 +120,12 @@ class BugzillaClient(Bugz):
             # iterate over them
             if entry[2]:
                 for sub_entry in entry[2]:
-                    row = {"bug_id": bug_id, "description": description,
-                           **sub_entry, "severity": severity,
-                           "priority": priority,
-                           "bug_status": status, "resolution": resolution}
-                    rows.append(row)
+                    if sub_entry['name'] == 'qe-verify' and sub_entry['status'] == '+': # noqa
+                        row = {"bug_id": bug_id, "description": description,
+                               **sub_entry, "severity": severity,
+                               "priority": priority,
+                               "bug_status": status, "resolution": resolution}
+                        rows.append(row)
             else:
                 # If no sub-entry, just add the bug_id description
                 row = {"bug_id": bug_id, "description": description,
