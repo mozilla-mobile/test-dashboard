@@ -66,7 +66,7 @@ class BugzillaClient(Bugz):
         return all(entry.get(key) == value for key, value in criteria.items())
 
     def bugzilla_query(self):
-        allBugs = []
+        all_bugs = []
         for product in PRODUCTS:
             query = dict(product=product, include_fields=FIELDS)
             bugs = self.BugzillaHelperClient.query(query)
@@ -74,9 +74,9 @@ class BugzillaClient(Bugz):
             for bug in bugs:
                 bug_ = [bug.id, bug.summary, bug.flags,
                         bug.severity, bug.priority, bug.status, bug.resolution]
-                allBugs.append(bug_)
+                all_bugs.append(bug_)
 
-        return allBugs
+        return all_bugs
 
     def bugzilla_query_qe_verify(self):
         qe_bugs = []
@@ -101,6 +101,14 @@ class BugzillaClient(Bugz):
         payload = self.bugzilla_query_qe_verify()
 
         rows = []
+        # Based on the filter, this is an example of a bug
+        # [1909150, 'Description',
+        # [{'id': 2244803, 'setter': 'email@mozilla.com', 'type_id': 864,
+        # 'creation_date': <DateTime '20240917T09:39:02' at 0x147cb6cf0>,
+        # 'name': 'qe-verify',
+        # 'modification_date': <DateTime '20240917T09:39:02' at 0x147cb6d50>,
+        # 'status': '+'}], 'N/A', 'P2', 'RESOLVED', 'FIXED']
+
         for entry in payload:
             bug_id = entry[0]
             description = entry[1]
@@ -108,7 +116,8 @@ class BugzillaClient(Bugz):
             priority = entry[4]
             status = entry[5]
             resolution = entry[6]
-            # If there are additional fields (sub-entry), iterate over them
+            # If there are additional fields due to flag field(sub-entry)
+            # iterate over them
             if entry[2]:
                 for sub_entry in entry[2]:
                     row = {"bug_id": bug_id, "description": description,
@@ -120,8 +129,7 @@ class BugzillaClient(Bugz):
                 # If no sub-entry, just add the bug_id description
                 row = {"bug_id": bug_id, "description": description,
                        "severity": severity, "priority": priority,
-                       "priority": priority, "bug_status": status,
-                       "resolution": resolution}
+                       "bug_status": status, "resolution": resolution}
                 rows.append(row)
 
         # Create the DataFrame
@@ -172,20 +180,22 @@ class DatabaseBugzilla(Database):
     def report_bugzilla_qa_needed_insert(self, payload):
         for index, row in payload.iterrows():
             print(row)
-            report = ReportBugzillaQENeeded(
-                        bugzilla_key=row['bugzilla_key'],
-                        bugzilla_summary=row['bugzilla_summary'],
-                        buzilla_modified_at=row['bugzilla_modified_at'].date(),
-                        bugzilla_tag_name=row['bugzilla_tag_name'],
-                        bugzilla_created_at=row['bugzilla_created_at'].date(),
-                        bugzilla_tag_status=row['bugzilla_tag_status'],
-                        bugzilla_tag_setter=row['bugzilla_tag_setter'],
-                        bugzilla_bug_severity=row['bugzilla_bug_severity'],
-                        bugzilla_bug_priority=row['bugzilla_bug_priority'],
-                        bugzilla_bug_status=row['bugzilla_bug_status'],
-                        bugzilla_bug_resolution=row['bugzilla_bug_resolution']
-                )
-
+            try:
+                report = ReportBugzillaQENeeded(
+                            bugzilla_key=row['bugzilla_key'],
+                            bugzilla_summary=row['bugzilla_summary'],
+                            buzilla_modified_at=row['bugzilla_modified_at'],
+                            bugzilla_tag_name=row['bugzilla_tag_name'],
+                            bugzilla_created_at=row['bugzilla_created_at'],
+                            bugzilla_tag_status=row['bugzilla_tag_status'],
+                            bugzilla_tag_setter=row['bugzilla_tag_setter'],
+                            bugzilla_bug_severity=row['bugzilla_bug_severity'],
+                            bugzilla_bug_priority=row['bugzilla_bug_priority'],
+                            bugzilla_bug_status=row['bugzilla_bug_status'],
+                            bugzilla_bug_resolution=row['bugzilla_bug_resolution'] # noqa
+                    )
+            except KeyError as e:
+                print(f"Missing key: {e} in row {index}")
             self.session.add(report)
         self.session.commit()
 

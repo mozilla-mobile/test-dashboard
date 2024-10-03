@@ -47,6 +47,8 @@ jobs:
             echo "JIRA_USER=${{ secrets.JIRA_USER }}" >> $GITHUB_ENV
             echo "JIRA_PASSWORD=${{ secrets.JIRA_PASSWORD }}" >> $GITHUB_ENV
             echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
+            echo "BUGZILLA_API_KEY=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
+
 
       - name: Jira query
         run: python ./__main__.py --report-type jira-qa-requests
