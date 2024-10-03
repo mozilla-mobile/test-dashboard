@@ -62,7 +62,7 @@ class BugzillaClient(Bugz):
         self.db = DatabaseBugzilla()
         self.BugzillaHelperClient = BugzillaHelper()
 
-    def contains_criteria(self, entry, criteria):
+    def contains_flags(self, entry, criteria):
         return all(entry.get(key) == value for key, value in criteria.items())
 
     def bugzilla_query(self):
@@ -80,15 +80,13 @@ class BugzillaClient(Bugz):
 
     def bugzilla_query_qe_verify(self):
         qe_bugs = []
-        search_criteria = {'name': 'qe-verify', 'status': '+'}
+        search_criteria = {'name': 'qe-verify'}
 
         payload = self.bugzilla_query()
-
         for bug in payload:
-            result = any(self.contains_criteria(entry, search_criteria) for entry in bug[2]) # noqa
+            result = any(self.contains_flags(entry, search_criteria) for entry in bug[2]) # noqa
             if result:
                 qe_bugs.append(bug)
-
         return qe_bugs
 
     def bugzilla_query_severity(self):
@@ -118,20 +116,14 @@ class BugzillaClient(Bugz):
             resolution = entry[6]
             # If there are additional fields due to flag field(sub-entry)
             # iterate over them
-            if entry[2]:
-                for sub_entry in entry[2]:
-                    if sub_entry['name'] == 'qe-verify' and sub_entry['status'] == '+': # noqa
-                        row = {"bug_id": bug_id, "description": description,
-                               **sub_entry, "severity": severity,
-                               "priority": priority,
-                               "bug_status": status, "resolution": resolution}
-                        rows.append(row)
-            else:
-                # If no sub-entry, just add the bug_id description
-                row = {"bug_id": bug_id, "description": description,
-                       "severity": severity, "priority": priority,
-                       "bug_status": status, "resolution": resolution}
-                rows.append(row)
+            for sub_entry in entry[2]:
+                if sub_entry['name'] == 'qe-verify' and sub_entry['status'] == '+': # noqa
+                    row = {"bug_id": bug_id, "description": description,
+                           **sub_entry, "severity": severity,
+                           "priority": priority,
+                           "bug_status": status, "resolution": resolution}
+
+                    rows.append(row)
 
         # Create the DataFrame
         df = pd.DataFrame(rows)
