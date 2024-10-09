@@ -49,7 +49,7 @@ jobs:
             echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
 
       - name: Update DB - test runs
-        run: python ./__main__.py --report-type test-case-coverage --project ALL
+        run: python ./__main__.py --report-type test-case-coverage --platform mobile --project ALL
 
       #- name: Jira query qa-requests
       #  run: python ./__main__.py --report-type jira-qa-requests
