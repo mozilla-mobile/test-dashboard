@@ -1,4 +1,13 @@
-PROJECTS_ABBREV = [
+PLATFORM = [
+    'mobile',
+    'ecosystem'
+]
+
+PROJECTS_ECOSYSTEM = [
+    'experimenter'
+]
+
+PROJECTS_MOBILE = [
     'fenix',
     'focus-android',
     'reference-browser',

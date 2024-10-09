@@ -4,7 +4,7 @@ import sys
 from github import GithubClient
 from jira import JiraClient
 from testrail import TestRailClient
-from utils.constants import PROJECTS_ABBREV, REPORT_TYPES
+from utils.constants import PROJECTS_MOBILE, PROJECTS_ECOSYSTEM, PLATFORM, REPORT_TYPES # noqa
 
 
 def parse_args(cmdln_args):
@@ -16,8 +16,14 @@ def parse_args(cmdln_args):
         "--project",
         help="Indicate project",
         required=False,
-        choices=PROJECTS_ABBREV
     )
+
+    parser.add_argument(
+        "--platform",
+        help="Select the platform Mobile or Ecosystem",
+        required=False,
+        choices=PLATFORM,
+        )
 
     parser.add_argument(
         "--report-type",
@@ -35,8 +41,28 @@ def parse_args(cmdln_args):
     return parser.parse_args(args=cmdln_args)
 
 
+# Function to validate the project based on the platform
+def validate_project(platform, project, report_type):
+    # Conditionally require --platform and --project
+    # if --report-type is 'test-case-coverage'
+    if report_type == 'test-case-coverage':
+        if not project:
+            print("--project is required for the report selected")
+        if not platform:
+            print("--platform is required for the report selected")
+
+    if platform == 'mobile' and project not in PROJECTS_MOBILE:
+        print(f"Error: Invalid project '{project}' for mobile. Valid options are {PROJECTS_MOBILE}") # noqa 
+        sys.exit(1)
+    elif platform == 'ecosystem' and project not in PROJECTS_ECOSYSTEM:
+        print(f"Error: Invalid project '{project}' for ecosystem. Valid options are {PROJECTS_ECOSYSTEM}") # noqa
+        sys.exit(1)
+
+
 def main():
     args = parse_args(sys.argv[1:])
+    validate_project(args.platform, args.project, args.report_type)
+
     if args.report_type == 'test-case-coverage':
         h = TestRailClient()
         h.data_pump(args.project.lower())
