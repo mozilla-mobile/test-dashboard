@@ -13,7 +13,7 @@ on:
 
 jobs:
   deploy:
-    name: Jira TestOps Report (DAILY)
+    name: Jira and Bugzilla TestOps Report (DAILY)
     runs-on: ubuntu-latest
 
     steps:
@@ -47,6 +47,8 @@ jobs:
             echo "JIRA_USER=${{ secrets.JIRA_USER }}" >> $GITHUB_ENV
             echo "JIRA_PASSWORD=${{ secrets.JIRA_PASSWORD }}" >> $GITHUB_ENV
             echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
+            echo "BUGZILLA_API_KEY=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
+
 
       - name: Jira query
         run: python ./__main__.py --report-type jira-qa-requests
@@ -54,6 +56,10 @@ jobs:
       - name: Jira query
         if: always()
         run: python ./__main__.py --report-type jira-qa-needed
+
+      #- name: Bugzilla query
+      #  if: always()
+      #  run: python ./__main__.py --report-type bugzilla-qe-verify
 
       - name: Set job log URL
         if: always()
