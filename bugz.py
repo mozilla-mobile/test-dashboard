@@ -1,5 +1,6 @@
 import pandas as pd
 
+from utils.constants import PRODUCTS, FIELDS
 from lib.bugzilla_conn import BugzillaAPIClient
 
 from database import (
@@ -7,10 +8,6 @@ from database import (
     ReportBugzillaQEVerifyCount,
     ReportBugzillaQENeeded
 )
-
-PRODUCTS = ["Fenix", "Focus", "GeckoView"]
-FIELDS = ["id", "summary", "flags", "severity",
-          "priority", "status", "resolution"]
 
 
 class Bugz:
@@ -107,17 +104,19 @@ class BugzillaClient(Bugz):
         # 'modification_date': <DateTime '20240917T09:39:02' at 0x147cb6d50>,
         # 'status': '+'}], 'N/A', 'P2', 'RESOLVED', 'FIXED']
 
-        for entry in payload:
-            bug_id = entry[0]
-            description = entry[1]
-            severity = entry[3]
-            priority = entry[4]
-            status = entry[5]
-            resolution = entry[6]
+        for bug in payload:
+            bug_id = bug[0]       # 1909150
+            description = bug[1]  # 'Description of the bug'
+            severity = bug[3]     # 'S2'
+            priority = bug[4]     # 'P1'
+            status = bug[5]       # 'RESOLVED'
+            resolution = bug[6]   # 'FIXED'
             # If there are additional fields due to flag field(sub-entry)
             # iterate over them
-            for sub_entry in entry[2]:
-                if sub_entry['name'] == 'qe-verify' and sub_entry['status'] == '+': # noqa
+            for sub_entry in bug[2]: # [{'id': 2244803, 'setter': 'email@mozilla.com', 'type_id': 864, # noqa
+                                     # 'creation_date': '20240917T09:39:02', 'name': 'qe-verify',      # noqa
+                                     # 'modification_date': '20240917T09:39:02', 'status': '+'}]       # noqa
+                if sub_entry['name'] == 'qe-verify' and sub_entry['status'] == '+':                    # noqa
                     row = {"bug_id": bug_id, "description": description,
                            **sub_entry, "severity": severity,
                            "priority": priority,
