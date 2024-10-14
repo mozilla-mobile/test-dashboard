@@ -52,11 +52,17 @@ jobs:
       - name: Update DB - test runs
         run: python ./__main__.py --report-type test-case-coverage --platform mobile --project ALL
 
-      #- name: Jira query qa-requests
-      #  run: python ./__main__.py --report-type jira-qa-requests
-      #- name: Jira query qa-needed
-      #  if: always()
-      #  run: python ./__main__.py --report-type jira-qa-needed
+      - name: Jira query qa-requests
+        run: python ./__main__.py --report-type jira-qa-requests
+
+      - name: Jira query qa-needed
+        if: always()
+        run: python ./__main__.py --report-type jira-qa-needed
+
+      - name: Bugzilla query qe-verify
+        if: always()
+        run: python ./__main__.py --report-type bugzilla-qe-verify
+
       - name: Set job log URL
         if: always()
         run: echo "JOB_LOG_URL=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_ENV
