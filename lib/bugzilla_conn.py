@@ -15,7 +15,7 @@ class BugzillaAPIClient:
 
     @property
     def URL(self) -> str:
-        return "bugzilla.mozilla.org"
+        return BUGZILLA_URL
 
     @property
     def bz_client(self) -> bugzilla.Bugzilla:
