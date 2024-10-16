@@ -1,4 +1,4 @@
-name: Testops Report DAILY 
+name: Testops Report DAILY - Production
 
 # Daily @8am UTC
 on:
