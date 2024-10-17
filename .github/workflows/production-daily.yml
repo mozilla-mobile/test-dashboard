@@ -1,4 +1,4 @@
-name: Testops Report DAILY 
+name: Testops Report DAILY - Production
 
 # Daily @8am UTC
 on:
@@ -47,7 +47,7 @@ jobs:
             echo "JIRA_USER=${{ secrets.JIRA_USER }}" >> $GITHUB_ENV
             echo "JIRA_PASSWORD=${{ secrets.JIRA_PASSWORD }}" >> $GITHUB_ENV
             echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
-            echo "BUGZILLA_API_KEY=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
+            echo "BUGZILLA_API_KEY=${{ secrets.BUGZILLA_API_KEY }}" >> $GITHUB_ENV
 
 
       - name: Jira query
@@ -57,9 +57,9 @@ jobs:
         if: always()
         run: python ./__main__.py --report-type jira-qa-needed
 
-      #- name: Bugzilla query
-      #  if: always()
-      #  run: python ./__main__.py --report-type bugzilla-qe-verify
+      - name: Bugzilla query
+        if: always()
+        run: python ./__main__.py --report-type bugzilla-qe-verify
 
       - name: Set job log URL
         if: always()
