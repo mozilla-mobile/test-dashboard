@@ -124,20 +124,26 @@ class BugzillaClient(Bugz):
 
                     rows.append(row)
 
-        # Create the DataFrame
-        df = pd.DataFrame(rows)
+        self.db.qa_needed_delete()
 
-        df['modification_date'] = pd.to_datetime(df['modification_date'], format='%Y%m%dT%H:%M:%S') # noqa
-        df['creation_date'] = pd.to_datetime(df['creation_date'], format='%Y%m%dT%H:%M:%S') # noqa
+        if not rows:
+            print("There are no bugs to verify today")
 
-        # Drop the columns 'type_id' and 'id'
-        df_cleaned = df.drop(columns=["type_id", "id"])
+        else:
+            # Create the DataFrame
+            df = pd.DataFrame(rows)
 
-        data_frame = self.db.report_bugzilla_qa_needed(df_cleaned)
-        self.db.report_bugzilla_qa_needed_insert(data_frame)
+            df['modification_date'] = pd.to_datetime(df['modification_date'], format='%Y%m%dT%H:%M:%S') # noqa
+            df['creation_date'] = pd.to_datetime(df['creation_date'], format='%Y%m%dT%H:%M:%S') # noqa
 
-        qe_needed_count = self.db.report_bugzilla_qa_needed_count(data_frame)
-        self.db.report_bugzilla_qa_needed_count_insert(qe_needed_count)
+            # Drop the columns 'type_id' and 'id'
+            df_cleaned = df.drop(columns=["type_id", "id"])
+
+            data_frame = self.db.report_bugzilla_qa_needed(df_cleaned)
+            self.db.report_bugzilla_qa_needed_insert(data_frame)
+
+            qe_needed_count = self.db.report_bugzilla_qa_needed_count(data_frame) # noqa
+            self.db.report_bugzilla_qa_needed_count_insert(qe_needed_count)
 
 
 class DatabaseBugzilla(Database):
@@ -145,6 +151,13 @@ class DatabaseBugzilla(Database):
     def __init__(self):
         super().__init__()
         self.db = Database()
+
+    def qa_needed_delete(self):
+        """ Wipe out all bugs.
+        NOTE: we'll print daily bugs data from Bugzilla every day."""
+        print("Delete entries from db first")
+        self.session.query(ReportBugzillaQENeeded).delete()
+        self.session.commit()
 
     def report_bugzilla_qa_needed(self, payload):
 
